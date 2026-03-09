@@ -27,7 +27,6 @@ const Login: React.FC = () => {
     } = useForm<FormInputs>();
 
     const onSubmit = async (data: FormInputs) => {
-        // console.log(data);
         const { input, password } = data;
 
         const payload = {
@@ -35,7 +34,6 @@ const Login: React.FC = () => {
             email: input.includes('@') ? input : undefined,
             password,
         };
-        // console.log(payload);
 
         try {
             await login(payload);

@@ -12,9 +12,7 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const signup = async (data: Data) => {
         try {
-            const res = await api.post('/api/auth/register', data);
-            console.log(res);
-            
+            const res = await api.post('/api/auth/register', data);            
 
             setUser(res.data.user);
         } catch (error) {

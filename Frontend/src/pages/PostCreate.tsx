@@ -45,7 +45,6 @@ const PostCreate: React.FC = () => {
 
     const onSubmit = async (data: FormInputs) => {
         if (handleCreatePost()) {
-            console.log(data);
             const formData = new FormData();
             if (data.image && data.image.length > 0) {
                 formData.append('image', data.image[0]);

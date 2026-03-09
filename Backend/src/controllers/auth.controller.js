@@ -37,8 +37,6 @@ const registerUser = async (req, res) => {
 
         res.cookie('token', token, options);
 
-        console.log(user);
-
         res.status(201).json({
             message: 'User created successfully',
             user: {

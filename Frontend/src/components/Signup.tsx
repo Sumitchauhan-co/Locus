@@ -26,7 +26,6 @@ const Signup: React.FC = () => {
     } = useForm<FormInputs>();
 
     const onSubmit = async (data: FormInputs) => {
-        // console.log(data);
 
         try {
             await signup(data);
