@@ -80,7 +80,7 @@ const PostCreate: React.FC = () => {
 
     return (
         <section className="h-fit py-20">
-            <div className="x-sm:text-4xl md:text-5xl text-3xl flex flex-col px-3 text-center mb-15">
+            <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center mb-15">
                 <h1>Create the post,</h1>
                 <h1>others will <p className='inline text-pink-500'>love</p> to see!</h1>
             </div>

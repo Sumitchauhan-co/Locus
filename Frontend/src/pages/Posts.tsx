@@ -29,7 +29,7 @@ const Posts: React.FC = () => {
     return (
         <section className="w-full flex flex-col justify-center items-center">
             <div className="w-full grid content-center mb-15">
-                <div className="x-sm:text-4xl md:text-5xl text-3xl flex flex-col px-3 text-center text-(--text-color) font-[cursive]">
+                <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center text-(--text-color) font-[cursive]">
                     <h1>Your amazing posts,</h1>
                     <h1>for everyone!</h1>
                 </div>
@@ -56,7 +56,7 @@ const Posts: React.FC = () => {
                                     className="w-full aspect-square object-cover"
                                 />
 
-                                <div className="p-3 text-sm text-center">
+                                <div className="p-3 text-[1rem] sm:text-lg text-center">
                                     {post.caption}
                                 </div>
                             </div>

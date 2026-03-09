@@ -18,7 +18,7 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['20%', '-150%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['100%', '-125%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
@@ -41,20 +41,20 @@ const Introduction: React.FC = () => {
     return (
         <motion.section
             style={{ opacity }}
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
                 type: spring,
                 stiffness: 120,
-                damping: 12,
+                damping: 6,
             }}
             viewport={{ once: true, amount: 0.2 }}
             className="sm:py-25 py-15 sm:px-5 px-2"
         >
-            <div className="sticky top-20 overflow-hidden flex justify-start items-center">
+            <div className="sticky top-20 overflow-hidden flex justify-center items-center">
                 <motion.div
                     style={{ x: translateX }}
-                    className="lg:text-7xl bg-clip-text bg-gradient-to-t from-neutral-900 to-neutral-100 md:text-6xl x-sm:text-5xl text-4xl leading-relaxed font-medium whitespace-nowrap "
+                    className="text-center bg-clip-text bg-gradient-to-t from-neutral-900 to-neutral-100 text-6xl sm:text-7xl leading-relaxed font-medium whitespace-nowrap "
                 >
                     {words.map((word, i) => (
                         <span
@@ -72,7 +72,7 @@ const Introduction: React.FC = () => {
             </div>
 
             <div
-                className="h-[75vh] sm:h-[50vh]"
+                className="h-[50vh]"
                 ref={targetRef}
             />
         </motion.section>
