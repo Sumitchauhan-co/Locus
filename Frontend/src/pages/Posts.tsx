@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Button from '../components/Button';
+import api from '../api/axios';
+import axios from 'axios';
 
 interface post {
     _id: string;
@@ -9,24 +10,21 @@ interface post {
 }
 
 const Posts: React.FC = () => {
-    const [posts, setPosts] = useState<Array<post>>([
-        // {
-        //     _id: '1',
-        //     imageId: 'https://ik.imagekit.io/imageID/image_kKoh7palx.jpg',
-        //     caption: 'post_caption',
-        // },
-        // {
-        //     _id: '1',
-        //     imageId: 'https://ik.imagekit.io/imageID/image_kKoh7palx.jpg',
-        //     caption: 'post_caption',
-        // },
-    ]);
+    const [posts, setPosts] = useState<Array<post>>([]);
 
     useEffect(() => {
-        axios
-            .get('http://localhost:3000/api/post')
-            .then((res) => ( setPosts(res.data.posts)))
-            .catch((err) => (console.log(err)));
+        const fetchData = async () => {
+            try {
+                api.get('/api/post')
+                    .then((res) => setPosts(res.data.posts))
+                    .catch((err) => console.log(err));
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    console.log(err.response?.data);
+                }
+            }
+        };
+        fetchData();
     }, []);
 
     return (
@@ -75,7 +73,7 @@ const Posts: React.FC = () => {
                         <p className="x-sm:text-lg md:text-xl text-sm">
                             Try creating one...
                         </p>
-                        <Button className='font-semibold'/>
+                        <Button className="font-semibold" />
                     </div>
                 </div>
             )}

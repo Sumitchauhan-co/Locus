@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
+import api from '../api/axios';
 
 interface FormInputs {
     image: FileList;
@@ -53,8 +54,8 @@ const PostCreate: React.FC = () => {
             formData.append('caption', data.caption);
 
             try {
-                await axios.post(
-                    'http://localhost:3000/api/post/create-post',
+                await api.post(
+                    '/api/post/create-post',
                     formData,
                 );
                 reset();

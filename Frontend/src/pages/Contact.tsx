@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Container2 from '../components/ContactContainer';
+import api from '../api/axios';
+import axios from 'axios';
 
 interface FormInputs {
     fullName: string;
@@ -19,29 +21,12 @@ const ContactUs: React.FC = () => {
         // formState: { errors },
     } = useForm<FormInputs>();
 
-    // const onSubmit = (data) => (
-    //     console.log(data)
-    // );
-
     const onSubmit = async (data: FormInputs) => {
         try {
-            const response = await fetch(
-                'http://localhost:3000/api/contact',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data),
-                },
-            );
-            const result = await response.json();
-            console.log(result);
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.error(error);
+            await api.post('/api/contact', data);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
             }
         }
         reset();

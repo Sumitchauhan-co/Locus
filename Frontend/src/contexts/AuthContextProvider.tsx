@@ -1,6 +1,7 @@
 import React, { useState, type ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import { type User, type Data } from './AuthContext';
+import api from '../api/axios';
 import axios from 'axios';
 
 interface ProviderProps {
@@ -12,55 +13,49 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const signup = async (data: Data) => {
         try {
-            const res = await axios.post(
-                'http://localhost:3000/api/auth/register',
-                data,
-                { withCredentials: true },
-            );
+            const res = await api.post('/api/auth/register', data);
 
             setUser(res.data.user);
-        } catch (error) {
-            console.log(error);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
+            }
         }
     };
 
     const login = async (data: Data) => {
         try {
-            const res = await axios.post(
-                'http://localhost:3000/api/auth/login',
-                data,
-                { withCredentials: true },
-            );
+            const res = await api.post('/api/auth/login', data);
 
             setUser(res.data.user);
-        } catch (error) {
-            console.log(error);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
+            }
         }
     };
 
     const logout = async () => {
         try {
-            await axios.post(
-                'http://localhost:3000/api/auth/logout',
-                {},
-                { withCredentials: true },
-            );
+            await api.post('/api/auth/logout');
 
             setUser(null);
-        } catch (error) {
-            console.log(error);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
+            }
         }
     };
 
     const getUser = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/auth/user', {
-                withCredentials: true,
-            });
+            const res = await api.get('/api/auth/user');
 
             setUser(res.data.user);
-        } catch (error) {
-            console.log(error);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                console.log(err.response?.data);
+            }
         }
     };
 
