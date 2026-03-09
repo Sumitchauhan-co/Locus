@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+@theme {
+  --breakpoint-sm: 575px;
+  --breakpoint-x-sm: 425px;
+}
+
+:root {
+    --primary-color: #0a0a0a;
+    --secondary-color: #111111;
+    --tertiary-color: #151515;
+    --backdrop-color: #15151550;
+    --navbar-color: #000;
+    --text-color: #eaeaea;
+    --text-color2: #aeaeae;
+    --button-color: #ececec;
+    --button-hover-color: #fff;
+
+    /* Contact page */
+    --bg-color: #737373;
+    --form-color: #bfbfbf;
+    --input-color: #ebebed;
+    --input-ring-color: #a1a1a1;
+    --light-text-color: #717182;
+    --clear-btn-hover-color: #e9ebef;
+    --form-width: 95vmin;
+}
