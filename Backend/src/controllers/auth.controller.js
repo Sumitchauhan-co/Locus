@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        console.log(req.body);
+        
 
         const isUserExists = await authModel.findOne({
             $or: [{ username }, { email }],
@@ -31,11 +33,14 @@ const registerUser = async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         };
 
         res.cookie('token', token, options);
+
+        console.log(user);
+        
 
         res.status(201).json({
             message: 'User created successfully',
@@ -80,8 +85,8 @@ const loginUser = async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         };
 
         res.cookie('token', token, options);
@@ -116,24 +121,24 @@ const logoutUser = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-        const token = req.cookies.token;
+    const token = req.cookies.token;
 
-        if (!token) {
-            return res.status(401).json({ message: 'Unauthorised' });
-        }
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorised' });
+    }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        const user = await authModel.findById(decoded.id).select('-password');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+    const user = await authModel.findById(decoded.id).select('-password');
 
-        res.status(200).json({
-            message: 'User get successfully',
-            user: user,
-        });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+        message: 'User get successfully',
+        user: user,
+    });
 };
 
 export default { registerUser, loginUser, logoutUser, getUser };

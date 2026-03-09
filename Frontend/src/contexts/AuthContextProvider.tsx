@@ -2,7 +2,6 @@ import React, { useState, type ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import { type User, type Data } from './AuthContext';
 import api from '../api/axios';
-import axios from 'axios';
 
 interface ProviderProps {
     children: ReactNode;
@@ -14,24 +13,25 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const signup = async (data: Data) => {
         try {
             const res = await api.post('/api/auth/register', data);
+            console.log(res);
+            
 
             setUser(res.data.user);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                console.log(err.response?.data);
-            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
     const login = async (data: Data) => {
         try {
-            const res = await api.post('/api/auth/login', data);
+            const res = await api.post(
+                '/api/auth/login',
+                data,
+            );
 
             setUser(res.data.user);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                console.log(err.response?.data);
-            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -40,10 +40,8 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
             await api.post('/api/auth/logout');
 
             setUser(null);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                console.log(err.response?.data);
-            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -52,10 +50,8 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
             const res = await api.get('/api/auth/user');
 
             setUser(res.data.user);
-        } catch (err: unknown) {
-            if (axios.isAxiosError(err)) {
-                console.log(err.response?.data);
-            }
+        } catch (error) {
+            console.log(error);
         }
     };
 

@@ -15,9 +15,8 @@ const Posts: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                api.get('/api/post')
-                    .then((res) => setPosts(res.data.posts))
-                    .catch((err) => console.log(err));
+                const res = await api.get('/api/post');
+                setPosts(res.data.posts || []);
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
@@ -36,7 +35,7 @@ const Posts: React.FC = () => {
                 </div>
             </div>
 
-            {posts.length !== 0 ? (
+            {posts?.length !== 0 ? (
                 <div className="w-full relative max-w-6xl h-fit p-4 scroll-smooth overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div
                         className="grid gap-6
@@ -46,7 +45,7 @@ const Posts: React.FC = () => {
                     md:grid-cols-4
                     lg:grid-cols-5"
                     >
-                        {posts.map((post) => (
+                        {posts?.map((post) => (
                             <div
                                 key={post._id}
                                 className="border break-inside-avoid rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"

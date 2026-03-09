@@ -54,7 +54,7 @@ const Signup: React.FC = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col items-center p-7 "
             >
-                <div className="flex flex-col w-[85vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-1/3 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[85vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-3">
                         <label className="w-full text-xl font-semibold">
                             Username
