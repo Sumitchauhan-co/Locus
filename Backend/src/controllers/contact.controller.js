@@ -15,6 +15,7 @@ const getContactData = async (req, res) => {
             contact: contact,
         });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: "Failed to post contact details" });
     }
 };

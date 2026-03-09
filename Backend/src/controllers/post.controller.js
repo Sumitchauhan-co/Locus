@@ -15,6 +15,7 @@ const createPost = async (req, res) => {
             post: post,
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: 'Failed to create post' });
     }
 };
@@ -22,6 +23,7 @@ const createPost = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const posts = await postModel.find().sort({ createdAt: -1 });
+        console.log(posts);
 
         return res.status(200).json({
             message: 'data fetched successfully',
@@ -29,8 +31,7 @@ const getPosts = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        
-        res.status(500).json({message: "Failed to get posts"})
+        res.status(500).json({ message: 'Failed to get posts' });
     }
 };
 

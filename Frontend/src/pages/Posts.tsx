@@ -15,7 +15,7 @@ const Posts: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await api.get('/api/post');
+                const res = await api.get('/api/post/');
                 setPosts(res.data.posts || []);
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
