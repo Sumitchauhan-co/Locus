@@ -5,8 +5,6 @@ import bcrypt from 'bcryptjs';
 const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        console.log(req.body);
-        
 
         const isUserExists = await authModel.findOne({
             $or: [{ username }, { email }],

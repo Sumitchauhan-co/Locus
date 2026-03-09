@@ -28,6 +28,8 @@ const getPosts = async (req, res) => {
             posts: posts,
         });
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({message: "Failed to get posts"})
     }
 };
