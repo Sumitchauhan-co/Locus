@@ -5,6 +5,7 @@ import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion } from 'motion/react';
+import { SiReactivex } from 'react-icons/si';
 
 interface FormInputs {
     input: string;
@@ -12,6 +13,7 @@ interface FormInputs {
 }
 
 const Login: React.FC = () => {
+    const { loading } = useContext(AuthContext);
     const { openModal } = useContext(ModalContext);
 
     const { login } = useContext(AuthContext);
@@ -36,7 +38,7 @@ const Login: React.FC = () => {
         };
 
         try {
-            await login(payload);
+            login(payload);
             reset();
             closeModal();
         } catch (error) {
@@ -52,8 +54,8 @@ const Login: React.FC = () => {
             >
                 <RxCross1 className="h-7 w-7" />
             </div>
-            <div className="h-fit w-full flex justify-center">
-                <span className="bg-transparent px-3 py-1 text-3xl md:text-4xl relative top-12 font-semibold">
+            <div className="h-fit w-full flex justify-center mt-10">
+                <span className="bg-transparent text-3xl md:text-4xl relative top-12 font-semibold">
                     <h1>Login</h1>
                 </span>
             </div>
@@ -109,11 +111,22 @@ const Login: React.FC = () => {
                     </div>
                     <div>
                         <motion.button
+                            type={`${loading ? 'reset' : 'submit'}`}
                             whileHover={{ scale: 1.025, y: 1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center"
+                            className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center`}
                         >
-                            <p>Login</p>
+                            {loading ? (
+                                <div className="h-full w-full flex justify-center items-center">
+                                    <div className="h-fit w-fit animate-spin">
+                                        <SiReactivex className="h-5 w-5"></SiReactivex>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <span>Login</span>
+                                </>
+                            )}
                         </motion.button>
                     </div>
                     <div className="w-full flex justify-center text-sm sm:text-[1rem] gap-2">

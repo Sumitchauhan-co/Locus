@@ -18,12 +18,12 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['100%', '-125%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['50%', '-125%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
         [0, 1],
-        [0, words.length * 1.5],
+        [0, words.length * 1],
     );
 
     const [currentWord, setCurrentWord] = useState<number>(0);
@@ -32,11 +32,7 @@ const Introduction: React.FC = () => {
         setCurrentWord(Math.floor(latest));
     });
 
-    const opacity = useTransform(
-        scrollYProgress,
-        [0, 0.5, 0.9],
-        [1, 1, 0],
-    );
+    const opacity = useTransform(scrollYProgress, [0, 0.5, 0.9], [1, 0.9, 0.5]);
 
     return (
         <motion.section
@@ -45,24 +41,24 @@ const Introduction: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
                 type: spring,
-                stiffness: 120,
-                damping: 6,
+                stiffness: 160,
+                damping: 8,
             }}
             viewport={{ once: true, amount: 0.2 }}
-            className="sm:py-25 py-15 sm:px-5 px-2"
+            className="sm:py-25 mb-20 sm:px-5 px-2"
         >
-            <div className="sticky top-20 overflow-hidden flex justify-center items-center">
+            <div className="sticky top-20 overflow-hidden flex justify-start items-center">
                 <motion.div
                     style={{ x: translateX }}
-                    className="text-center bg-clip-text bg-gradient-to-t from-neutral-900 to-neutral-100 text-6xl sm:text-7xl leading-relaxed font-medium whitespace-nowrap "
+                    className="text-center bg-clip-text bg-gradient-to-t from-neutral-950 to-neutral-50 text-7xl sm:text-8xl leading-relaxed font-medium whitespace-nowrap "
                 >
                     {words.map((word, i) => (
                         <span
                             key={i}
-                            className={`transition duration-500 ${
+                            className={`transition duration-300 font-[sans-serif] ${
                                 i <= currentWord
-                                    ? 'text-white'
-                                    : 'text-white/15'
+                                    ? 'text-(--text-pink-color)'
+                                    : 'text-(--text-pink-color2)'
                             }`}
                         >
                             {word}
@@ -72,7 +68,7 @@ const Introduction: React.FC = () => {
             </div>
 
             <div
-                className="h-[50vh]"
+                className="h-[125vh] scroll-smooth"
                 ref={targetRef}
             />
         </motion.section>

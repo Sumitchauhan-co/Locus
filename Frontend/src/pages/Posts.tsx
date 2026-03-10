@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import api from '../api/axios';
 import axios from 'axios';
+import { SiReactivex } from 'react-icons/si';
 
 interface post {
     _id: string;
@@ -12,11 +13,14 @@ interface post {
 const Posts: React.FC = () => {
     const [posts, setPosts] = useState<Array<post>>([]);
 
+    const [loading, setLoading] = useState<boolean>(true);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await api.get('/api/post/');
                 setPosts(res.data.posts || []);
+                setLoading(false);
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
@@ -25,6 +29,16 @@ const Posts: React.FC = () => {
         };
         fetchData();
     }, []);
+
+    if (loading) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <div className="h-10 w-10 flex justify-center items-center animate-spin">
+                    <SiReactivex className="h-7 w-7"></SiReactivex>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <section className="w-full flex flex-col justify-center items-center">

@@ -36,7 +36,9 @@ const ContactUs: React.FC = () => {
 
     return (
         <Container2>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form 
+            className='h-fit w-fit '
+            onSubmit={handleSubmit(onSubmit)}>
                 <div className="h-fit w-full mb-8">
                     <h1 className="w-full text-3xl font-semibold mb-2">
                         Contact Us
@@ -59,25 +61,25 @@ const ContactUs: React.FC = () => {
                     />
                 </div>
                 <div className="w-fit flex sm:flex-row flex-col gap-4">
-                    <div className="w-full flex flex-col mb-8">
+                    <div className="h-fit w-full flex flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Email
                         </label>
                         <input
                             type="text"
                             placeholder="Enter Your email"
-                            className="p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
+                            className="w-fit p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
                             {...register('email', { required: true })}
                         />
                     </div>
-                    <div className="w-fit flex flex-col mb-8">
+                    <div className="h-fit w-fit flex flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Phone (optional)
                         </label>
                         <input
                             type="text"
                             placeholder="Phone"
-                            className="p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
+                            className="w-fit p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
                             {...register('phone', { required: false })}
                         />
                     </div>
@@ -130,6 +132,7 @@ const ContactUs: React.FC = () => {
                         placeholder="Tell us how can we help you..."
                         rows={5}
                         {...register('message', { maxLength: 300 })}
+                        maxLength={300}
                     ></textarea>
                     <p className="text-sm text-(--light-text-color)">{`${text.length} / 300 characters`}</p>
                 </div>

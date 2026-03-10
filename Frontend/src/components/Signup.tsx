@@ -5,6 +5,7 @@ import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion } from 'motion/react';
+import { SiReactivex } from 'react-icons/si';
 
 interface FormInputs {
     username: string;
@@ -13,6 +14,7 @@ interface FormInputs {
 }
 
 const Signup: React.FC = () => {
+    const { loading } = useContext(AuthContext);
     const { signup } = useContext(AuthContext);
     const { closeModal } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState(false);
@@ -26,9 +28,8 @@ const Signup: React.FC = () => {
     } = useForm<FormInputs>();
 
     const onSubmit = async (data: FormInputs) => {
-
         try {
-            await signup(data);
+            signup(data);
             reset();
             closeModal();
         } catch (error) {
@@ -44,8 +45,8 @@ const Signup: React.FC = () => {
             >
                 <RxCross1 className="h-7 w-7" />
             </div>
-            <div className="h-fit w-full flex justify-center relative mt-25">
-                <span className="bg-transparent absolute text-(--text-color) px-3 py-1 text-3xl md:text-4xl font-semibold">
+            <div className="h-fit w-full flex justify-center mt-25">
+                <span className="bg-transparent text-3xl md:text-4xl relative top-12 font-semibold">
                     <h1>Signup</h1>
                 </span>
             </div>
@@ -123,11 +124,22 @@ const Signup: React.FC = () => {
                     </div>
                     <div>
                         <motion.button
+                            type={`${loading ? 'reset' : 'submit'}`}
                             whileHover={{ scale: 1.025, y: 1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center"
+                            className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center`}
                         >
-                            <p>Sign up</p>
+                            {loading ? (
+                                <div className="h-full w-full flex justify-center items-center cursor-not-allowed">
+                                    <div className="h-fit w-fit animate-spin">
+                                        <SiReactivex className="h-5 w-5"></SiReactivex>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <span>Sign up</span>
+                                </>
+                            )}
                         </motion.button>
                     </div>
                 </div>

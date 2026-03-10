@@ -10,7 +10,7 @@ const Home: React.FC = () => {
     return (
         <section className="min-h-screen relative pt-20 pb-20">
             <div className="w-full grid content-center ">
-                <div className="text-4xl sm:text-5xl flex flex-col px-3 font-[cursive] text-center">
+                <div className="text-4xl sm:text-5xl flex flex-col px-3 font-[tahoma] text-center">
                     <h1>New way to connect,</h1>
                     <h1> make friends!</h1>
                     <div className="relative">

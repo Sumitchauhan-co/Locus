@@ -21,28 +21,30 @@ const Menu: React.FC = () => {
                 <div className="absolute right-0">
                     <div className="p-5 grid content-center">
                         <RxCross1
-                            onClick={() => (closeModal(),navigate('/'))}
+                            onClick={() => (closeModal(), navigate('/'))}
                             className="h-7 w-7 opacity-75"
                         />
                     </div>
                 </div>
                 <div className="w-full p-5 pt-25 flex flex-col items-start gap-5 text-center">
                     <motion.div
-                        onClick={() => (closeModal(),navigate('/'))}
+                        onClick={() => (closeModal(), navigate('/'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>Home</span>
                     </motion.div>
                     <motion.div
-                        onClick={() => (closeModal(),navigate('/about'))}
+                        onClick={() => (closeModal(), navigate('/about'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>About</span>
                     </motion.div>
                     <motion.div
-                        onClick={() => (closeModal(),navigate('/create-post'))}
+                        onClick={() => (closeModal(), navigate('/create-post'))}
                         whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.99 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
@@ -50,7 +52,7 @@ const Menu: React.FC = () => {
                         <span>Create</span>
                     </motion.div>
                     <motion.div
-                        onClick={() => (closeModal(),navigate('/posts'))}
+                        onClick={() => (closeModal(), navigate('/posts'))}
                         whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.99 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
@@ -60,7 +62,10 @@ const Menu: React.FC = () => {
                     {!user && (
                         <>
                             <motion.div
-                                onClick={() => (openModal('login'),navigate('/'))}
+                                onClick={() => (
+                                    openModal('login'),
+                                    navigate('/')
+                                )}
                                 whileHover={{ scale: 1.125, y: 1 }}
                                 whileTap={{ scale: 0.99 }}
                                 className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
@@ -68,7 +73,10 @@ const Menu: React.FC = () => {
                                 <span>Login</span>
                             </motion.div>
                             <motion.div
-                                onClick={() => (openModal('signup'),navigate('/'))}
+                                onClick={() => (
+                                    openModal('signup'),
+                                    navigate('/')
+                                )}
                                 whileHover={{ scale: 1.125, y: 1 }}
                                 whileTap={{ scale: 0.99 }}
                                 className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"

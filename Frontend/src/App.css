@@ -13,6 +13,10 @@
     --navbar-color: #000;
     --text-color: #eaeaea;
     --text-color2: #aeaeae;
+    /* --text-pink-color: #f6339a; */
+    --text-pink-color: #fcb0d9;
+    --text-pink-color2: #fed0e9;
+    --text-dark-color: #7e7e7e;
     --button-color: #ececec;
     --button-hover-color: #fff;
 
@@ -23,5 +27,4 @@
     --input-ring-color: #a1a1a1;
     --light-text-color: #717182;
     --clear-btn-hover-color: #e9ebef;
-    --form-width: 95vmin;
 }

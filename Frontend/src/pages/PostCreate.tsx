@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { motion } from 'motion/react';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
+import { SiReactivex } from 'react-icons/si';
 
 interface FormInputs {
     image: FileList;
@@ -19,6 +20,7 @@ const random: string = [...emojis][
 ];
 
 const PostCreate: React.FC = () => {
+    const [loading, setLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const { openModal } = useContext(ModalContext);
 
@@ -30,9 +32,12 @@ const PostCreate: React.FC = () => {
         handleSubmit,
         watch,
         reset,
-        // formState: { errors },
+        formState: { errors },
     } = useForm<FormInputs>();
 
+    const image = watch('image');
+
+    const hasImage = image && image.length > 0;
     const captionValue = watch('caption');
 
     const handleCreatePost = () => {
@@ -53,22 +58,34 @@ const PostCreate: React.FC = () => {
             formData.append('caption', data.caption);
 
             try {
-                await api.post(
-                    '/api/post/create-post',
-                    formData,
-                );
+                setLoading(true);
+                await api.post('/api/post/create-post', formData);
+
                 reset();
                 navigate('/posts');
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
                 }
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     const { ref: captionRef, ...captionRegister } = register('caption', {
-        required: true,
+        required: {
+            value: true,
+            message: 'Caption is required',
+        },
+        minLength: {
+            value: 5,
+            message: 'Caption is too short!',
+        },
+        maxLength: {
+            value: 125,
+            message: "Caption shouldn't be too long!",
+        },
     });
 
     useEffect(() => {
@@ -82,10 +99,13 @@ const PostCreate: React.FC = () => {
         <section className="h-fit py-20">
             <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center mb-15">
                 <h1>Create the post,</h1>
-                <h1>others will <p className='inline text-pink-500'>love</p> to see!</h1>
+                <h1>
+                    others will <p className="inline text-pink-500">love</p> to
+                    see!
+                </h1>
             </div>
             <div className="h-fit w-full flex justify-center">
-                <span className="bg-(--primary-color) rounded-lg text-(--text-color) px-3 py-1 text-3xl md:text-4xl relative top-12 font-semibold">
+                <span className="bg-(--primary-color) rounded-lg text-(--text-color) text-3xl md:text-4xl relative top-12 font-semibold">
                     <h1>Create</h1>
                 </span>
             </div>
@@ -95,30 +115,38 @@ const PostCreate: React.FC = () => {
             >
                 <div className="flex flex-col w-[85vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-1/3 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-5">
-                        <label className="text-xl text-(--text-color) sm:text-2xl p-1">
+                        <label className="text-2xl text-(--text-color)">
                             <span>Post</span>
                         </label>
-                        <div className="flex justify-center items-center">
+                        <div className="flex flex-col justify-center items-center">
                             <input
                                 {...register('image', {
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: 'Image is required',
+                                    },
                                 })}
-                                className="w-[85%] border-2 border-(--input-ring-color) p-2 px-3 rounded-lg text-sm text-neutral-500"
+                                className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
+                            {errors.image?.message && (
+                                <p className="text-sm text-red-500 p-2">
+                                    {errors.image.message}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-5">
-                        <label className="text-xl text-(--text-color) sm:text-2xl p-1 transition-all ease-in-out">
+                        <label className="text-2xl text-(--text-color) transition-all ease-in-out">
                             <span>Caption</span>
                         </label>
-                        <div className="flex justify-center items-center">
-                            <div className="h-fit w-[85%] border-2 p-1 x-sm:p-2 rounded-xl grid content-center border-(--input-ring-color)">
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="h-fit w-[90%] border-2 grid content-center rounded-xl border-(--input-ring-color)">
                                 <textarea
                                     {...captionRegister}
                                     placeholder={`Posto...${random}`}
-                                    className="h-fit resize-none text-sm p-1 px-2 appearance-none focus:ring-0 outline-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                                    className="h-fit w-full p-2 resize-none text-[1rem] appearance-none focus:ring-0 outline-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                                     ref={(e) => {
                                         captionRef(e);
                                         textareaRef.current = e;
@@ -126,6 +154,11 @@ const PostCreate: React.FC = () => {
                                     rows={1}
                                 />
                             </div>
+                            {errors.caption?.message && (
+                                <p className="text-sm text-red-500 p-2">
+                                    {errors.caption.message}
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div className="h-fit w-full flex justify-center items-center">
@@ -137,9 +170,19 @@ const PostCreate: React.FC = () => {
                                 scale: 0.95,
                             }}
                             type="submit"
-                            className="h-10 w-25 cursor-pointer rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold"
+                            className="h-10 w-30 cursor-pointer rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold"
                         >
-                            <span>Submit</span>
+                            {loading ? (
+                                <div className="h-full w-full flex justify-center items-center">
+                                    <div className="h-fit w-fit animate-spin">
+                                        <SiReactivex className="h-5 w-5"></SiReactivex>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <span>Submit</span>
+                                </>
+                            )}
                         </motion.button>
                     </div>
                 </div>

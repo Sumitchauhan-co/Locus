@@ -16,6 +16,7 @@ export type Data = {
 
 interface AuthContextType {
     user: User | null;
+    loading: boolean;
     getUser: () => void;
     login: (user: Data) => void;
     signup: (user: Data) => void;
@@ -24,6 +25,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
+    loading: false,
     getUser: () => {},
     login: () => {},
     signup: () => {},
