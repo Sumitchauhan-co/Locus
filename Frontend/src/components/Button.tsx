@@ -21,12 +21,12 @@ const Button: React.FC<ButtonProps> = ({ className, ...props }) => {
             }}
             type="button"
             className={twMerge(
-                'h-12 w-36 peer bg-(--button-color) hover:bg-(--button-hover-color) rounded-3xl outline-none text-black font-[tahoma]',
+                'h-14 w-42 sm:h-12 sm:w-36 peer bg-(--button-color) hover:bg-(--button-hover-color) rounded-3xl outline-none text-black font-[tahoma]',
                 className,
             )}
             {...props}
         >
-            <span>Create Post</span>
+            <span className=' text-lg sm:text-[1rem]'>Create Post</span>
         </motion.button>
     );
 };

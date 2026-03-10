@@ -105,7 +105,7 @@ const PostCreate: React.FC = () => {
                 </h1>
             </div>
             <div className="h-fit w-full flex justify-center">
-                <span className="bg-(--primary-color) rounded-lg text-(--text-color) text-3xl md:text-4xl relative top-12 font-semibold">
+                <span className="bg-(--primary-color) rounded-lg text-(--text-color) text-4xl md:text-5xl relative top-12 font-semibold">
                     <h1>Create</h1>
                 </span>
             </div>
@@ -170,7 +170,7 @@ const PostCreate: React.FC = () => {
                                 scale: 0.95,
                             }}
                             type="submit"
-                            className="h-10 w-30 cursor-pointer rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold"
+                            className="sm:h-10 sm:w-30 h-12 w-36 cursor-pointer rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold"
                         >
                             {loading ? (
                                 <div className="h-full w-full flex justify-center items-center">
@@ -180,7 +180,7 @@ const PostCreate: React.FC = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <span>Submit</span>
+                                    <span className='sm:text-[1rem] text-lg'>Submit</span>
                                 </>
                             )}
                         </motion.button>
