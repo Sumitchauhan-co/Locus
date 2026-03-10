@@ -18,7 +18,7 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['50%', '-125%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['50%', '-150%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
@@ -32,7 +32,7 @@ const Introduction: React.FC = () => {
         setCurrentWord(Math.floor(latest));
     });
 
-    const opacity = useTransform(scrollYProgress, [0, 0.5, 0.9], [1, 0.9, 0.5]);
+    const opacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.75]);
 
     return (
         <motion.section
