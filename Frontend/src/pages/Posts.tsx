@@ -4,14 +4,15 @@ import api from '../api/axios';
 import axios from 'axios';
 import { SiReactivex } from 'react-icons/si';
 
-interface post {
+interface Post {
     _id: string;
-    imageID: string;
+    mediaURL: string;
+    mediaType: string;
     caption: string;
 }
 
 const Posts: React.FC = () => {
-    const [posts, setPosts] = useState<Array<post>>([]);
+    const [posts, setPosts] = useState<Array<Post>>([]);
 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -20,11 +21,12 @@ const Posts: React.FC = () => {
             try {
                 const res = await api.get('/api/post/');
                 setPosts(res.data.posts || []);
-                setLoading(false);
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
                 }
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -34,14 +36,14 @@ const Posts: React.FC = () => {
         return (
             <div className="h-screen flex justify-center items-center">
                 <div className="h-10 w-10 flex justify-center items-center animate-spin">
-                    <SiReactivex className="h-7 w-7"></SiReactivex>
+                    <SiReactivex className="h-8 w-8"></SiReactivex>
                 </div>
             </div>
         );
     }
 
     return (
-        <section className="w-full flex flex-col justify-center items-center">
+        <section className="h-screen w-full flex flex-col justify-center items-center">
             <div className="w-full grid content-center mb-15">
                 <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center text-(--text-color) font-[cursive]">
                     <h1>Your amazing posts,</h1>
@@ -49,28 +51,41 @@ const Posts: React.FC = () => {
                 </div>
             </div>
 
-            {posts?.length !== 0 ? (
-                <div className="w-full relative max-w-6xl h-fit p-4 scroll-smooth overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            {posts.length > 0 ? (
+                <div className="h-fit w-full relative max-w-6xl p-4 scroll-smooth overflow-y-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     <div
-                        className="grid gap-6
+                        className="h-fit w-full grid gap-6
                     grid-cols-1
                     x-sm:grid-cols-2
                     sm:grid-cols-3
-                    md:grid-cols-4
-                    lg:grid-cols-5"
+                    md:grid-cols-4"
                     >
                         {posts?.map((post) => (
                             <div
                                 key={post._id}
-                                className="border break-inside-avoid rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                                className="h-fit border break-inside-avoid rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
                             >
-                                <img
-                                    src={post.imageID}
-                                    alt="post"
-                                    className="w-full aspect-square object-cover"
-                                />
+                                <div className="h-fit w-fit">
+                                    {post.mediaType === 'video' && (
+                                        <video
+                                            muted
+                                            loop
+                                            controls
+                                            src={post.mediaURL}
+                                            className="w-full aspect-square object-cover"
+                                        ></video>
+                                    )}
+                                    {post.mediaType === 'image' && (
+                                        <img
+                                            src={post.mediaURL}
+                                            loading="lazy"
+                                            alt="Post"
+                                            className="w-full aspect-square object-cover"
+                                        ></img>
+                                    )}
+                                </div>
 
-                                <div className="p-3 text-[1rem] sm:text-lg text-center">
+                                <div className="p-2 text-lg sm:text-[1rem] text-center">
                                     {post.caption}
                                 </div>
                             </div>

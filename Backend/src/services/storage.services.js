@@ -6,8 +6,8 @@ const client = new ImageKit({
 
 const uploadFile = async (file) => {
     const response = await client.files.upload({
-        file,
-        fileName: 'photo_' + Date.now(),
+        file: file.buffer.toString("base64"),
+        fileName: file.originalname,
         folder: 'project-1/posto/',
     });
 

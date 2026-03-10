@@ -3,10 +3,26 @@ import uploadFile from '../services/storage.services.js';
 
 const createPost = async (req, res) => {
     try {
-        const result = await uploadFile(req.file.buffer.toString('base64'));
+        if (!req.file) {
+            return res.status(400).json({
+                message: 'Media file is required',
+            });
+        }
+
+        const mime = req.file.mimetype;
+
+        if (!mime.startsWith('image') && !mime.startsWith('video')) {
+            return res.status(400).json({
+                message: 'Only image or video uploads are allowed',
+            });
+        }
+        const result = await uploadFile(req.file);
+
+        const mediaType = mime.startsWith('video') ? 'video' : 'image';
 
         const post = await postModel.create({
-            imageID: result.url,
+            mediaURL: result.url,
+            mediaType,
             caption: req.body.caption,
         });
 

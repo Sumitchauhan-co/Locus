@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-    imageID : String,
+    mediaURL : String,
     caption: String,
+    mediaType: String,
 }, {timestamps: true})
 
 const postModel = mongoose.model("post", postSchema)

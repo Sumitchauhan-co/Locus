@@ -44,6 +44,14 @@ const Menu: React.FC = () => {
                         <span>About</span>
                     </motion.div>
                     <motion.div
+                        onClick={() => (navigate('/contact'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
+                    >
+                        <span>Contact</span>
+                    </motion.div>
+                    <motion.div
                         onClick={() => (closeModal(), navigate('/create-post'))}
                         whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.99 }}

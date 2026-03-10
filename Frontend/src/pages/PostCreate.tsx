@@ -9,7 +9,7 @@ import api from '../api/axios';
 import { SiReactivex } from 'react-icons/si';
 
 interface FormInputs {
-    image: FileList;
+    media: FileList;
     caption: string;
 }
 
@@ -35,9 +35,9 @@ const PostCreate: React.FC = () => {
         formState: { errors },
     } = useForm<FormInputs>();
 
-    const image = watch('image');
+    const media = watch('media');
 
-    const hasImage = image && image.length > 0;
+    const hasImage = media && media.length > 0;
     const captionValue = watch('caption');
 
     const handleCreatePost = () => {
@@ -51,8 +51,8 @@ const PostCreate: React.FC = () => {
     const onSubmit = async (data: FormInputs) => {
         if (handleCreatePost()) {
             const formData = new FormData();
-            if (data.image && data.image.length > 0) {
-                formData.append('image', data.image[0]);
+            if (data.media && data.media.length > 0) {
+                formData.append('media', data.media[0]);
             }
 
             formData.append('caption', data.caption);
@@ -120,18 +120,18 @@ const PostCreate: React.FC = () => {
                         </label>
                         <div className="flex flex-col justify-center items-center">
                             <input
-                                {...register('image', {
+                                {...register('media', {
                                     required: {
                                         value: true,
-                                        message: 'Image is required',
+                                        message: 'Media is required',
                                     },
                                 })}
                                 className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
-                            {errors.image?.message && (
+                            {errors.media?.message && (
                                 <p className="text-sm text-red-500 p-2">
-                                    {errors.image.message}
+                                    {errors.media.message}
                                 </p>
                             )}
                         </div>
@@ -163,14 +163,14 @@ const PostCreate: React.FC = () => {
                     </div>
                     <div className="h-fit w-full flex justify-center items-center">
                         <motion.button
+                            type={loading ? 'reset' : 'submit'}
                             whileHover={{
                                 scale: 1.05,
                             }}
                             whileTap={{
                                 scale: 0.95,
                             }}
-                            type="submit"
-                            className="sm:h-10 sm:w-30 h-12 w-36 cursor-pointer rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold"
+                            className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} sm:h-10 sm:w-30 h-12 w-36 rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold`}
                         >
                             {loading ? (
                                 <div className="h-full w-full flex justify-center items-center">
@@ -180,7 +180,9 @@ const PostCreate: React.FC = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <span className='sm:text-[1rem] text-lg'>Submit</span>
+                                    <span className="sm:text-[1rem] text-lg">
+                                        Submit
+                                    </span>
                                 </>
                             )}
                         </motion.button>

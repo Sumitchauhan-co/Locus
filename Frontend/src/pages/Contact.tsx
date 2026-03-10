@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Container2 from '../components/ContactContainer';
+import ContactContainer from '../components/ContactContainer';
 import api from '../api/axios';
 import axios from 'axios';
 
@@ -35,7 +35,7 @@ const ContactUs: React.FC = () => {
     const text = watch('message', '');
 
     return (
-        <Container2>
+        <ContactContainer>
             <form 
             className='h-fit w-fit '
             onSubmit={handleSubmit(onSubmit)}>
@@ -152,7 +152,7 @@ const ContactUs: React.FC = () => {
                     </button>
                 </div>
             </form>
-        </Container2>
+        </ContactContainer>
     );
 };
 

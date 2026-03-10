@@ -37,11 +37,8 @@ const Navbar: React.FC = () => {
                     top: 0,
                     bottom: 0,
                 }}
-                animate={{
-                    rotate: 360,
-                }}
                 whileDrag={{
-                    rotate: -360,
+                    rotate: 360,
                 }}
                 transition={{
                     duration: 0.8,
@@ -51,7 +48,7 @@ const Navbar: React.FC = () => {
                 <SiReactivex className="h-10 w-10" />
             </motion.div>
             <div
-                className={`h-full ${user ? 'w-1/2' : 'w-3/5'} hidden md:flex justify-between items-center font-[sans-serif]`}
+                className={`h-full ${user ? 'w-3/5' : 'w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
             >
                 <motion.div
                     onClick={() => (closeModal(), navigate('/'))}
@@ -68,6 +65,14 @@ const Navbar: React.FC = () => {
                     className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
                 >
                     <span>About</span>
+                </motion.div>
+                <motion.div
+                    onClick={() => (navigate('/contact'))}
+                    whileHover={{ scale: 1.125, y: 1 }}
+                    whileTap={{ scale: 0.975 }}
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                >
+                    <span>Contact</span>
                 </motion.div>
                 <motion.div
                     onClick={() => (closeModal(), navigate('/create-post'))}

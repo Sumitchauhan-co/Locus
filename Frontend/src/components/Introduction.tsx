@@ -18,7 +18,7 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['50%', '-150%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['100%', '-175%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
@@ -44,13 +44,14 @@ const Introduction: React.FC = () => {
                 stiffness: 160,
                 damping: 8,
             }}
+            ref={targetRef}
             viewport={{ once: true, amount: 0.2 }}
-            className="sm:py-25 mb-20 sm:px-5 px-2"
+            className="h-[275vh] sm:py-25 sm:px-5 px-2"
         >
-            <div className="sticky top-20 overflow-hidden flex justify-start items-center">
+            <div className="sticky h-screen top-0 overflow-hidden flex items-center">
                 <motion.div
                     style={{ x: translateX }}
-                    className="text-center bg-clip-text bg-gradient-to-t from-neutral-950 to-neutral-50 text-7xl sm:text-8xl leading-relaxed font-medium whitespace-nowrap "
+                    className="text-center text-7xl sm:text-8xl leading-relaxed font-medium whitespace-nowrap "
                 >
                     {words.map((word, i) => (
                         <span
@@ -66,11 +67,6 @@ const Introduction: React.FC = () => {
                     ))}
                 </motion.div>
             </div>
-
-            <div
-                className="h-[125vh] scroll-smooth"
-                ref={targetRef}
-            />
         </motion.section>
     );
 };

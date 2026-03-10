@@ -9,10 +9,8 @@ const Applayout: React.FC = () => {
     return (
         <Container>
             <Navbar />
-            <div className="relative min-h-screen">
-                <Outlet />
-                <ModalManager />
-            </div>
+            <Outlet />
+            <ModalManager />
             <Footer />
         </Container>
     );
