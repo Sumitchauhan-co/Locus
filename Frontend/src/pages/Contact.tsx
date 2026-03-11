@@ -23,7 +23,7 @@ const ContactUs: React.FC = () => {
 
     const onSubmit = async (data: FormInputs) => {
         try {
-            await api.post('/api/contact', data);
+            await api.post('/api/contact/create', data);
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 console.log(err.response?.data);

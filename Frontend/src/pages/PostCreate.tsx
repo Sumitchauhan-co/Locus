@@ -59,7 +59,7 @@ const PostCreate: React.FC = () => {
 
             try {
                 setLoading(true);
-                await api.post('/api/post/create-post', formData);
+                await api.post('/api/post/create', formData);
 
                 reset();
                 navigate('/posts');

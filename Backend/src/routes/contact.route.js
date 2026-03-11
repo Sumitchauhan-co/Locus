@@ -3,6 +3,6 @@ import contactController from "../controllers/contact.controller.js"
 
 const route = express.Router()
 
-route.post("/create-contact", contactController.getContactData)
+route.post("/create", contactController.getContactData)
 
 export default route

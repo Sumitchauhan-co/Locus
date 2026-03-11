@@ -28,7 +28,7 @@ const upload = multer({
     },
 });
 
-route.post('/create-post', upload.single('media'), postController.createPost);
+route.post('/create', upload.single('media'), postController.createPost);
 
 route.get('/', postController.getPosts);
 
