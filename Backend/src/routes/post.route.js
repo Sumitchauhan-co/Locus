@@ -14,6 +14,7 @@ const upload = multer({
             'image/png',
             'image/jpeg',
             'image/jpg',
+            'image/webp',
             'video/mp4',
             'video/webm',
             'video/quicktime',

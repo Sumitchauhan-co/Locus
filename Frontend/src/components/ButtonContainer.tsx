@@ -47,7 +47,7 @@ const ButtonContainer: React.FC = () => {
                     }}
                     className="peer-hover:animate-bounce"
                 >
-                    <SelectedIcon className="sm:h-15 sm:w-15 h-20 w-20" />
+                    <SelectedIcon className="lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20" />
                 </motion.div>
                 <div className="text-3xl">
                     <span>Make your move!</span>

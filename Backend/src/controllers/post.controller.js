@@ -1,5 +1,8 @@
 import postModel from '../models/post.model.js';
 import uploadFile from '../services/storage.services.js';
+import compressImage from '../utils/compressImage.js';
+import compressVideo from '../utils/compressVideo.js';
+import fs from "fs"
 
 const createPost = async (req, res) => {
     try {
@@ -9,6 +12,26 @@ const createPost = async (req, res) => {
             });
         }
 
+        let buffer;
+
+        if (req.file.mimetype.startsWith('image')) {
+            buffer = await compressImage(req.file);
+        }
+
+        if (req.file.mimetype.startsWith('video')) {
+            const inputPath = `public/temp/${Date.now()}-${req.file.originalname}`;
+            const outputPath = `public/temp/compressed-${Date.now()}.mp4`;
+
+            fs.writeFileSync(inputPath, req.file.buffer);
+
+            await compressVideo(inputPath, outputPath);
+
+            buffer = fs.readFileSync(outputPath);
+
+            fs.unlinkSync(inputPath);
+            fs.unlinkSync(outputPath);
+        }
+
         const mime = req.file.mimetype;
 
         if (!mime.startsWith('image') && !mime.startsWith('video')) {
@@ -16,7 +39,10 @@ const createPost = async (req, res) => {
                 message: 'Only image or video uploads are allowed',
             });
         }
-        const result = await uploadFile(req.file);
+        const result = await uploadFile({
+            buffer,
+            originalname: req.file.originalname,
+        });
 
         const mediaType = mime.startsWith('video') ? 'video' : 'image';
 

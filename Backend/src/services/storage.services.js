@@ -4,10 +4,10 @@ const client = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
 });
 
-const uploadFile = async (file) => {
+const uploadFile = async ({buffer, originalname}) => {
     const response = await client.files.upload({
-        file: file.buffer.toString("base64"),
-        fileName: file.originalname,
+        file: buffer.toString("base64"),
+        fileName: originalname,
         folder: 'project-1/posto/',
     });
 
