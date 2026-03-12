@@ -10,6 +10,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { RxCross1 } from 'react-icons/rx';
 import { formatPostTime } from '../utils/time.ts';
+import { ModalContext } from '../contexts/ModalContext.ts';
 
 interface User {
     _id: string;
@@ -27,6 +28,7 @@ interface Post {
 }
 
 const Posts: React.FC = () => {
+    const { openModal } = useContext(ModalContext);
     const [activePostId, setActivePostId] = useState<string | null>(null);
     const { user } = useContext(AuthContext);
     const [posts, setPosts] = useState<Array<Post>>([]);
@@ -34,7 +36,9 @@ const Posts: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
     const handleLike = async (postId: string) => {
-        if (!user) return;
+        if (!user) {
+            return openModal("login")
+        };
 
         let updatedLikes: string[] = [];
 

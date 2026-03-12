@@ -46,15 +46,15 @@ const Signup: React.FC = () => {
                 <RxCross1 className="h-7 w-7" />
             </div>
             <div className="h-fit w-full flex justify-center mt-25">
-                <span className="bg-transparent text-3xl md:text-4xl relative top-12 font-semibold">
+                <span className="bg-transparent text-3xl md:text-4xl relative top-6 sm:top-12 font-semibold">
                     <h1>Signup</h1>
                 </span>
             </div>
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col items-center p-7 "
+                className="flex flex-col items-center sm:p-7 p-3"
             >
-                <div className="flex flex-col w-[85vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-3">
                         <label className="w-full text-xl font-semibold">
                             Username
