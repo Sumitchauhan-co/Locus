@@ -78,10 +78,6 @@ const PostCreate: React.FC = () => {
             value: true,
             message: 'Caption is required',
         },
-        minLength: {
-            value: 5,
-            message: 'Caption is too short!',
-        },
         maxLength: {
             value: 125,
             message: "Caption shouldn't be too long!",
@@ -89,6 +85,9 @@ const PostCreate: React.FC = () => {
     });
 
     useEffect(() => {
+        if(!user) {
+            openModal('login')
+        }
         if (textareaRef.current) {
             textareaRef.current.style.height = 'inherit';
             textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
@@ -110,10 +109,10 @@ const PostCreate: React.FC = () => {
                 </span>
             </div>
             <form
-                className="flex flex-col items-center p-7"
+                className="flex flex-col items-center sm:p-7 p-3"
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col w-[85vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-1/3 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-1/3 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-5">
                         <label className="text-2xl text-(--text-color)">
                             <span>Post</span>

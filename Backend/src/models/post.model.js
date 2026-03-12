@@ -1,11 +1,36 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-const postSchema = new mongoose.Schema({
-    mediaURL : String,
-    caption: String,
-    mediaType: String,
-}, {timestamps: true})
+const postSchema = new mongoose.Schema(
+    {
+        mediaURL: {
+            type: String,
+            required: true,
+        },
+        caption: {
+            type: String,
+            required: true,
+        },
+        mediaType: {
+            type: String,
+            enum: ['video', 'image'],
+            required: true,
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'Auth',
+            required: true,
+        },
+        likesCount: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'Auth',
+                unique: true,
+            },
+        ],
+    },
+    { timestamps: true },
+);
 
-const postModel = mongoose.model("post", postSchema)
+const postModel = mongoose.model('Post', postSchema);
 
-export default postModel
+export default postModel;

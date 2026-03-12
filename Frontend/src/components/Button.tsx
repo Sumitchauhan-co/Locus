@@ -11,7 +11,6 @@ const Button: React.FC<ButtonProps> = ({ className, ...props }) => {
     const navigate = useNavigate();
     return (
         <motion.button
-            title="Click on a die"
             onClick={() => navigate('/create-post')}
             whileTap={{
                 scale: 0.95,
@@ -21,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({ className, ...props }) => {
             }}
             type="button"
             className={twMerge(
-                'h-14 w-42 sm:h-12 sm:w-36 lg:h-14 lg:w-40 peer bg-(--button-color) hover:bg-(--button-hover-color) rounded-4xl lg:rounded-4xl sm:rounded-3xl outline-none text-black font-[tahoma]',
+                'h-12 w-40 sm:h-12 sm:w-36 text-sm sm:text-lg bg-(--button-color) hover:bg-(--button-hover-color) rounded-4xl lg:rounded-4xl sm:rounded-3xl outline-none text-black font-[tahoma]',
                 className,
             )}
             {...props}

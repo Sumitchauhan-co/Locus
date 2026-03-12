@@ -15,7 +15,8 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const signup = async (data: Data) => {
         try {
             setLoading(true);
-            const res = await api.post('/api/auth/register', data);
+            await api.post('/api/auth/register', data);
+            const res = await api.get('/api/auth/user');
 
             setUser(res.data.user);
         } catch (error) {
@@ -28,8 +29,8 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const login = async (data: Data) => {
         try {
             setLoading(true);
-            const res = await api.post('/api/auth/login', data);
-
+            await api.post('/api/auth/login', data);
+            const res = await api.get('/api/auth/user');
             setUser(res.data.user);
         } catch (error) {
             console.log(error);

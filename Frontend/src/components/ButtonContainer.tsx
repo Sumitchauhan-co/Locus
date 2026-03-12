@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import confetti from 'canvas-confetti';
 import {
     GiPerspectiveDiceSixFacesRandom,
     GiPerspectiveDiceSixFacesOne,
@@ -29,6 +30,22 @@ const ButtonContainer: React.FC = () => {
     const rollDice = () => {
         const randomIndex = Math.floor(Math.random() * diceIcons.length);
         setCurrentDiceIndex(randomIndex);
+        if (randomIndex === 5) {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: [
+                    '#ff0000',
+                    '#ffa500',
+                    '#ffff00',
+                    '#008000',
+                    '#0000ff',
+                    '#4b0082',
+                    '#ee82ee',
+                ],
+            });
+        }
     };
 
     const SelectedIcon =
@@ -37,7 +54,10 @@ const ButtonContainer: React.FC = () => {
             : GiPerspectiveDiceSixFacesRandom;
 
     return (
-        <section className="relative z-2 h-[25vh] grid content-center">
+        <section
+            title="Click on a die"
+            className="relative z-2 h-[25vh] grid content-center"
+        >
             <div className="flex flex-col justify-between items-center gap-5 group">
                 <Button className="font-semibold" />
                 <motion.div
@@ -49,8 +69,15 @@ const ButtonContainer: React.FC = () => {
                 >
                     <SelectedIcon className="lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20" />
                 </motion.div>
-                <div className="text-3xl">
-                    <span>Make your move!</span>
+                <div className="text-2xl sm:text-3xl text-center">
+                    <span>
+                        {currentDiceIndex === 5
+                            ? (<div className='text-center'>
+                                <p>You won the <p className='inline text-pink-300'>luck</p>,</p>
+                                <p>Now create your post!</p>
+                            </div>)
+                            : 'Make your move!'}
+                    </span>
                 </div>
             </div>
         </section>

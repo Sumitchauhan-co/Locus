@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import postController from '../controllers/post.controller.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const route = express.Router();
 
@@ -28,7 +29,11 @@ const upload = multer({
     },
 });
 
-route.post('/create', upload.single('media'), postController.createPost);
+route.post('/create', upload.single('media'), authMiddleware, postController.createPost);
+
+route.patch('/:postId/like', authMiddleware, postController.toggleLike)
+
+route.delete('/:postId',authMiddleware, postController.removePost)
 
 route.get('/', postController.getPosts);
 
