@@ -25,9 +25,11 @@ interface Post {
     caption: string;
     user: User;
     likesCount: string[];
+    createdAt: string;
 }
 
 const Posts: React.FC = () => {
+    const [mediaLoaded, setMediaLoaded] = useState<Record<string, boolean>>({});
     const { openModal } = useContext(ModalContext);
     const [activePostId, setActivePostId] = useState<string | null>(null);
     const { user } = useContext(AuthContext);
@@ -37,8 +39,8 @@ const Posts: React.FC = () => {
 
     const handleLike = async (postId: string) => {
         if (!user) {
-            return openModal("login")
-        };
+            return openModal('login');
+        }
 
         let updatedLikes: string[] = [];
 
@@ -73,6 +75,7 @@ const Posts: React.FC = () => {
 
     const removePost = async (postId: string) => {
         try {
+            setLoading(true);
             const res = await api.delete(`/api/post/${postId}`);
             console.log(res);
 
@@ -81,14 +84,15 @@ const Posts: React.FC = () => {
             setActivePostId(null);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
-
-    const isotime = new Date().toISOString();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 const res = await api.get('/api/post/');
                 setPosts(res.data.posts);
                 console.log(res.data.posts);
@@ -153,17 +157,13 @@ const Posts: React.FC = () => {
                                             : ''
                                     } h-fit w-fit relative hover:bg-(--tertiary-color) p-2 flex flex-col border border-(--border-color) rounded-xl bg-(--tertiary-color)`}
                                 >
-                                    {/* header */}
                                     <div className="h-fit w-full flex flex-col relative mb-2">
-                                        {/* userame */}
                                         <div className="text-sm text-start text-(--text-color2) hover:underline">
                                             {post.user.username}
                                         </div>
-                                        {/* caption */}
                                         <div className="text-[1rem] text-start">
                                             {post.caption}
                                         </div>
-                                        {/* options */}
                                         <motion.div
                                             onClick={() =>
                                                 setActivePostId(post._id)
@@ -171,16 +171,29 @@ const Posts: React.FC = () => {
                                             whileTap={{
                                                 scale: 1.25,
                                             }}
-                                            className={`${user?._id !== post._id ? 'hidden' : 'absolute'} top-3 right-3`}
+                                            className={`${user?._id !== post.user._id ? 'hidden' : 'absolute'} top-3 right-3`}
                                         >
                                             <BsThreeDotsVertical className="h-4 w-4" />
                                         </motion.div>
                                     </div>
                                     {/* img/video */}
                                     <div className="h-full">
-                                        <div className="h-full w-full">
+                                        <div className="h-full w-full sm:aspect-square aspect-4/5">
+                                            {!mediaLoaded[post._id] && (
+                                                <div className="absolute inset-0 flex items-center justify-center animate-spin">
+                                                    <SiReactivex />
+                                                </div>
+                                            )}
                                             {post.mediaType === 'video' && (
                                                 <video
+                                                    onLoadedData={() =>
+                                                        setMediaLoaded(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                [post._id]: true,
+                                                            }),
+                                                        )
+                                                    }
                                                     muted
                                                     loop
                                                     controls
@@ -190,16 +203,25 @@ const Posts: React.FC = () => {
                                             )}
                                             {post.mediaType === 'image' && (
                                                 <img
+                                                    onLoad={() =>
+                                                        setMediaLoaded(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                [post._id]: true,
+                                                            }),
+                                                        )
+                                                    }
                                                     src={post.mediaURL}
                                                     loading="lazy"
                                                     alt="Post"
                                                     className="w-full rounded-lg sm:aspect-square aspect-4/5 object-cover"
                                                 ></img>
                                             )}
+                                            
                                         </div>
 
                                         <div className="text-[0.7rem] text-end text-(--text-color2)">
-                                            {formatPostTime(isotime)}
+                                            {formatPostTime(post.createdAt)}
                                         </div>
                                     </div>
                                     {/* likes */}

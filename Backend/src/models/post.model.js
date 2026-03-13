@@ -24,7 +24,7 @@ const postSchema = new mongoose.Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: 'Auth',
-                unique: true,
+                default: [],
             },
         ],
     },

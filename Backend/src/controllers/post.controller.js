@@ -52,6 +52,7 @@ const createPost = async (req, res) => {
             mediaType,
             caption: req.body.caption,
             user: req.user,
+            likesCount: [],
         });
 
         res.status(201).json({
