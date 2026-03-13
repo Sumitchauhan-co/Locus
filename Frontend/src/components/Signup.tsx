@@ -38,7 +38,7 @@ const Signup: React.FC = () => {
     };
 
     return (
-        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-3 flex flex-col items-center justify-center bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
+        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-3 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
             <div
                 onClick={() => closeModal()}
                 className="absolute top-5 right-5"

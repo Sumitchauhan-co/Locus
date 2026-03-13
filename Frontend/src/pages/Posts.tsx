@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { RxCross1 } from 'react-icons/rx';
 import { formatPostTime } from '../utils/time.ts';
 import { ModalContext } from '../contexts/ModalContext.ts';
+import ScrollToTop from '../components/ScrollToTop.tsx';
 
 interface User {
     _id: string;
@@ -76,8 +77,7 @@ const Posts: React.FC = () => {
     const removePost = async (postId: string) => {
         try {
             setLoading(true);
-            const res = await api.delete(`/api/post/${postId}`);
-            console.log(res);
+            await api.delete(`/api/post/${postId}`);
 
             setPosts((prev) => prev.filter((post) => post._id !== postId));
 
@@ -95,7 +95,6 @@ const Posts: React.FC = () => {
                 setLoading(true);
                 const res = await api.get('/api/post/');
                 setPosts(res.data.posts);
-                console.log(res.data.posts);
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
@@ -119,6 +118,7 @@ const Posts: React.FC = () => {
 
     return (
         <section className="min-h-screen w-full flex flex-col items-center ">
+            <ScrollToTop />
             <div className="w-full grid content-center mb-10">
                 <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center text-(--text-color) font-[cursive]">
                     <h1>Your amazing posts,</h1>
@@ -153,7 +153,7 @@ const Posts: React.FC = () => {
                                     }}
                                     className={`${
                                         activePostId === post._id
-                                            ? 'blur-[3px]'
+                                            ? 'blur-xs'
                                             : ''
                                     } h-fit w-fit relative hover:bg-(--tertiary-color) p-2 flex flex-col border border-(--border-color) rounded-xl bg-(--tertiary-color)`}
                                 >
@@ -180,8 +180,8 @@ const Posts: React.FC = () => {
                                     <div className="h-full">
                                         <div className="h-full w-full sm:aspect-square aspect-4/5">
                                             {!mediaLoaded[post._id] && (
-                                                <div className="absolute inset-0 flex items-center justify-center animate-spin">
-                                                    <SiReactivex />
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <SiReactivex className="h-8 w-8 sm:h-6 sm:w-6 animate-spin" />
                                                 </div>
                                             )}
                                             {post.mediaType === 'video' && (
@@ -217,7 +217,6 @@ const Posts: React.FC = () => {
                                                     className="w-full rounded-lg sm:aspect-square aspect-4/5 object-cover"
                                                 ></img>
                                             )}
-                                            
                                         </div>
 
                                         <div className="text-[0.7rem] text-end text-(--text-color2)">
@@ -263,13 +262,13 @@ const Posts: React.FC = () => {
                                     </div>
                                 </motion.div>
                                 {activePostId === post._id && (
-                                    <div className="h-fit w-fit py-4 flex flex-col border rounded-lg absolute top-3 right-3 z-2 bg-(--tertiary-color)/85 cursor-pointer">
-                                        <div className="h-fit w-full px-12 flex justify-center items-center hover:bg-(--primary-color)">
+                                    <div className="h-fit w-fit sm:px-0 px-3 py-5 flex flex-col border rounded-xl absolute top-3 right-3 z-2 bg-(--tertiary-color) cursor-pointer animate-pulse">
+                                        <div className="h-fit w-full px-15 flex justify-center items-center hover:bg-(--primary-color) active:bg-(--primary-color) text-(--text-color2)  hover:text-(--text-color)">
                                             <span
                                                 onClick={() =>
                                                     removePost(post._id)
                                                 }
-                                                className="text-(--text-color) text-sm leading-8"
+                                                className="text-xl sm:text-lg leading-12 sm:leading-10"
                                             >
                                                 Remove
                                             </span>
@@ -278,9 +277,9 @@ const Posts: React.FC = () => {
                                             onClick={() =>
                                                 setActivePostId(null)
                                             }
-                                            className="absolute top-1 right-1"
+                                            className="h-7 w-7 absolute top-1 right-1 flex justify-center items-center active:bg-(--button-bg-color) hover:bg-(--button-bg-color) rounded-[50%]"
                                         >
-                                            <RxCross1 className="h-3 w-3" />
+                                            <RxCross1 className="h-5 w-5 sm:h-4 sm:w-4" />
                                         </div>
                                     </div>
                                 )}

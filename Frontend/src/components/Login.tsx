@@ -47,14 +47,14 @@ const Login: React.FC = () => {
     };
 
     return (
-        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-3 flex flex-col items-center justify-center bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
+        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-3 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
             <div
                 onClick={() => closeModal()}
                 className="absolute top-5 right-5"
             >
                 <RxCross1 className="h-7 w-7" />
             </div>
-            <div className="h-fit w-full flex justify-center mt-10">
+            <div className="h-fit w-full flex justify-center mt-25">
                 <span className="bg-transparent text-3xl md:text-4xl relative top-6 sm:top-12 font-semibold">
                     <h1>Login</h1>
                 </span>

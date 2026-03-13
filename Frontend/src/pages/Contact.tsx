@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import ContactContainer from '../components/ContactContainer';
 import api from '../api/axios';
 import axios from 'axios';
+import ScrollToTop from '../components/ScrollToTop';
 
 interface FormInputs {
     fullName: string;
@@ -36,9 +37,12 @@ const ContactUs: React.FC = () => {
 
     return (
         <ContactContainer>
-            <form 
-            className='h-fit w-fit '
-            onSubmit={handleSubmit(onSubmit)}>
+            <ScrollToTop />
+
+            <form
+                className="h-fit w-fit "
+                onSubmit={handleSubmit(onSubmit)}
+            >
                 <div className="h-fit w-full mb-8">
                     <h1 className="w-full text-3xl font-semibold mb-2">
                         Contact Us

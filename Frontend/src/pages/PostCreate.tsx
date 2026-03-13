@@ -7,6 +7,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
 import { SiReactivex } from 'react-icons/si';
+import ScrollToTop from '../components/ScrollToTop';
 
 interface FormInputs {
     media: FileList;
@@ -96,6 +97,8 @@ const PostCreate: React.FC = () => {
 
     return (
         <section className="h-fit py-20">
+            <ScrollToTop/>
+            
             <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center mb-15">
                 <h1>Create the post,</h1>
                 <h1>

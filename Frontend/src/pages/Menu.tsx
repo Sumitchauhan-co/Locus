@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Container from '../components/LayoutContainer';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
+import ScrollToTop from '../components/ScrollToTop';
 
 const Menu: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
@@ -17,6 +18,8 @@ const Menu: React.FC = () => {
 
     return (
         <Container>
+            <ScrollToTop/>
+            
             <section className="min-h-screen max-w-screen flex justify-center items-start relative">
                 <div className="absolute right-0">
                     <div className="p-5 grid content-center">

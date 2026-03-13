@@ -5,10 +5,13 @@ import ButtonContainer from '../components/ButtonContainer';
 import { BsEmojiGrin } from 'react-icons/bs';
 import { BsEmojiHeartEyes } from 'react-icons/bs';
 import { BsEmojiSunglasses } from 'react-icons/bs';
+import ScrollToTop from '../components/ScrollToTop';
 
 const Home: React.FC = () => {
     return (
         <section className="min-h-screen relative pt-20 pb-20">
+            <ScrollToTop/>
+
             <div className="w-full grid content-center ">
                 <div className="text-4xl sm:text-5xl flex flex-col px-3 font-[tahoma] text-center">
                     <h1>New way to connect,</h1>
