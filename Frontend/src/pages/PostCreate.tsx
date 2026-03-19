@@ -11,7 +11,7 @@ import ScrollToTop from '../components/ScrollToTop';
 
 interface FormInputs {
     media: FileList;
-    caption: string;
+    caption?: string;
 }
 
 const emojis: string = '🤔😏👽🤖🐥🦋👀🧠🪲🐰🦁😉😎😀🫶✨🎉💎🧸🗿📍☕🍪';
@@ -38,7 +38,7 @@ const PostCreate: React.FC = () => {
 
     const media = watch('media');
 
-    const hasImage = media && media.length > 0;
+    let hasImage = media && media.length > 0;
     const captionValue = watch('caption');
 
     const handleCreatePost = () => {
@@ -56,7 +56,7 @@ const PostCreate: React.FC = () => {
                 formData.append('media', data.media[0]);
             }
 
-            formData.append('caption', data.caption);
+            formData.append('caption', data.caption || '');
 
             try {
                 setLoading(true);
@@ -75,19 +75,15 @@ const PostCreate: React.FC = () => {
     };
 
     const { ref: captionRef, ...captionRegister } = register('caption', {
-        required: {
-            value: true,
-            message: 'Caption is required',
-        },
         maxLength: {
-            value: 125,
-            message: "Caption shouldn't be too long!",
-        },
+            value: 100,
+            message: "Caption is too long!"
+        }
     });
 
     useEffect(() => {
-        if(!user) {
-            openModal('login')
+        if (!user) {
+            openModal('login');
         }
         if (textareaRef.current) {
             textareaRef.current.style.height = 'inherit';
@@ -97,8 +93,8 @@ const PostCreate: React.FC = () => {
 
     return (
         <section className="h-fit py-20">
-            <ScrollToTop/>
-            
+            <ScrollToTop />
+
             <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center mb-15">
                 <h1>Create the post,</h1>
                 <h1>
@@ -115,7 +111,7 @@ const PostCreate: React.FC = () => {
                 className="flex flex-col items-center sm:p-7 p-3"
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-1/3 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-2/5 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-5">
                         <label className="text-2xl text-(--text-color)">
                             <span>Post</span>
@@ -171,6 +167,11 @@ const PostCreate: React.FC = () => {
                             }}
                             whileTap={{
                                 scale: 0.95,
+                            }}
+                            onClick={() => {
+                                if (loading) {
+                                    hasImage = false;
+                                }
                             }}
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} sm:h-10 sm:w-30 h-12 w-36 rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold`}
                         >

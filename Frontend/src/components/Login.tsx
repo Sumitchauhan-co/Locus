@@ -13,6 +13,7 @@ interface FormInputs {
 }
 
 const Login: React.FC = () => {
+    const [error, setError] = useState<string | undefined>(undefined);
     const { loading } = useContext(AuthContext);
     const { openModal } = useContext(ModalContext);
 
@@ -38,7 +39,11 @@ const Login: React.FC = () => {
         };
 
         try {
-            login(payload);
+            const res = await login(payload);
+            if (res?.statusCode == 404 || res?.statusCode == 401) {
+                setError(res.errorMessage || 'Something went wrong');
+                return;
+            }
             reset();
             closeModal();
         } catch (error) {
@@ -63,7 +68,7 @@ const Login: React.FC = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col items-center sm:p-7 p-3"
             >
-                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="w-full flex flex-col gap-3">
                         <label className="w-full text-xl font-semibold">
                             Username or Email
@@ -73,9 +78,17 @@ const Login: React.FC = () => {
                             type="text"
                             placeholder="Enter username or email"
                             {...register('input', {
-                                required: true,
+                                required: {
+                                    value: true,
+                                    message: 'Username or email is required',
+                                },
                             })}
                         />
+                        {errors.password?.message && (
+                            <p className="text-sm text-red-500">
+                                {errors.password.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="w-full flex flex-col gap-3 mb-2">
@@ -88,7 +101,10 @@ const Login: React.FC = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 placeholder="Enter password"
                                 {...register('password', {
-                                    required: true,
+                                    required: {
+                                        value: true,
+                                        message: 'Password is required',
+                                    },
                                     // minLength: {
                                     //     value: 8,
                                     //     message:
@@ -138,6 +154,12 @@ const Login: React.FC = () => {
                             Sign up
                         </span>
                     </div>
+
+                    {error && (
+                        <p className="text-sm text-red-500 text-center">
+                            {error}
+                        </p>
+                    )}
                 </div>
             </form>
         </section>

@@ -19,7 +19,7 @@ function App(): React.ReactNode {
                 <Container>
                     <div className="h-screen w-full flex flex-col justify-center items-center gap-3">
                         <div className="h-10 w-10 flex justify-center items-center animate-spin">
-                            <SiReactivex className="h-8 w-8"></SiReactivex>
+                            <SiReactivex className="h-10 w-10"></SiReactivex>
                         </div>
                         <Loader onFinish={() => setShowApp(true)} />
                     </div>

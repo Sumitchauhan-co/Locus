@@ -14,6 +14,7 @@ interface FormInputs {
 }
 
 const Signup: React.FC = () => {
+    const [error, setError] = useState<string | undefined>(undefined)
     const { loading } = useContext(AuthContext);
     const { signup } = useContext(AuthContext);
     const { closeModal } = useContext(ModalContext);
@@ -29,7 +30,12 @@ const Signup: React.FC = () => {
 
     const onSubmit = async (data: FormInputs) => {
         try {
-            signup(data);
+            const res = await signup(data);
+            if (res?.statusCode == 409) {
+                setError(res.errorMessage || 'Something went wrong');
+                return;
+            }
+
             reset();
             closeModal();
         } catch (error) {
@@ -54,7 +60,7 @@ const Signup: React.FC = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col items-center sm:p-7 p-3"
             >
-                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
+                <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-3">
                         <label className="w-full text-xl font-semibold">
                             Username
@@ -64,9 +70,17 @@ const Signup: React.FC = () => {
                             type="text"
                             placeholder="Enter username"
                             {...register('username', {
-                                required: true,
+                                required: {
+                                    value: true,
+                                    message: 'Username is required',
+                                },
                             })}
                         />
+                        {errors.username?.message && (
+                            <p className="text-sm text-red-500">
+                                {errors.username.message}
+                            </p>
+                        )}
                     </div>
                     <div className="flex flex-col gap-3">
                         <label className="w-full text-xl font-semibold">
@@ -77,7 +91,10 @@ const Signup: React.FC = () => {
                             type="email"
                             placeholder="Enter email"
                             {...register('email', {
-                                required: true,
+                                required: {
+                                    value: true,
+                                    message: 'Email is required',
+                                },
                                 // minLength: {
                                 //     value: 6,
                                 //     message:
@@ -101,8 +118,10 @@ const Signup: React.FC = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 placeholder="Enter password"
                                 {...register('password', {
-                                    required: true,
-                                    // minLength: {
+                                    required: {
+                                        value: true,
+                                        message: 'Password is required',
+                                    }, // minLength: {
                                     //     value: 8,
                                     //     message:
                                     //         'Minimum length should be atleast 8',
@@ -142,6 +161,11 @@ const Signup: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
+                    {error && (
+                        <p className="text-sm text-red-500 text-center">
+                            {error}
+                        </p>
+                    )}
                 </div>
             </form>
         </section>

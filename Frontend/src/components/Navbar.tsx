@@ -48,13 +48,13 @@ const Navbar: React.FC = () => {
                 <SiReactivex className="h-10 w-10" />
             </motion.div>
             <div
-                className={`h-full ${user ? 'w-3/5' : 'w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
+                className={`h-full ${user ? 'lg:w-3/5 w-4/5' : 'w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
             >
                 <motion.div
                     onClick={() => (closeModal(), navigate('/'))}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>Home</span>
                 </motion.div>
@@ -62,15 +62,15 @@ const Navbar: React.FC = () => {
                     onClick={() => (closeModal(), navigate('/about'))}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>About</span>
                 </motion.div>
                 <motion.div
-                    onClick={() => (navigate('/contact'))}
+                    onClick={() => navigate('/contact')}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>Contact</span>
                 </motion.div>
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
                     onClick={() => (closeModal(), navigate('/create-post'))}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>Create</span>
                 </motion.div>
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
                     onClick={() => (closeModal(), navigate('/posts'))}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>Posts</span>
                 </motion.div>
@@ -96,7 +96,7 @@ const Navbar: React.FC = () => {
                             onClick={() => openModal('login')}
                             whileHover={{ scale: 1.125, y: 1 }}
                             whileTap={{ scale: 0.975 }}
-                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                         >
                             <span>Login</span>
                         </motion.div>
@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
                             onClick={() => openModal('signup')}
                             whileHover={{ scale: 1.125, y: 1 }}
                             whileTap={{ scale: 0.975 }}
-                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg lg:text-xl outline-white rounded-lg"
+                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                         >
                             <span>Signup</span>
                         </motion.div>
@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
                             onClick={() => logout()}
                             whileHover={{ scale: 1.125, y: 1 }}
                             whileTap={{ scale: 0.975 }}
-                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl outline-white rounded-lg"
+                            className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                         >
                             <span>Logout</span>
                         </motion.div>

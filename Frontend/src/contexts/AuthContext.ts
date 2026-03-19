@@ -14,21 +14,28 @@ export type Data = {
     password: string;
 }
 
+interface returnObj {
+    statusCode: number | undefined;
+    errorMessage: string | undefined;
+}
+
 interface AuthContextType {
     user: User | null;
     loading: boolean;
+    setLoading: (arg: boolean) => void;
     getUser: () => void;
-    login: (user: Data) => void;
-    signup: (user: Data) => void;
+    login: (user: Data) => Promise<returnObj | undefined>;
+    signup: (user: Data) => Promise<returnObj | undefined>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
     loading: false,
+    setLoading: () => {},
     getUser: () => {},
-    login: () => {},
-    signup: () => {},
+    login: async () => undefined,
+    signup: async () => undefined,
     logout: () => {},
 });
 
