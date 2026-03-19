@@ -113,10 +113,10 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                             } h-fit w-fit relative hover:bg-(--post-bg-color) p-2 flex flex-col border border-(--border-color) rounded-xl bg-(--tertiary-color)`}
                         >
                             <div className="h-fit w-full flex flex-col relative mb-2">
-                                <div className="text-[0.8rem] text-start text-(--text-color2) hover:underline">
+                                <div className="sm:text-sm text-start text-(--text-color2) hover:underline">
                                     {post.user.username}
                                 </div>
-                                <div className=" sm:text-[0.9rem] text-[1rem] text-start">
+                                <div className=" sm:text-[0.925rem] text-[1rem] text-start">
                                     {post.caption}
                                 </div>
                                 <motion.div
@@ -201,8 +201,8 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                             </div>
                         </motion.div>
                         {activePostId === post._id && (
-                            <div className="h-fit w-fit sm:px-0 px-3 py-6 flex flex-col border rounded-xl absolute top-3 right-3 z-2 bg-(--options-color) cursor-pointer">
-                                <div className="h-fit w-full px-15 flex justify-center items-center hover:bg-(--options-div-color) active:bg-(--options-div-color) text-(--text-color2) hover:text-(--text-color)">
+                            <div className="h-fit w-fit py-6 flex flex-col border-(--border-color) rounded-xl absolute top-3 right-3 z-2 bg-(--options-color) cursor-pointer">
+                                <div className="h-fit w-full px-15 flex justify-center items-center hover:bg-(--options-div-color) active:bg-(--options-div-color) sm:text-(--text-color2) sm:hover:text-(--text-color) text-(--text-color)">
                                     <span
                                         onClick={() => removePost(post._id)}
                                         className="text-xl sm:text-lg leading-12 sm:leading-12"
@@ -212,7 +212,7 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                                 </div>
                                 <div
                                     onClick={() => setActivePostId(null)}
-                                    className="h-7 w-7 absolute top-1 right-1 flex justify-center items-center active:bg-(--button-bg-color) hover:bg-(--button-bg-color) rounded-[50%]"
+                                    className="h-8 w-8 sm:h-6 sm:w-6 absolute top-1 right-1 flex justify-center items-center active:bg-(--button-bg-color) hover:bg-(--button-bg-color) rounded-[50%]"
                                 >
                                     <RxCross1 className="h-5 w-5 sm:h-4 sm:w-4" />
                                 </div>
