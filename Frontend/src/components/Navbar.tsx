@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
                 <SiReactivex className="h-10 w-10" />
             </motion.div>
             <div
-                className={`h-full ${user ? 'lg:w-3/5 w-4/5' : 'w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
+                className={`h-full ${user ? 'lg:w-4/7 w-5/7' : 'w-4/5 lg:w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
             >
                 <motion.div
                     onClick={() => (closeModal(), navigate('/'))}

@@ -67,9 +67,9 @@ const ButtonContainer: React.FC = () => {
                     }}
                     className="peer-hover:animate-bounce"
                 >
-                    <SelectedIcon className="lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20" />
+                    <SelectedIcon className="xl:h-20 xl:w-20 lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20" />
                 </motion.div>
-                <div className="text-2xl sm:text-3xl text-center">
+                <div className="text-2xl sm:text-3xl xl:text-4xl text-center">
                     <span>
                         {currentDiceIndex === 5
                             ? (<div className='text-center'>

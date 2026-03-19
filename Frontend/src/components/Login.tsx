@@ -84,9 +84,9 @@ const Login: React.FC = () => {
                                 },
                             })}
                         />
-                        {errors.password?.message && (
+                        {errors.input?.message && (
                             <p className="text-sm text-red-500">
-                                {errors.password.message}
+                                {errors.input.message}
                             </p>
                         )}
                     </div>
