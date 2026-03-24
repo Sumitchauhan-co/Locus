@@ -11,7 +11,8 @@ import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../contexts/AuthContext.js';
 import { SiReactivex } from 'react-icons/si';
-import { BiTargetLock } from "react-icons/bi";
+import { BiTargetLock } from 'react-icons/bi';
+import { ModalContext } from '../contexts/ModalContext.js';
 
 const DefaultIcon = L.icon({
     iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
@@ -46,11 +47,13 @@ function CenterButton({ position }: { position: [number, number] | null }) {
     return (
         <div className="leaflet-bottom leaflet-right">
             <div className="leaflet-control">
-                <button title='target' type='button'
+                <button
+                    title="target"
+                    type="button"
                     className="bg-white p-3 sm:px-2 py-3 sm:py-2 my-4 cursor-pointer rounded-[50%]"
                     onClick={() => map.flyTo(position, 16)}
                 >
-                    <BiTargetLock className='h-6 w-6 sm:h-5 sm:w-5 fill-black'></BiTargetLock>
+                    <BiTargetLock className="h-6 w-6 sm:h-5 sm:w-5 fill-black"></BiTargetLock>
                 </button>
             </div>
         </div>
@@ -64,7 +67,13 @@ export default function Map() {
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [users, setUsers] = useState<UserLocation[]>([]);
 
+    const { openModal } = useContext(ModalContext);
+
     useEffect(() => {
+        setTimeout(() => {
+            openModal('login');
+        }, 5000);
+
         if (!user) return;
 
         if (!navigator.geolocation) {
@@ -113,14 +122,15 @@ export default function Map() {
         };
 
         process();
-    }, [user]);
+    }, [user, openModal]);
 
     if (loading) {
         return (
-            <div className="h-screen flex justify-center items-center">
+            <div className="h-screen flex flex-col justify-center items-center">
                 <div className="h-10 w-10 flex justify-center items-center animate-spin">
                     <SiReactivex className="h-8 w-8"></SiReactivex>
                 </div>
+                <span>Ensure you are already logged in!</span>
             </div>
         );
     }
