@@ -48,7 +48,7 @@ function CenterButton({ position }: { position: [number, number] | null }) {
         <div className="leaflet-bottom leaflet-right">
             <div className="leaflet-control">
                 <button
-                    title="target"
+                    title="current location"
                     type="button"
                     className="bg-white p-3 sm:px-2 py-3 sm:py-2 my-4 cursor-pointer rounded-[50%]"
                     onClick={() => map.flyTo(position, 16)}
@@ -70,11 +70,12 @@ export default function Map() {
     const { openModal } = useContext(ModalContext);
 
     useEffect(() => {
-        setTimeout(() => {
-            openModal('login');
-        }, 5000);
-
-        if (!user) return;
+        if (!user) {
+            setTimeout(() => {
+                openModal('login');
+            }, 3000);
+            return;
+        }
 
         if (!navigator.geolocation) {
             console.log('Geolocation not supported');
@@ -130,7 +131,7 @@ export default function Map() {
                 <div className="h-10 w-10 flex justify-center items-center animate-spin">
                     <SiReactivex className="h-8 w-8"></SiReactivex>
                 </div>
-                <span>Ensure you are already logged in!</span>
+                {!user && <span>Ensure you are already logged in!</span>}
             </div>
         );
     }
