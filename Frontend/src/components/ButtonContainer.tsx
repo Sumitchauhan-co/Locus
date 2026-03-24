@@ -58,7 +58,9 @@ const ButtonContainer: React.FC = () => {
             title="Click on a die"
             className="relative z-2 h-[25vh] grid content-center"
         >
-            <div className="flex flex-col justify-between items-center gap-5 group">
+            <div
+                className="flex flex-col justify-between items-center gap-5 group"
+            >
                 <Button className="font-semibold" />
                 <motion.div
                     onClick={rollDice}
@@ -71,12 +73,18 @@ const ButtonContainer: React.FC = () => {
                 </motion.div>
                 <div className="text-2xl sm:text-3xl xl:text-4xl text-center">
                     <span>
-                        {currentDiceIndex === 5
-                            ? (<div className='text-center'>
-                                <p>You won the <p className='inline text-pink-300'>luck</p>,</p>
+                        {currentDiceIndex === 5 ? (
+                            <div className="text-center">
+                                <p>
+                                    You won the{' '}
+                                    <p className="inline text-pink-300">luck</p>
+                                    ,
+                                </p>
                                 <p>Now create your post!</p>
-                            </div>)
-                            : 'Make your move!'}
+                            </div>
+                        ) : (
+                            'Make your move!'
+                        )}
                     </span>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import Applayout from '../layouts/AppLayout';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
 import Posts from '../pages/Posts';
+import Map from '../pages/Map';
 
 const AppRoute: React.FC = () => {
     return (
@@ -28,6 +29,10 @@ const AppRoute: React.FC = () => {
                 <Route
                     path="/posts"
                     element={<Posts />}
+                ></Route>
+                <Route
+                    path="/map"
+                    element={<Map />}
                 ></Route>
             </Route>
             <Route

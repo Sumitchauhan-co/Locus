@@ -7,57 +7,68 @@ import fs from 'fs';
 
 const createPost = async (req, res) => {
     try {
-        if (!req.file) {
+        const caption = req.body.caption;
+        const file = req.file;
+
+        if (!file && (!caption || caption.trim() === '')) {
             return res.status(400).json({
-                message: 'Media file is required',
+                message: 'Post must have either media or caption',
             });
         }
 
-        let buffer;
+        let mediaURL = null;
+        let mediaType = null;
 
-        if (req.file.mimetype.startsWith('image')) {
-            buffer = await compressImage(req.file);
-        }
+        if (file) {
+            const mime = file.mimetype;
+            let buffer;
 
-        if (req.file.mimetype.startsWith('video')) {
-            const inputPath = `public/temp/${Date.now()}-${req.file.originalname}`;
-            const outputPath = `public/temp/compressed-${Date.now()}.mp4`;
+            if (!mime.startsWith('image') && !mime.startsWith('video')) {
+                return res.status(400).json({
+                    message: 'Only image or video uploads are allowed',
+                });
+            }
 
-            fs.writeFileSync(inputPath, req.file.buffer);
+            if (mime.startsWith('image')) {
+                buffer = await compressImage(file);
+                mediaType = 'image';
+            }
 
-            await compressVideo(inputPath, outputPath);
+            if (mime.startsWith('video')) {
+                const inputPath = `public/temp/${Date.now()}-${file.originalname}`;
+                const outputPath = `public/temp/compressed-${Date.now()}.mp4`;
 
-            buffer = fs.readFileSync(outputPath);
+                fs.writeFileSync(inputPath, file.buffer);
 
-            fs.unlinkSync(inputPath);
-            fs.unlinkSync(outputPath);
-        }
+                await compressVideo(inputPath, outputPath);
 
-        const mime = req.file.mimetype;
+                buffer = fs.readFileSync(outputPath);
 
-        if (!mime.startsWith('image') && !mime.startsWith('video')) {
-            return res.status(400).json({
-                message: 'Only image or video uploads are allowed',
+                fs.unlinkSync(inputPath);
+                fs.unlinkSync(outputPath);
+
+                mediaType = 'video';
+            }
+
+            const result = await uploadFile({
+                buffer,
+                originalname: file.originalname,
             });
-        }
-        const result = await uploadFile({
-            buffer,
-            originalname: req.file.originalname,
-        });
 
-        const mediaType = mime.startsWith('video') ? 'video' : 'image';
+            mediaURL = result.url;
+        }
 
         const post = await postModel.create({
-            mediaURL: result.url,
+            mediaURL,
             mediaType,
-            caption: req.body.caption,
+            caption: caption || '',
             user: req.user,
             likesCount: [],
         });
 
-        res.status(201).json({
-            message: 'post created successfully',
-            post: post,
+        return res.status(201).json({
+            message: 'Post created successfully',
+            post,
         });
     } catch (error) {
         console.log(error);

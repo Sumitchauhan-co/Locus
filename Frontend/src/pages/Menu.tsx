@@ -24,7 +24,7 @@ const Menu: React.FC = () => {
                 <div className="absolute right-0">
                     <div className="p-5 grid content-center">
                         <RxCross1
-                            onClick={() => (closeModal(), navigate('/'))}
+                            onClick={() => (navigate(-1), closeModal())}
                             className="h-7 w-7 opacity-75"
                         />
                     </div>
@@ -37,22 +37,6 @@ const Menu: React.FC = () => {
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>Home</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/about'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>About</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (navigate('/contact'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Contact</span>
                     </motion.div>
                     <motion.div
                         onClick={() => (closeModal(), navigate('/create-post'))}
@@ -70,12 +54,36 @@ const Menu: React.FC = () => {
                     >
                         <span>Posts</span>
                     </motion.div>
+                    <motion.div
+                        onClick={() => (closeModal(), navigate('/map'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
+                        whileTap={{ scale: 0.99 }}
+                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
+                    >
+                        <span>Map</span>
+                    </motion.div>
+                    <motion.div
+                        onClick={() => (navigate('/contact'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
+                    >
+                        <span>Contact</span>
+                    </motion.div>
+                    <motion.div
+                        onClick={() => (closeModal(), navigate('/about'))}
+                        whileHover={{ scale: 1.125, y: 1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
+                    >
+                        <span>About</span>
+                    </motion.div>
                     {!user && (
                         <>
                             <motion.div
                                 onClick={() => (
                                     openModal('login'),
-                                    navigate('/')
+                                    navigate(-1)
                                 )}
                                 whileHover={{ scale: 1.125, y: 1 }}
                                 whileTap={{ scale: 0.99 }}
@@ -86,7 +94,7 @@ const Menu: React.FC = () => {
                             <motion.div
                                 onClick={() => (
                                     openModal('signup'),
-                                    navigate('/')
+                                    navigate(-1)
                                 )}
                                 whileHover={{ scale: 1.125, y: 1 }}
                                 whileTap={{ scale: 0.99 }}

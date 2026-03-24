@@ -10,7 +10,7 @@ import { SiReactivex } from 'react-icons/si';
 import ScrollToTop from '../components/ScrollToTop';
 
 interface FormInputs {
-    media: FileList;
+    media?: FileList;
     caption?: string;
 }
 
@@ -21,6 +21,7 @@ const random: string = [...emojis][
 ];
 
 const PostCreate: React.FC = () => {
+    const [error, setError] = useState<string | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const { openModal } = useContext(ModalContext);
@@ -67,6 +68,9 @@ const PostCreate: React.FC = () => {
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
                     console.log(err.response?.data);
+                    if (err.status == 400) {
+                    setError(err.response?.data.message || 'Something went wrong');
+                }
                 }
             } finally {
                 setLoading(false);
@@ -77,8 +81,8 @@ const PostCreate: React.FC = () => {
     const { ref: captionRef, ...captionRegister } = register('caption', {
         maxLength: {
             value: 100,
-            message: "Caption is too long!"
-        }
+            message: 'Caption is too long!',
+        },
     });
 
     useEffect(() => {
@@ -118,12 +122,7 @@ const PostCreate: React.FC = () => {
                         </label>
                         <div className="flex flex-col justify-center items-center">
                             <input
-                                {...register('media', {
-                                    required: {
-                                        value: true,
-                                        message: 'Media is required',
-                                    },
-                                })}
+                                {...register('media')}
                                 className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
@@ -137,7 +136,7 @@ const PostCreate: React.FC = () => {
 
                     <div className="flex flex-col gap-5">
                         <label className="text-2xl text-(--text-color) transition-all ease-in-out">
-                            <span>Caption</span>
+                            <span>Caption or Message</span>
                         </label>
                         <div className="flex flex-col justify-center items-center">
                             <div className="h-fit w-[90%] border-2 grid content-center rounded-xl border-(--input-ring-color)">
@@ -190,6 +189,11 @@ const PostCreate: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
+                    {error && (
+                        <p className="text-sm text-red-500 text-center">
+                            {error}
+                        </p>
+                    )}
                 </div>
             </form>
         </section>

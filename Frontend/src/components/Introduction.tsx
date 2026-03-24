@@ -3,7 +3,6 @@ import {
     useTransform,
     motion,
     useMotionValueEvent,
-    spring,
 } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 
@@ -40,9 +39,11 @@ const Introduction: React.FC = () => {
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{
-                type: spring,
-                stiffness: 160,
-                damping: 8,
+                type: 'spring',
+                stiffness: 200,
+                damping: 20,
+                mass: 1,
+                delay: 0.2,
             }}
             ref={targetRef}
             viewport={{ once: true, amount: 0.2 }}

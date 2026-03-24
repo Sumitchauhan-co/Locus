@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
     return (
         <motion.nav
             // style={{ top }}
-            className="p-5 sticky top-0 z-99 flex justify-between items-center bg-(--secondary-color)"
+            className="p-5 sticky top-0 z-99999 flex justify-between items-center bg-(--secondary-color)"
         >
             <motion.div
                 style={{ rotate }}
@@ -59,22 +59,6 @@ const Navbar: React.FC = () => {
                     <span>Home</span>
                 </motion.div>
                 <motion.div
-                    onClick={() => (closeModal(), navigate('/about'))}
-                    whileHover={{ scale: 1.125, y: 1 }}
-                    whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
-                >
-                    <span>About</span>
-                </motion.div>
-                <motion.div
-                    onClick={() => navigate('/contact')}
-                    whileHover={{ scale: 1.125, y: 1 }}
-                    whileTap={{ scale: 0.975 }}
-                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
-                >
-                    <span>Contact</span>
-                </motion.div>
-                <motion.div
                     onClick={() => (closeModal(), navigate('/create-post'))}
                     whileHover={{ scale: 1.125, y: 1 }}
                     whileTap={{ scale: 0.975 }}
@@ -89,6 +73,30 @@ const Navbar: React.FC = () => {
                     className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
                 >
                     <span>Posts</span>
+                </motion.div>
+                <motion.div
+                    onClick={() => (closeModal(), navigate('/map'))}
+                    whileHover={{ scale: 1.125, y: 1 }}
+                    whileTap={{ scale: 0.975 }}
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
+                >
+                    <span>Map</span>
+                </motion.div>
+                <motion.div
+                    onClick={() => navigate('/contact')}
+                    whileHover={{ scale: 1.125, y: 1 }}
+                    whileTap={{ scale: 0.975 }}
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
+                >
+                    <span>Contact</span>
+                </motion.div>
+                <motion.div
+                    onClick={() => (closeModal(), navigate('/about'))}
+                    whileHover={{ scale: 1.125, y: 1 }}
+                    whileTap={{ scale: 0.975 }}
+                    className="p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg"
+                >
+                    <span>About</span>
                 </motion.div>
                 {!user && (
                     <>

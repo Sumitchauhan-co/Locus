@@ -9,6 +9,7 @@ import Loader from './components/Loader';
 function App(): React.ReactNode {
     const [showApp, setShowApp] = useState(false);
     const { loading, getUser } = useContext(AuthContext);
+
     useEffect(() => {
         getUser();
     }, []);

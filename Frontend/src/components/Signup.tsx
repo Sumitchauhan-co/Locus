@@ -6,6 +6,7 @@ import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion } from 'motion/react';
 import { SiReactivex } from 'react-icons/si';
+// import { useNavigate } from 'react-router-dom';
 
 interface FormInputs {
     username: string;
@@ -14,11 +15,13 @@ interface FormInputs {
 }
 
 const Signup: React.FC = () => {
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<string | undefined>(undefined);
     const { loading } = useContext(AuthContext);
     const { signup } = useContext(AuthContext);
     const { closeModal } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState(false);
+
+    // const navigate = useNavigate();
 
     const {
         register,
@@ -44,10 +47,10 @@ const Signup: React.FC = () => {
     };
 
     return (
-        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-3 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
+        <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-9999 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
             <div
-                onClick={() => closeModal()}
-                className="absolute top-5 right-5"
+                onClick={() => (closeModal())}
+                className="absolute top-5 right-5 mt-15"
             >
                 <RxCross1 className="h-7 w-7" />
             </div>
@@ -62,7 +65,7 @@ const Signup: React.FC = () => {
             >
                 <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-3">
-                        <label className="w-full text-xl font-semibold">
+                        <label className="w-full text-lg sm:text-xl font-semibold">
                             Username
                         </label>
                         <input
@@ -83,7 +86,7 @@ const Signup: React.FC = () => {
                         )}
                     </div>
                     <div className="flex flex-col gap-3">
-                        <label className="w-full text-xl font-semibold">
+                        <label className="w-full text-lg sm:text-xl font-semibold">
                             Email
                         </label>
                         <input
@@ -109,7 +112,7 @@ const Signup: React.FC = () => {
                         )}
                     </div>
                     <div className="w-full flex flex-col gap-3 mb-2">
-                        <label className="w-full text-xl font-semibold">
+                        <label className="w-full text-lg sm:text-xl font-semibold">
                             Password
                         </label>
                         <div className="w-full relative flex justify-end items-center group">
