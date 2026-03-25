@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import ContactContainer from '../components/ContactContainer';
 import api from '../api/axios';
 import axios from 'axios';
-import ScrollToTop from '../components/ScrollToTop';
+import {ScrollToTop} from '../components/ScrollTo';
 
 interface FormInputs {
     fullName: string;

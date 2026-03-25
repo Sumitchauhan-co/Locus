@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { SiReactivex } from 'react-icons/si';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { TiThMenu } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import { ModalContext } from '../contexts/ModalContext';
@@ -15,8 +15,6 @@ const Navbar: React.FC = () => {
 
     const { scrollYProgress } = useScroll();
 
-    // const top = useTransform(scrollYProgress, [0, 1], ['0px', '0px']);
-
     const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
     // menu
@@ -24,9 +22,8 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <motion.nav
-            // style={{ top }}
-            className="p-5 sticky top-0 z-99999 flex justify-between items-center bg-(--secondary-color)"
+        <nav
+            className="p-5 z-99999 flex justify-between items-center"
         >
             <motion.div
                 style={{ rotate }}
@@ -38,7 +35,7 @@ const Navbar: React.FC = () => {
                     bottom: 0,
                 }}
                 whileDrag={{
-                    rotate: 360,
+                    rotate: -360,
                 }}
                 transition={{
                     duration: 0.8,
@@ -137,7 +134,7 @@ const Navbar: React.FC = () => {
             >
                 <TiThMenu className="h-5 w-5" />
             </div>
-        </motion.nav>
+        </nav>
     );
 };
 

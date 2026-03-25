@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { RxCross1 } from 'react-icons/rx';
 import { useNavigate } from 'react-router-dom';
 import Container from '../components/LayoutContainer';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
-import ScrollToTop from '../components/ScrollToTop';
+import {ScrollToTop} from '../components/ScrollTo';
 
 const Menu: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
@@ -18,8 +18,8 @@ const Menu: React.FC = () => {
 
     return (
         <Container>
-            <ScrollToTop/>
-            
+            <ScrollToTop />
+
             <section className="min-h-screen max-w-screen flex justify-center items-start relative">
                 <div className="absolute right-0">
                     <div className="p-5 grid content-center">
@@ -41,7 +41,7 @@ const Menu: React.FC = () => {
                     <motion.div
                         onClick={() => (closeModal(), navigate('/create-post'))}
                         whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.99 }}
+                        whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>Create</span>
@@ -49,7 +49,7 @@ const Menu: React.FC = () => {
                     <motion.div
                         onClick={() => (closeModal(), navigate('/posts'))}
                         whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.99 }}
+                        whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>Posts</span>
@@ -57,13 +57,13 @@ const Menu: React.FC = () => {
                     <motion.div
                         onClick={() => (closeModal(), navigate('/map'))}
                         whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.99 }}
+                        whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
                     >
                         <span>Map</span>
                     </motion.div>
                     <motion.div
-                        onClick={() => (navigate('/contact'))}
+                        onClick={() => navigate('/contact')}
                         whileHover={{ scale: 1.125, y: 1 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"

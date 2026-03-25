@@ -30,6 +30,7 @@ const AppRoute: React.FC = () => {
                     path="/posts"
                     element={<Posts />}
                 ></Route>
+
                 <Route
                     path="/map"
                     element={<Map />}

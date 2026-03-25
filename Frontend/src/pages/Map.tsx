@@ -5,14 +5,19 @@ import {
     Tooltip,
     useMap,
 } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css';
+import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
+import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../contexts/AuthContext.js';
-import { SiReactivex } from 'react-icons/si';
 import { BiTargetLock } from 'react-icons/bi';
 import { ModalContext } from '../contexts/ModalContext.js';
+import Loading from '../components/Loading.js';
+import axios from 'axios';
 
 const DefaultIcon = L.icon({
     iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
@@ -61,6 +66,8 @@ function CenterButton({ position }: { position: [number, number] | null }) {
 }
 
 export default function Map() {
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [limitReached, setLimitReached] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
 
@@ -104,11 +111,16 @@ export default function Map() {
                             },
                         });
 
-                        console.log('Users:', res.data);
-
                         setUsers(res.data);
                     } catch (err) {
-                        console.error('Error in flow:', err);
+                        if (axios.isAxiosError(err)) {
+                            if (err.response?.status === 429) {
+                                setLimitReached(true);
+                                setErrorMsg(err.response.data.message);
+                            } else {
+                                console.error('Error in flow:', err);
+                            }
+                        }
                     } finally {
                         setLoading(false);
                     }
@@ -125,14 +137,25 @@ export default function Map() {
         process();
     }, [user, openModal]);
 
+    if (limitReached) {
+        return (
+            <div className="h-screen w-full flex justify-center items-center">
+                <span className="text-red-500">{errorMsg}</span>
+            </div>
+        );
+    }
+
     if (loading) {
         return (
-            <div className="h-screen flex flex-col justify-center items-center">
-                <div className="h-10 w-10 flex justify-center items-center animate-spin">
-                    <SiReactivex className="h-8 w-8"></SiReactivex>
-                </div>
-                {!user && <span>Ensure you are already logged in!</span>}
-            </div>
+            <>
+                <Loading>
+                    {!user && (
+                        <span className="text-yellow-500">
+                            Ensure you are already logged in!
+                        </span>
+                    )}
+                </Loading>
+            </>
         );
     }
 

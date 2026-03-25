@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import {
     GiPerspectiveDiceSixFacesRandom,
@@ -14,6 +14,8 @@ import {} from 'react-icons/gi';
 import Button from './Button';
 
 const ButtonContainer: React.FC = () => {
+    const [lucky, setLucky] = useState(false);
+
     const diceIcons = [
         GiPerspectiveDiceSixFacesOne,
         GiPerspectiveDiceSixFacesTwo,
@@ -30,7 +32,9 @@ const ButtonContainer: React.FC = () => {
     const rollDice = () => {
         const randomIndex = Math.floor(Math.random() * diceIcons.length);
         setCurrentDiceIndex(randomIndex);
+        setLucky(false)
         if (randomIndex === 5) {
+            setLucky(true)
             confetti({
                 particleCount: 150,
                 spread: 70,
@@ -58,9 +62,7 @@ const ButtonContainer: React.FC = () => {
             title="Click on a die"
             className="relative z-2 h-[25vh] grid content-center"
         >
-            <div
-                className="flex flex-col justify-between items-center gap-5 group"
-            >
+            <div className="flex flex-col justify-between items-center gap-5 group">
                 <Button className="font-semibold" />
                 <motion.div
                     onClick={rollDice}
@@ -69,7 +71,7 @@ const ButtonContainer: React.FC = () => {
                     }}
                     className="peer-hover:animate-bounce"
                 >
-                    <SelectedIcon className="xl:h-20 xl:w-20 lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20" />
+                    <SelectedIcon className={`${lucky ? "fill-pink-300" : "fill-white"} xl:h-20 xl:w-20 lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20`} />
                 </motion.div>
                 <div className="text-2xl sm:text-3xl xl:text-4xl text-center">
                     <span>

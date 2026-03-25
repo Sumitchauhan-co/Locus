@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import api from '../api/axios';
 import axios from 'axios';
-import ScrollToTop from '../components/ScrollToTop.tsx';
-import { SiReactivex } from 'react-icons/si';
+import {ScrollToTop} from '../components/ScrollTo.tsx';
 import PostsFeed from '../components/PostsFeed.tsx';
 import type { Post } from '../types/Posts.ts';
+import Loading from '../components/Loading.tsx';
 
 const Posts: React.FC = () => {
     const [posts, setPosts] = useState<Array<Post>>([]);
@@ -29,27 +29,21 @@ const Posts: React.FC = () => {
     }, []);
 
     if (loading) {
-        return (
-            <div className="h-screen flex justify-center items-center">
-                <div className="h-10 w-10 flex justify-center items-center animate-spin">
-                    <SiReactivex className="h-8 w-8"></SiReactivex>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     return (
         <section className="min-h-screen w-full flex flex-col items-center ">
             <ScrollToTop />
             <div className="w-full grid content-center mb-10">
-                <div className="text-4xl sm:text-5xl flex flex-col p-3 text-center text-(--text-color) font-[cursive]">
+                <div className="text-4xl sm:text-5xl flex flex-col p-3 text-center text-(--text-color)">
                     <h1>Your amazing posts,</h1>
                     <h1>for everyone!</h1>
                 </div>
             </div>
 
             <div className="h-fit w-full py-2 sm:py-10 text-center sm:m-0 mb-10">
-                <h2 className="text-pink-500 text-4xl sm:text-5xl font-semibold">
+                <h2 className="text-pink-500 text-4xl sm:text-5xl tracking-[0.2rem]">
                     Posts
                 </h2>
             </div>

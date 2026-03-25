@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
-import { SiReactivex } from 'react-icons/si';
-import ScrollToTop from '../components/ScrollToTop';
+import {ScrollToTop} from '../components/ScrollTo';
+import Loading from '../components/Loading';
 
 interface FormInputs {
     media?: FileList;
@@ -67,10 +67,12 @@ const PostCreate: React.FC = () => {
                 navigate('/posts');
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
-                    console.log(err.response?.data);
                     if (err.status == 400) {
-                    setError(err.response?.data.message || 'Something went wrong');
-                }
+                        setError(
+                            err.response?.data.message ||
+                                'Something went wrong',
+                        );
+                    }
                 }
             } finally {
                 setLoading(false);
@@ -106,8 +108,8 @@ const PostCreate: React.FC = () => {
                     see!
                 </h1>
             </div>
-            <div className="h-fit w-full flex justify-center">
-                <span className="bg-(--primary-color) rounded-lg text-(--text-color) text-4xl md:text-5xl relative top-12 font-semibold">
+            <div className="h-fit w-full flex justify-center relative bottom-5">
+                <span className="bg-transparent text-(--text-color) text-4xl md:text-5xl relative top-12 tracking-[0.1rem] font-semibold">
                     <h1>Create</h1>
                 </span>
             </div>
@@ -175,11 +177,7 @@ const PostCreate: React.FC = () => {
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} sm:h-10 sm:w-30 h-12 w-36 rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold`}
                         >
                             {loading ? (
-                                <div className="h-full w-full flex justify-center items-center">
-                                    <div className="h-fit w-fit animate-spin">
-                                        <SiReactivex className="h-5 w-5"></SiReactivex>
-                                    </div>
-                                </div>
+                                <Loading />
                             ) : (
                                 <>
                                     <span className="sm:text-[1rem] text-lg">

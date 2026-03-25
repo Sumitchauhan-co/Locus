@@ -8,10 +8,16 @@ import ModalManager from './ModalManager';
 const Applayout: React.FC = () => {
     return (
         <Container>
-            <Navbar />
-            <Outlet />
-            <ModalManager />
-            <Footer />
+            <header className='sticky z-1 top-0 bg-(--secondary-color)/50 backdrop-blur-lg'>
+                <Navbar />
+            </header>
+            <main id='main-content'>
+                <Outlet />
+                <ModalManager />
+            </main>
+            <footer>
+                <Footer />
+            </footer>
         </Container>
     );
 };

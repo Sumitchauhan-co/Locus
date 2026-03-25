@@ -24,7 +24,6 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
             if (axios.isAxiosError(error)) {
                 const statusCode = error.response?.status;
                 const errorMessage = error.response?.data?.message;
-                // console.log(error.response?.status);
                 return { statusCode, errorMessage };
             }
         }
@@ -34,7 +33,6 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
         try {
             await api.post('/api/auth/login', data);
             const res = await api.get('/api/auth/user');
-            console.log(res);
 
             setUser(res.data.user);
             return { statusCode: res.status, errorMessage: undefined };
@@ -42,7 +40,6 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
             if (axios.isAxiosError(error)) {
                 const statusCode = error.response?.status;
                 const errorMessage = error.response?.data?.message;
-                // console.log(error.response?.status);
                 return { statusCode, errorMessage };
             }
         }

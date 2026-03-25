@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaArrowAltCircleUp, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
-import { motion } from 'motion/react';
-import { SiReactivex } from 'react-icons/si';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import Loading from './Loading';
 // import { useNavigate } from 'react-router-dom';
 
 interface FormInputs {
@@ -21,6 +21,14 @@ const Signup: React.FC = () => {
     const { closeModal } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState(false);
 
+    const targetRef = useRef<HTMLDivElement | null>(null);
+
+    const { scrollYProgress } = useScroll({
+        target: targetRef,
+        offset: ['start end', 'end start'],
+    });
+    const opacity = useTransform(scrollYProgress, [0, 0.75], [0, 1]);
+
     // const navigate = useNavigate();
 
     const {
@@ -30,6 +38,14 @@ const Signup: React.FC = () => {
         reset,
         formState: { errors },
     } = useForm<FormInputs>();
+
+    const scrollTop = () => {
+        window.scrollTo({
+            left: 0,
+            top: 125,
+            behavior: 'smooth',
+        });
+    };
 
     const onSubmit = async (data: FormInputs) => {
         try {
@@ -49,7 +65,7 @@ const Signup: React.FC = () => {
     return (
         <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-9999 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
             <div
-                onClick={() => (closeModal())}
+                onClick={() => closeModal()}
                 className="absolute top-5 right-5 mt-15"
             >
                 <RxCross1 className="h-7 w-7" />
@@ -152,11 +168,7 @@ const Signup: React.FC = () => {
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center`}
                         >
                             {loading ? (
-                                <div className="h-full w-full flex justify-center items-center cursor-not-allowed">
-                                    <div className="h-fit w-fit animate-spin">
-                                        <SiReactivex className="h-5 w-5"></SiReactivex>
-                                    </div>
-                                </div>
+                                <Loading />
                             ) : (
                                 <>
                                     <span>Sign up</span>
@@ -171,6 +183,16 @@ const Signup: React.FC = () => {
                     )}
                 </div>
             </form>
+            <motion.div
+                onClick={scrollTop}
+                style={{ opacity }}
+                className="w-full sticky mt-auto pb-25 bottom-0 cursor-pointer flex flex-col justify-center items-center sm:text-lg text-[1rem] gap-2"
+            >
+                <span>Scroll Up</span>
+                <div className="h-10 w-10 flex justify-center items-center">
+                    <FaArrowAltCircleUp className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></FaArrowAltCircleUp>
+                </div>
+            </motion.div>
         </section>
     );
 };

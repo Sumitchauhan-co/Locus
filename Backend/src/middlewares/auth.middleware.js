@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import authModel from '../models/auth.model.js';
 
-const authMiddleware = async (req, res, next) => {
+export const authMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies.token;
 
@@ -20,5 +20,3 @@ const authMiddleware = async (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 };
-
-export { authMiddleware };

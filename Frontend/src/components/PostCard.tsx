@@ -26,7 +26,7 @@ const PostCard: React.FC<PostCardProps> = ({
     onRemove,
     onToggleOptions,
     currentUserId,
-    isAdmin
+    isAdmin,
 }) => {
     const [loaded, setLoaded] = useState(false);
     const isLiked = post.likesCount.includes(currentUserId ?? '');
@@ -108,12 +108,13 @@ const PostCard: React.FC<PostCardProps> = ({
             {/* Options Dropdown */}
             {isActive && (
                 <div className="min-w-30 sm:min-w-25 absolute top-2 right-2 z-10 bg-(--options-color) rounded-xl border border-(--border-color) shadow-xl overflow-hidden">
-                    <button title='remove'
+                    <button
+                        title="remove"
                         type="button"
                         onClick={() => onRemove(post._id)}
                         className="w-full flex justify-center items-center py-1 my-4 hover:bg-(--options-div-color) transition-colors text-sm font-medium"
                     >
-                        <ImBin className='fill-red-500 h-5 w-5 sm:h-4 sm:w-4'></ImBin>
+                        <ImBin className="fill-red-500 h-5 w-5 sm:h-4 sm:w-4"></ImBin>
                     </button>
                     <button
                         title="cancel"
