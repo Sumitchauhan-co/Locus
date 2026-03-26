@@ -107,22 +107,22 @@ const PostCard: React.FC<PostCardProps> = ({
 
             {/* Options Dropdown */}
             {isActive && (
-                <div className="min-w-30 sm:min-w-25 absolute top-2 right-2 z-10 bg-(--options-color) rounded-xl border border-(--border-color) shadow-xl overflow-hidden">
+                <div className="min-w-45 sm:min-w-35 absolute top-2 right-2 z-10 bg-(--options-color) rounded-xl border border-(--border-color) shadow-xl overflow-hidden">
                     <button
                         title="remove"
                         type="button"
                         onClick={() => onRemove(post._id)}
-                        className="w-full flex justify-center items-center py-1 my-4 hover:bg-(--options-div-color) transition-colors text-sm font-medium"
+                        className="w-full flex justify-center items-center py-3 my-5 sm:my-4 hover:bg-(--options-div-color) transition-colors text-sm font-medium"
                     >
-                        <ImBin className="fill-red-500 h-5 w-5 sm:h-4 sm:w-4"></ImBin>
+                        <ImBin className="fill-red-500 h-7 w-7 sm:h-5 sm:w-5"></ImBin>
                     </button>
                     <button
                         title="cancel"
                         type="button"
                         onClick={() => onToggleOptions(null)}
-                        className="absolute top-1 right-1 p-1 hover:bg-white/10 rounded-full"
+                        className="absolute top-1 right-1 p-2 hover:bg-white/10 rounded-full"
                     >
-                        <RxCross1 className="h-4 w-4 sm:h-3 sm:w-3" />
+                        <RxCross1 className="h-6 w-6 sm:h-4 sm:w-4" />
                     </button>
                 </div>
             )}

@@ -138,10 +138,23 @@ const removePost = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.status(400).json({ message: 'Invalid Post ID format' });
         }
-        const deletedPost = await postModel.findOneAndDelete({
+
+        const isAdmin = req.user.email === 'one@one.com';
+
+        let deletedPost;
+
+        let deletedPostFromAdmin;
+
+        if (isAdmin) {
+            deletedPostFromAdmin = await postModel.findOneAndDelete({
+                _id: postId,
+            });
+        } else {
+            deletedPost = await postModel.findOneAndDelete({
             _id: postId,
             user: req.user._id,
         });
+        }
 
         if (!deletedPost) {
             const postExists = await postModel.findById(postId);
@@ -154,7 +167,7 @@ const removePost = async (req, res) => {
 
         res.status(200).json({
             message: 'Successfully deleted the post',
-            post: deletedPost,
+            post: deletedPost || deletedPostFromAdmin,
         });
     } catch (error) {
         console.log(error);
