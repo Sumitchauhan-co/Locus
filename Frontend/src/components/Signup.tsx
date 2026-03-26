@@ -42,7 +42,7 @@ const Signup: React.FC = () => {
     const scrollTop = () => {
         window.scrollTo({
             left: 0,
-            top: 125,
+            top: 0,
             behavior: 'smooth',
         });
     };
@@ -186,7 +186,7 @@ const Signup: React.FC = () => {
             <motion.div
                 onClick={scrollTop}
                 style={{ opacity }}
-                className="w-full sticky mt-auto pb-25 bottom-0 cursor-pointer flex flex-col justify-center items-center sm:text-lg text-[1rem] gap-2"
+                className="w-full sticky mt-auto pb-40 md:pb-30 bottom-0 cursor-pointer flex flex-col justify-center items-center sm:text-lg text-[1rem] gap-2"
             >
                 <span>Scroll Up</span>
                 <div className="h-10 w-10 flex justify-center items-center">
