@@ -20,7 +20,7 @@ export default function Loader({ onFinish }: { onFinish: () => void }) {
             opacity: [0, 1],
             y: [10, -10],
             transition: {
-                duration: 1.5,
+                duration: 2,
                 times: [0, 0.2, 1],
                 ease: 'easeInOut',
             },

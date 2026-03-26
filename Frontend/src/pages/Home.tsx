@@ -30,19 +30,19 @@ const Home: React.FC = () => {
                     <h1> make friends!</h1>
                     <div className="relative">
                         <div className="absolute top-0 left-75">
-                            <BsEmojiGrin className="hidden sm:flex h-5 w-5" />
+                            <BsEmojiGrin className="flex h-5 w-5" />
                         </div>
-                        <div className="absolute -top-27 left-85">
-                            <BsEmojiHeartEyes className="hidden sm:flex h-5 w-5" />
+                        <div className="absolute -top-25 left-85">
+                            <BsEmojiHeartEyes className="flex h-5 w-5" />
                         </div>
-                        <div className="absolute -top-12 right-75">
-                            <BsEmojiSunglasses className="hidden sm:flex h-5 w-5" />
+                        <div className="absolute -top-10 right-75">
+                            <BsEmojiSunglasses className="flex h-5 w-5" />
                         </div>
                     </div>
                 </div>
             </div>
             <div className="w-full flex justify-center text-6xl sm:text-7xl my-15 font-sans">
-                <h1 className="tracking-[0.2rem] sm:tracking-[0.3rem] text-pink-500">
+                <h1 className="tracking-[0.2rem] sm:tracking-[0.3rem] font-[cursive] text-pink-500">
                     LOCUS
                 </h1>
             </div>
@@ -53,7 +53,7 @@ const Home: React.FC = () => {
             <motion.div
                 onClick={ScrollToBottom}
                 style={{ opacity }}
-                className="w-full cursor-pointer sticky flex flex-col justify-center items-center bottom-0 sm:text-lg text-[1rem] gap-2"
+                className="w-full pb-10 cursor-pointer sticky flex flex-col justify-center items-center bottom-0 sm:text-lg text-[1rem] gap-2"
             >
                 <span>Scroll down</span>
                 <div className="h-10 w-10 flex justify-center items-center">
