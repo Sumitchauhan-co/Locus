@@ -132,7 +132,7 @@ const Navbar: React.FC = () => {
                 onClick={() => navigate('/menu')}
                 className="md:hidden flex"
             >
-                <TiThMenu className="h-5 w-5" />
+                <TiThMenu className="h-7 w-7" />
             </div>
         </nav>
     );
