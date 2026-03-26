@@ -10,7 +10,7 @@ export const locationLimiter = rateLimit({
     handler: (_, res) => {
         res.status(429).json({
             errorMessage:
-                "You've reached your daily limit, please try again later!.",
+                "You've reached your daily limit, please try again later!",
         });
     },
 });

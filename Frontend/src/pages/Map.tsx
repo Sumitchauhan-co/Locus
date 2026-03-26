@@ -15,7 +15,6 @@ import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../contexts/AuthContext.js';
 import { BiTargetLock } from 'react-icons/bi';
-import { ModalContext } from '../contexts/ModalContext.js';
 import Loading from '../components/Loading.js';
 import axios from 'axios';
 
@@ -74,13 +73,8 @@ export default function Map() {
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [users, setUsers] = useState<UserLocation[]>([]);
 
-    const { openModal } = useContext(ModalContext);
-
     useEffect(() => {
         if (!user) {
-            setTimeout(() => {
-                openModal('login');
-            }, 3000);
             return;
         }
 
@@ -89,49 +83,53 @@ export default function Map() {
             return;
         }
 
-        const handleSuccess = async (pos: GeolocationPosition) => {
-            const { latitude, longitude } = pos.coords;
-            console.log('Updated Location:', latitude, longitude);
+        const process = async () => {
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const { latitude, longitude } = pos.coords;
 
-            try {
-                await api.post('/api/location/update', {
-                    lat: latitude,
-                    lng: longitude,
-                });
+                    console.log('Location:', latitude, longitude);
 
-                setPosition([latitude, longitude]);
+                    try {
+                        await api.post('/api/location/update', {
+                            lat: latitude,
+                            lng: longitude,
+                        });
 
-                const res = await api.get('/api/location/nearby', {
-                    params: { lat: latitude, lng: longitude },
-                });
-                setUsers(res.data);
-            } catch (err) {
-                if (axios.isAxiosError(err) && err.response?.status === 429) {
-                    setLimitReached(true);
-                    setErrorMsg(err.response.data.message);
-                }
-            } finally {
-                setLoading(false);
-            }
+                        setPosition([latitude, longitude]);
+
+                        const res = await api.get('/api/location/nearby', {
+                            params: {
+                                lat: latitude,
+                                lng: longitude,
+                            },
+                        });
+
+                        setUsers(res.data);
+                    } catch (err) {
+                        if (axios.isAxiosError(err)) {
+                            if (err.response?.status === 429) {
+                                setLimitReached(true);
+                                setErrorMsg(err.response.data.errorMessage);
+                            } else {
+                                console.error('Error in flow:', err);
+                            }
+                        }
+                    } finally {
+                        setLoading(false);
+                    }
+                },
+                (err) => {
+                    console.error('Error getting location:', err);
+                },
+                {
+                    enableHighAccuracy: true,
+                },
+            );
         };
 
-        const handleError = (err: GeolocationPositionError) => {
-            console.error('Error getting location:', err);
-            setLoading(false);
-        };
-
-        const watchId = navigator.geolocation.watchPosition(
-            handleSuccess,
-            handleError,
-            {
-                enableHighAccuracy: true,
-                maximumAge: 0,
-                timeout: 5000,
-            },
-        );
-
-        return () => navigator.geolocation.clearWatch(watchId);
-    }, [user, openModal]);
+        process();
+    }, [user]);
 
     if (limitReached) {
         return (
