@@ -89,52 +89,48 @@ export default function Map() {
             return;
         }
 
-        const process = async () => {
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const { latitude, longitude } = pos.coords;
+        const handleSuccess = async (pos: GeolocationPosition) => {
+            const { latitude, longitude } = pos.coords;
+            console.log('Updated Location:', latitude, longitude);
 
-                    console.log('Location:', latitude, longitude);
+            try {
+                await api.post('/api/location/update', {
+                    lat: latitude,
+                    lng: longitude,
+                });
 
-                    try {
-                        await api.post('/api/location/update', {
-                            lat: latitude,
-                            lng: longitude,
-                        });
+                setPosition([latitude, longitude]);
 
-                        setPosition([latitude, longitude]);
-
-                        const res = await api.get('/api/location/nearby', {
-                            params: {
-                                lat: latitude,
-                                lng: longitude,
-                            },
-                        });
-
-                        setUsers(res.data);
-                    } catch (err) {
-                        if (axios.isAxiosError(err)) {
-                            if (err.response?.status === 429) {
-                                setLimitReached(true);
-                                setErrorMsg(err.response.data.message);
-                            } else {
-                                console.error('Error in flow:', err);
-                            }
-                        }
-                    } finally {
-                        setLoading(false);
-                    }
-                },
-                (err) => {
-                    console.error('Error getting location:', err);
-                },
-                {
-                    enableHighAccuracy: true,
-                },
-            );
+                const res = await api.get('/api/location/nearby', {
+                    params: { lat: latitude, lng: longitude },
+                });
+                setUsers(res.data);
+            } catch (err) {
+                if (axios.isAxiosError(err) && err.response?.status === 429) {
+                    setLimitReached(true);
+                    setErrorMsg(err.response.data.message);
+                }
+            } finally {
+                setLoading(false);
+            }
         };
 
-        process();
+        const handleError = (err: GeolocationPositionError) => {
+            console.error('Error getting location:', err);
+            setLoading(false);
+        };
+
+        const watchId = navigator.geolocation.watchPosition(
+            handleSuccess,
+            handleError,
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000,
+            },
+        );
+
+        return () => navigator.geolocation.clearWatch(watchId);
     }, [user, openModal]);
 
     if (limitReached) {
