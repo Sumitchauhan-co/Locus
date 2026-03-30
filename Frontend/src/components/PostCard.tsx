@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({
             >
                 <div className="flex flex-col relative mb-2">
                     <span className="sm:text-sm text-(--text-color2) hover:underline cursor-pointer">
-                        {post.user.username}
+                        {post.user?.username}
                     </span>
                     <p className="sm:text-[0.925rem] text-[1rem]">
                         {post.caption}

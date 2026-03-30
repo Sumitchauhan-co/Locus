@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
-import {ScrollToTop} from '../components/ScrollTo';
+import { ScrollToTop } from '../components/ScrollTo';
 import Loading2 from '../components/Loading2';
 
 interface FormInputs {
@@ -151,6 +151,7 @@ const PostCreate: React.FC = () => {
                                         textareaRef.current = e;
                                     }}
                                     rows={1}
+                                    maxLength={101}
                                 />
                             </div>
                             {errors.caption?.message && (
@@ -187,8 +188,13 @@ const PostCreate: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
+                    <div className="text-yellow-500 text-center">
+                        <p>
+                            <p className='font-bold inline'>Note</p> : Create post with media & caption or just message or only with media
+                        </p>
+                    </div>
                     {error && (
-                        <p className="text-sm text-red-500 text-center">
+                        <p className="text-red-500 text-center">
                             {error}
                         </p>
                     )}

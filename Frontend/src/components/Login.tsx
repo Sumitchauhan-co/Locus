@@ -6,7 +6,6 @@ import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Loading from './Loading';
-// import { useNavigate } from 'react-router-dom';
 
 interface FormInputs {
     input: string;
@@ -29,8 +28,6 @@ const Login: React.FC = () => {
         offset: ['start end', 'end start'],
     });
     const opacity = useTransform(scrollYProgress, [0, 0.75], [0, 1]);
-
-    // const navigate = useNavigate();
 
     const {
         register,
@@ -124,11 +121,11 @@ const Login: React.FC = () => {
                                         value: true,
                                         message: 'Password is required',
                                     },
-                                    // minLength: {
-                                    //     value: 8,
-                                    //     message:
-                                    //         'Minimum length should be atleast 8',
-                                    // },
+                                    minLength: {
+                                        value: 8,
+                                        message:
+                                            'Minimum length should be atleast 8',
+                                    },
                                 })}
                             />
                             <span
@@ -160,11 +157,11 @@ const Login: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
-                    <div className="w-full flex justify-center text-sm sm:text-[1rem] gap-2">
+                    <div className="w-full flex justify-center items-center text-sm sm:text-[1rem] gap-2">
                         <p>Don't have an account?</p>
                         <span
                             onClick={() => openModal('signup')}
-                            className="cursor-pointer active:underline sm:hover:underline hover:text-(--text-color2)"
+                            className="cursor-pointer active:underline sm:hover:underline text-lg hover:text-(--text-color2) font-semibold"
                         >
                             Sign up
                         </span>

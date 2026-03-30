@@ -1,20 +1,40 @@
 import React, { useContext } from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { RxCross1 } from 'react-icons/rx';
 import { useNavigate } from 'react-router-dom';
 import Container from '../components/LayoutContainer';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
-import {ScrollToTop} from '../components/ScrollTo';
+import { ScrollToTop } from '../components/ScrollTo';
+
+const linkVariants: Variants = {
+    hover: { scale: 1.125, y: 1 },
+    tap: { scale: 0.975 }
+};
 
 const Menu: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
 
-    // menu
-
     const navigate = useNavigate();
 
     const { openModal, closeModal } = useContext(ModalContext);
+
+    const baseLinks = [
+        { label: 'Home', path: '/' },
+        { label: 'Create', path: '/create-post' },
+        { label: 'Posts', path: '/posts' },
+        { label: 'Map', path: '/map' },
+        { label: 'Contact', path: '/contact' },
+        { label: 'About', path: '/about' },
+    ];
+
+    const linkStyle =
+        'w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg';
+
+    const handleNavigation = (path: string) => {
+        closeModal();
+        navigate(path);
+    };
 
     return (
         <Container>
@@ -30,54 +50,18 @@ const Menu: React.FC = () => {
                     </div>
                 </div>
                 <div className="w-full p-5 pt-25 flex flex-col items-start gap-5 text-center">
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Home</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/create-post'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Create</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/posts'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Posts</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/map'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Map</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => navigate('/contact')}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>Contact</span>
-                    </motion.div>
-                    <motion.div
-                        onClick={() => (closeModal(), navigate('/about'))}
-                        whileHover={{ scale: 1.125, y: 1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full p-1 px-3 leading-relaxed font-sans md:text-4xl text-3xl text-start outline-white rounded-lg"
-                    >
-                        <span>About</span>
-                    </motion.div>
+                    {baseLinks.map((link) => (
+                        <motion.div
+                            key={link.path}
+                            variants={linkVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                            onClick={() => handleNavigation(link.path)}
+                            className={linkStyle}
+                        >
+                            <span>{link.label}</span>
+                        </motion.div>
+                    ))}
                     {!user && (
                         <>
                             <motion.div

@@ -140,7 +140,7 @@ const removePost = async (req, res) => {
             return res.status(400).json({ message: 'Invalid Post ID format' });
         }
 
-        const isAdmin = req.user.email === 'one@one.com';
+        const isAdmin = req.user.email === 'chauhan.sumit3012@gmail.com';
 
         let deletedPost;
 
@@ -257,7 +257,7 @@ export const deleteComment = async (req, res) => {
 
         // 3. Authorization
         const isCommentOwner = comment.userId.toString() === userId.toString();
-        const isAdmin = userEmail === 'one@one.com';
+        const isAdmin = userEmail === 'chauhan.sumit3012@gmail.com';
 
         if (!isCommentOwner && !isAdmin) {
             return res

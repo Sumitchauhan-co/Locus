@@ -17,7 +17,7 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
     const [activePostId, setActivePostId] = useState<string | null>(null);
     const { user, setLoading } = useContext(AuthContext);
 
-    const isAdmin = user?.email === 'one@one.com';
+    const isAdmin = user?.email === 'chauhan.sumit3012@gmail.com';
 
     const handleLike = async (postId: string) => {
         if (!user) {
@@ -78,7 +78,7 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                         <PostCard
                             key={post._id}
                             post={post}
-                            isOwner={user?._id === post.user._id}
+                            isOwner={user?._id === post.user?._id}
                             isActive={activePostId === post._id}
                             onLike={handleLike}
                             onRemove={removePost}

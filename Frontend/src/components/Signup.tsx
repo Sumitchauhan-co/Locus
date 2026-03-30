@@ -6,7 +6,6 @@ import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Loading from './Loading';
-// import { useNavigate } from 'react-router-dom';
 
 interface FormInputs {
     username: string;
@@ -21,6 +20,8 @@ const Signup: React.FC = () => {
     const { closeModal } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState(false);
 
+    const [username, setUsername] = useState('')
+
     const targetRef = useRef<HTMLDivElement | null>(null);
 
     const { scrollYProgress } = useScroll({
@@ -28,8 +29,6 @@ const Signup: React.FC = () => {
         offset: ['start end', 'end start'],
     });
     const opacity = useTransform(scrollYProgress, [0, 0.75], [0, 1]);
-
-    // const navigate = useNavigate();
 
     const {
         register,
@@ -94,7 +93,12 @@ const Signup: React.FC = () => {
                                     message: 'Username is required',
                                 },
                             })}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
+                        <div className="text-start text-yellow-500">
+                            <p>{username.split(/\s+/).join("_")}</p>
+                        </div>
                         {errors.username?.message && (
                             <p className="text-sm text-red-500">
                                 {errors.username.message}
@@ -114,11 +118,11 @@ const Signup: React.FC = () => {
                                     value: true,
                                     message: 'Email is required',
                                 },
-                                // minLength: {
-                                //     value: 6,
-                                //     message:
-                                //         'Minimum length should be atleast 6',
-                                // },
+                                minLength: {
+                                    value: 6,
+                                    message:
+                                        'Minimum length should be atleast 6',
+                                },
                             })}
                         />
                         {errors.email?.message && (
@@ -140,11 +144,12 @@ const Signup: React.FC = () => {
                                     required: {
                                         value: true,
                                         message: 'Password is required',
-                                    }, // minLength: {
-                                    //     value: 8,
-                                    //     message:
-                                    //         'Minimum length should be atleast 8',
-                                    // },
+                                    },
+                                    minLength: {
+                                        value: 8,
+                                        message:
+                                            'Minimum length should be atleast 8',
+                                    },
                                 })}
                             />
                             <span

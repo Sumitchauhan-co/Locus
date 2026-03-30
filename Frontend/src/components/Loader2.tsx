@@ -85,7 +85,7 @@ export default function Loader2({ onFinish }: { onFinish: () => void }) {
                             initial={{ y: '-10vh', opacity: 0 }}
                             animate={{ y: '110vh', opacity: 1 }}
                             exit={{ 
-                                scale: 3, 
+                                scale: 1.5, 
                                 opacity: 0, 
                                 filter: 'brightness(5) blur(15px)',
                                 transition: { duration: 0.3 } 
@@ -111,7 +111,7 @@ export default function Loader2({ onFinish }: { onFinish: () => void }) {
                                     backgroundColor: ball.isPopped ? '#db2777' : 'rgba(219, 39, 119, 0.05)',
                                     borderColor: ball.isPopped ? '#fbcfe8' : 'rgba(236, 72, 153, 0.5)',
                                     boxShadow: ball.isPopped 
-                                        ? '0 0 50px 15px rgba(236, 72, 153, 1)' 
+                                        ? '0 0 36px 12px rgba(236, 72, 153, 1)' 
                                         : '0 0 15px 2px rgba(236, 72, 153, 0.2)',
                                     scale: ball.isPopped ? 1.5 : 1
                                 }}
