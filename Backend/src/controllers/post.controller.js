@@ -4,6 +4,7 @@ import uploadFile from '../services/storage.services.js';
 import compressImage from '../utils/compressImage.js';
 import compressVideo from '../utils/compressVideo.js';
 import fs from 'fs';
+import authModel from '../models/auth.model.js';
 
 const createPost = async (req, res) => {
     try {
@@ -151,9 +152,9 @@ const removePost = async (req, res) => {
             });
         } else {
             deletedPost = await postModel.findOneAndDelete({
-            _id: postId,
-            user: req.user._id,
-        });
+                _id: postId,
+                user: req.user._id,
+            });
         }
 
         if (!deletedPost) {
@@ -175,4 +176,138 @@ const removePost = async (req, res) => {
     }
 };
 
-export default { createPost, getPosts, toggleLike, removePost };
+const createComment = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const postId = req.params.postId;
+        const text = req.body.text;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid User ID format' });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(400).json({ message: 'Invalid Post ID format' });
+        }
+
+        if (!text) {
+            return res
+                .status(400)
+                .json({ message: 'Empty comments are Invalid' });
+        }
+
+        const user = await authModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const updatedPost = await postModel.findByIdAndUpdate(
+            postId,
+            {
+                $push: {
+                    comments: {
+                        userId,
+                        username: user.username,
+                        text,
+                    },
+                },
+            },
+            { new: true },
+        );
+
+        if (!updatedPost) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        const newComment = updatedPost.comments[updatedPost.comments.length - 1];
+
+        res.status(201).json({
+            message: 'Comment added successfully',
+            comment: newComment,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server failed to add comment' });
+    }
+};
+
+
+export const deleteComment = async (req, res) => {
+    try {
+        const { postId, commentId } = req.params;
+        const userId = req.user._id;
+        const userEmail = req.user.email;
+
+        // 1. Find the post
+        const post = await postModel.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        // 2. Find the comment
+        const comment = post.comments.find(
+            (c) => c._id.toString() === commentId,
+        );
+
+        if (!comment) {
+            return res.status(404).json({ message: 'Comment not found' });
+        }
+
+        // 3. Authorization
+        const isCommentOwner = comment.userId.toString() === userId.toString();
+        const isAdmin = userEmail === 'one@one.com';
+
+        if (!isCommentOwner && !isAdmin) {
+            return res
+                .status(403)
+                .json({ message: 'Unauthorized to delete this comment' });
+        }
+
+        post.comments.pull(commentId);
+
+        await post.save();
+
+        res.status(200).json({
+            message: 'Comment deleted successfully',
+            comments: post.comments,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+const getComments = async (req, res) => {
+    try {
+        const { postId } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(postId)) {
+            return res.status(400).json({ message: 'Invalid Post ID' });
+        }
+
+        const post = await postModel.findById(postId).select('comments');
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        res.status(200).json({
+            message: 'Comments fetched successfully',
+            comments: post.comments,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server failed to fetch comments' });
+    }
+};
+
+export default {
+    createPost,
+    getPosts,
+    toggleLike,
+    removePost,
+    createComment,
+    deleteComment,
+    getComments,
+};

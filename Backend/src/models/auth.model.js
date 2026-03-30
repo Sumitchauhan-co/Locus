@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const authschema = new mongoose.Schema({
+const authSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -17,6 +17,6 @@ const authschema = new mongoose.Schema({
     },
 });
 
-const authModel = mongoose.model('Auth', authschema);
+const authModel = mongoose.model('Auth', authSchema);
 
 export default authModel

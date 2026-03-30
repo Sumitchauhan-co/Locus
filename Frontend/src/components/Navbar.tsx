@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
 
     return (
         <nav
-            className="p-5 z-99999 flex justify-between items-center"
+            className="relative p-5 z-99999 flex justify-between items-center"
         >
             <motion.div
                 style={{ rotate }}

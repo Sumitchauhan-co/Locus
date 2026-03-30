@@ -11,5 +11,10 @@ export interface Post {
     caption: string;
     user: User;
     likesCount: string[];
+    comments: [
+        {
+            text: string;
+        } & Pick<User, '_id' | 'username'>,
+    ];
     createdAt: string;
 }

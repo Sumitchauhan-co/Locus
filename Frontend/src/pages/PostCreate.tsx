@@ -7,7 +7,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
 import {ScrollToTop} from '../components/ScrollTo';
-import Loading from '../components/Loading';
+import Loading2 from '../components/Loading2';
 
 interface FormInputs {
     media?: FileList;
@@ -177,7 +177,7 @@ const PostCreate: React.FC = () => {
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} sm:h-10 sm:w-30 h-12 w-36 rounded-2xl sm:rounded-xl bg-(--button-color) hover:bg-(--button-hover-color) text-black grid content-center font-semibold`}
                         >
                             {loading ? (
-                                <Loading />
+                                <Loading2 />
                             ) : (
                                 <>
                                     <span className="sm:text-[1rem] text-lg">

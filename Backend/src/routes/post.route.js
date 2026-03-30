@@ -37,4 +37,10 @@ route.delete('/:postId',authMiddleware, postController.removePost)
 
 route.get('/', postController.getPosts);
 
+route.post('/create-comment/:postId',authMiddleware , postController.createComment);
+
+route.get('/comment/:postId', postController.getComments);
+
+route.delete('/:postId/comment/:commentId', authMiddleware, postController.deleteComment);
+
 export default route;

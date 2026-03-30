@@ -24,6 +24,23 @@ const postSchema = new mongoose.Schema(
                 default: [],
             },
         ],
+        comments: [
+            {
+                userId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Auth',
+                    required: true,
+                },
+                username: {
+                    type: String,
+                    required: true,
+                },
+                text: {
+                    type: String,
+                    required: true,
+                },
+            },
+        ],
     },
     { timestamps: true },
 );

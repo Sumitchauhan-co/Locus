@@ -11,11 +11,13 @@ type Props = {
 };
 
 const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
+
+    const [openCommentPostId, setOpenCommentPostId] = useState<string | null>(null);
     const { openModal } = useContext(ModalContext);
     const [activePostId, setActivePostId] = useState<string | null>(null);
     const { user, setLoading } = useContext(AuthContext);
 
-    const isAdmin = user?.email === "one@one.com";
+    const isAdmin = user?.email === 'one@one.com';
 
     const handleLike = async (postId: string) => {
         if (!user) {
@@ -71,19 +73,27 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
     return (
         <div className="flex-1 h-screen w-full relative max-w-7xl sm:py-4 md:px-6 px-4">
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {posts?.map((post) => (
-                    <PostCard
-                        key={post._id}
-                        post={post}
-                        isOwner={user?._id === post.user._id}
-                        isActive={activePostId === post._id}
-                        onLike={handleLike}
-                        onRemove={removePost}
-                        onToggleOptions={setActivePostId}
-                        currentUserId={user?._id}
-                        isAdmin={isAdmin}
-                    />
-                ))}
+                {posts?.map((post) => {
+                    return (
+                        <PostCard
+                            key={post._id}
+                            post={post}
+                            isOwner={user?._id === post.user._id}
+                            isActive={activePostId === post._id}
+                            onLike={handleLike}
+                            onRemove={removePost}
+                            onToggleOptions={setActivePostId}
+                            currentUserId={user?._id}
+                            isAdmin={isAdmin}
+                            showComment={openCommentPostId === post._id}
+                            onToggleComments={(id : string) =>
+                                setOpenCommentPostId((prev) =>
+                                    prev === id ? null : id,
+                                )
+                            }
+                        />
+                    );
+                })}
             </div>
         </div>
     );

@@ -6,16 +6,21 @@ import { RxCross1 } from 'react-icons/rx';
 import { formatPostTime } from '../utils/time.ts';
 import type { Post } from '../types/Posts.ts';
 import { ImBin } from 'react-icons/im';
+import { FaRegComment } from 'react-icons/fa';
+import Comment from './Comment.tsx';
 
 interface PostCardProps {
     post: Post;
     isOwner: boolean;
     isActive: boolean;
     onLike: (id: string) => void;
+    // onComment: (id: string) => void;
     onRemove: (id: string) => void;
     onToggleOptions: (id: string | null) => void;
     currentUserId?: string;
     isAdmin?: boolean;
+    showComment: boolean;
+    onToggleComments: (id: string) => void
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -27,7 +32,10 @@ const PostCard: React.FC<PostCardProps> = ({
     onToggleOptions,
     currentUserId,
     isAdmin,
+    showComment,
+    onToggleComments
 }) => {
+    console.log(post);
     const [loaded, setLoaded] = useState(false);
     const isLiked = post.likesCount.includes(currentUserId ?? '');
 
@@ -48,7 +56,7 @@ const PostCard: React.FC<PostCardProps> = ({
                     {(isOwner || isAdmin) && (
                         <motion.button
                             whileTap={{ scale: 1.2 }}
-                            onClick={() => onToggleOptions(post._id)}
+                            onClick={() => onToggleOptions(isActive ? null : post._id)}
                             className="absolute top-0 right-0 p-1"
                         >
                             <BsThreeDotsVertical className="h-4 w-4" />
@@ -87,7 +95,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 </div>
 
                 {/* Interaction Bar */}
-                <div className="flex items-center gap-2 px-1 mt-1">
+                <div className="flex items-center gap-10 px-1 mt-1">
                     <motion.button
                         whileTap={{ scale: 1.2 }}
                         onClick={() => onLike(post._id)}
@@ -98,10 +106,21 @@ const PostCard: React.FC<PostCardProps> = ({
                         ) : (
                             <FaRegHeart className="h-5 w-5" />
                         )}
-                        <span className="text-[0.7rem]">
-                            {post.likesCount.length}
+                        <span className="text-sm">
+                            {post.likesCount?.length || 0}
                         </span>
                     </motion.button>
+                    <button
+                        onClick={() => onToggleComments(post._id)}
+                        title="comment"
+                        type="button"
+                        className=""
+                    >
+                        <FaRegComment className="h-5 w-5 " />
+                        <span className="text-sm">
+                            {post.comments?.length || 0}
+                        </span>
+                    </button>
                 </div>
             </motion.div>
 
@@ -125,6 +144,18 @@ const PostCard: React.FC<PostCardProps> = ({
                         <RxCross1 className="h-6 w-6 sm:h-4 sm:w-4" />
                     </button>
                 </div>
+            )}
+            {showComment && (
+                <Comment
+                    className={`w-full h-full ${isOwner ? "rounded-tl-none" : ""}`}
+                    currentUserId={currentUserId}
+                    isOwner={isOwner}
+                    isAdmin={isAdmin}
+                    isActive={isActive}
+                    postId={post._id}
+                    showComment={showComment}
+                    setCommentOff={() => onToggleComments("")}
+                />
             )}
         </div>
     );
