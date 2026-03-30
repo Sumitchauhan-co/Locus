@@ -14,8 +14,8 @@ function App(): React.ReactNode {
         getUser();
     }, []);
 
-    if (!loading || !showApp) {
-        return <Loader3 onFinish={() => setShowApp(false)} />;
+    if (loading || !showApp) {
+        return <Loader3 onFinish={() => setShowApp(true)} />;
     }
 
     return <AppRoute />;
