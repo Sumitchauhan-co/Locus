@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import api from '../api/axios';
 import { RxCross1 } from 'react-icons/rx';
 import { twMerge } from 'tailwind-merge';
 import { ImBin } from 'react-icons/im';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Loading2 from './Loading2';
+import { AuthContext } from '../contexts/AuthContext';
+import { ModalContext } from '../contexts/ModalContext';
 
 interface CommentProps {
     className: string;
@@ -37,6 +39,9 @@ const Comment: React.FC<CommentProps> = ({
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState<Array<Comment>>([]);
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+    const {openModal} = useContext(ModalContext)
+    const {user} = useContext(AuthContext)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,6 +85,10 @@ const Comment: React.FC<CommentProps> = ({
     };
 
     useEffect(() => {
+        if (!user) {
+            return openModal('login');
+        }
+
         const handleComment = async (postId: string) => {
             try {
                 setLoading(true);
