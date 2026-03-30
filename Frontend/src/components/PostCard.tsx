@@ -35,7 +35,6 @@ const PostCard: React.FC<PostCardProps> = ({
     showComment,
     onToggleComments
 }) => {
-    console.log(post);
     const [loaded, setLoaded] = useState(false);
     const isLiked = post.likesCount.includes(currentUserId ?? '');
 

@@ -48,8 +48,6 @@ const Comment: React.FC<CommentProps> = ({
                 text,
             });
 
-            console.log('Server Response:', res.data);
-
             const newComment = res.data.comment || res.data.comments;
 
             if (newComment && newComment._id) {
