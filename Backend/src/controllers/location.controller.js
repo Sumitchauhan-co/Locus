@@ -34,7 +34,6 @@ const getLocation = async (req, res) => {
             .select('userId name location');
 
         const usersData = await locationModel.find({});
-        console.log(usersData);
 
         const formattedUsers = users.map((user) => ({
             id: user.userId,

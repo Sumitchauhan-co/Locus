@@ -88,7 +88,7 @@ export default function Map() {
                 async (pos) => {
                     const { latitude, longitude } = pos.coords;
 
-                    console.log('Location:', latitude, longitude);
+                    // console.log('Location:', latitude, longitude);
 
                     try {
                         await api.post('/api/location/update', {
