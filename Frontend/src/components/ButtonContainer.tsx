@@ -32,9 +32,9 @@ const ButtonContainer: React.FC = () => {
     const rollDice = () => {
         const randomIndex = Math.floor(Math.random() * diceIcons.length);
         setCurrentDiceIndex(randomIndex);
-        setLucky(false)
+        setLucky(false);
         if (randomIndex === 5) {
-            setLucky(true)
+            setLucky(true);
             confetti({
                 particleCount: 150,
                 spread: 70,
@@ -71,17 +71,19 @@ const ButtonContainer: React.FC = () => {
                     }}
                     className="peer-hover:animate-bounce"
                 >
-                    <SelectedIcon className={`${lucky ? "fill-pink-300" : "fill-white"} xl:h-20 xl:w-20 lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20`} />
+                    <SelectedIcon
+                        className={`${lucky ? 'fill-pink-300' : 'fill-white'} xl:h-20 xl:w-20 lg:h-17 lg:w-17 sm:h-15 sm:w-15 h-20 w-20`}
+                    />
                 </motion.div>
                 <div className="text-2xl sm:text-3xl xl:text-4xl text-center">
                     <span>
                         {currentDiceIndex === 5 ? (
                             <div className="text-center">
-                                <p>
-                                    You won the{' '}
+                                <div>
+                                    You won the
                                     <p className="inline text-pink-300">luck</p>
                                     ,
-                                </p>
+                                </div>
                                 <p>Now create your post!</p>
                             </div>
                         ) : (
