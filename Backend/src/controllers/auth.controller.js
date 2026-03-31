@@ -4,8 +4,8 @@ import bcrypt from 'bcryptjs';
 
 const registerUser = async (req, res) => {
     try {
-        const {email, password } = req.body;
-        const username = req.body.username.split(/\s+/).join('_')
+        const { email, password } = req.body;
+        const username = req.body.username.split(/\s+/).join('_');
 
         const isUserExists = await authModel.findOne({
             $or: [{ username }, { email }],
@@ -23,23 +23,36 @@ const registerUser = async (req, res) => {
             password: hash,
         });
 
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             {
                 id: user._id,
             },
-            process.env.JWT_SECRET,
+            process.env.ACCESS_SECRET,
+            { expiresIn: process.env.ACCESS_SECRET_EXPIRY || '1d' },
         );
 
-        const options = {
+        const refreshToken = jwt.sign(
+            {
+                id: user._id,
+            },
+            process.env.REFRESH_SECRET,
+            { expiresIn: process.env.REFRESH_SECRET_EXPIRY || '7d' },
+        );
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         };
 
-        res.cookie('token', token, options);
+        res.cookie('refreshToken', refreshToken, cookieOptions);
 
         res.status(201).json({
             message: 'User created successfully',
+            accessToken,
             user: {
                 id: user._id,
                 username: user.username,
@@ -61,8 +74,8 @@ const loginUser = async (req, res) => {
         });
 
         if (!user) {
-            res.status(404).json({
-                message: 'User not found, invalid email or password',
+            return res.status(404).json({
+                message: 'User not found, invalid email or username',
             });
         }
 
@@ -72,23 +85,36 @@ const loginUser = async (req, res) => {
             res.status(401).json({ message: 'Invalid password' });
         }
 
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             {
                 id: user._id,
             },
-            process.env.JWT_SECRET,
+            process.env.ACCESS_SECRET,
+            { expiresIn: process.env.ACCESS_SECRET_EXPIRY || 'id' },
         );
 
-        const options = {
+        const refreshToken = jwt.sign(
+            {
+                id: user._id,
+            },
+            process.env.REFRESH_SECRET,
+            { expiresIn: process.env.REFRESH_SECRET_EXPIRY || '7d' },
+        );
+
+        const cookiesOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         };
 
-        res.cookie('token', token, options);
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        res.cookie('refreshToken', refreshToken, cookiesOptions);
 
         res.status(200).json({
             message: 'User logged in successfully',
+            accessToken,
             user: {
                 id: user._id,
                 username: user.username,
@@ -101,40 +127,70 @@ const loginUser = async (req, res) => {
     }
 };
 
-const logoutUser = async (req, res) => {
+const refreshAccessToken = async (req, res) => {
     try {
-        res.clearCookie('token', {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-        });
+        const token = req.cookies.refreshToken;
 
-        res.status(200).json({ message: 'User logout successfully' });
+        if (!token) {
+            return res.status(401).json({ message: 'No refresh token' });
+        }
+
+        const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+
+        const user = await authModel.findById(decoded.id);
+
+        if (!user || user.refreshToken !== token) {
+            return res.status(403).json({ message: 'Invalid refresh token' });
+        }
+
+        const newAccessToken = jwt.sign(
+            { id: user._id },
+            process.env.ACCESS_SECRET,
+            { expiresIn: process.env.ACCESS_SECRET_EXPIRY || '1d' },
+        );
+
+        res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'user failed to logged out' });
+        return res.status(403).json({ message: 'Token expired or invalid' });
+    }
+};
+
+const logoutUser = async (req, res) => {
+    try {
+        const token = req.cookies.refreshToken;
+
+        if (token) {
+            await authModel.findOneAndUpdate(
+                { refreshToken: token },
+                { $unset: { refreshToken: 1 } },
+            );
+        }
+
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        });
+
+        res.status(200).json({ message: 'User logged out successfully' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'User failed to log out' });
     }
 };
 
 const getUser = async (req, res) => {
     try {
-        const token = req.cookies.token;
-
-        if (!token) {
-            return res.status(401).json({ message: 'Unauthorised' });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const user = await authModel.findById(decoded.id).select('-password');
+        const user = req.user;
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         res.status(200).json({
-            message: 'User get successfully',
-            user: user,
+            message: 'User fetched successfully',
+            user,
         });
     } catch (error) {
         console.log(error);
@@ -142,4 +198,10 @@ const getUser = async (req, res) => {
     }
 };
 
-export default { registerUser, loginUser, logoutUser, getUser };
+export default {
+    registerUser,
+    loginUser,
+    refreshAccessToken,
+    logoutUser,
+    getUser,
+};

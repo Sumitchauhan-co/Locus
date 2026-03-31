@@ -3,6 +3,7 @@ import { AuthContext } from './AuthContext';
 import { type User, type Data } from './AuthContext';
 import api from '../api/axios';
 import axios from 'axios';
+import {setAccessToken} from "../utils/TokenService.ts"
 
 interface ProviderProps {
     children: ReactNode;
@@ -15,10 +16,10 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const signup = async (data: Data) => {
         try {
-            await api.post('/api/auth/register', data);
-            const res = await api.get('/api/auth/user');
+            const res = await api.post('/api/auth/register', data);
 
             setUser(res.data.user);
+            setAccessToken(res.data.accessToken);
             return { statusCode: res.status, errorMessage: undefined };
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -31,10 +32,11 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
 
     const login = async (data: Data) => {
         try {
-            await api.post('/api/auth/login', data);
-            const res = await api.get('/api/auth/user');
+            const res = await api.post('/api/auth/login', data);
 
             setUser(res.data.user);
+            setAccessToken(res.data.accessToken);
+            
             return { statusCode: res.status, errorMessage: undefined };
         } catch (error) {
             if (axios.isAxiosError(error)) {
@@ -51,6 +53,7 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
             await api.post('/api/auth/logout');
 
             setUser(null);
+            setAccessToken(null);
         } catch (error) {
             console.log(error);
         } finally {
@@ -61,11 +64,13 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const getUser = async () => {
         try {
             setLoading(true);
-            const res = await api.get('/api/auth/user');
 
+            const res = await api.get('/api/auth/user');
             setUser(res.data.user);
+            
         } catch (error) {
             console.log(error);
+            setUser(null);
         } finally {
             setLoading(false);
         }
