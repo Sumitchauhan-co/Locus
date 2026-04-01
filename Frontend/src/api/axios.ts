@@ -21,12 +21,16 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        if (!originalRequest._retryCount) {
+            originalRequest._retryCount = 0;
+        }
+
         if (
             error.response?.status === 401 &&
-            !originalRequest._retry &&
+            originalRequest._retryCount < 2 &&
             !originalRequest.url.includes('/auth/refresh')
         ) {
-            originalRequest._retry = true;
+            originalRequest._retryCount += 1;
 
             try {
                 const res = await api.post('/api/auth/refresh');
@@ -45,7 +49,7 @@ api.interceptors.response.use(
         }
 
         return Promise.reject(error);
-    }
+    },
 );
 
-export default api;
+export default api

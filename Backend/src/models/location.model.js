@@ -6,9 +6,10 @@ const locationSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    name: {
+    username: {
         type: String,
         required: true,
+        unique: true
     },
     location: {
         type: {

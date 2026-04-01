@@ -1,8 +1,13 @@
 import { rateLimit } from 'express-rate-limit';
 
 export const locationLimiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    limit: 7,
+    windowMs: 24 * 60 * 60 * 1000,
+    limit: 10,
+
+    keyGenerator: (req) => {
+        return req.user?.id || req.ip;
+    },
+
     standardHeaders: true,
     legacyHeaders: false,
     validate: { default: false },

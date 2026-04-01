@@ -17,6 +17,8 @@ import { AuthContext } from '../contexts/AuthContext.js';
 import { BiTargetLock } from 'react-icons/bi';
 import Loading from '../components/Loading.js';
 import axios from 'axios';
+import { ModalContext } from '../contexts/ModalContext.js';
+import { FaLocationDot } from 'react-icons/fa6';
 
 const DefaultIcon = L.icon({
     iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
@@ -28,7 +30,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 interface UserLocation {
     id: string;
-    name: string;
+    username: string;
     lat: number;
     lng: number;
 }
@@ -69,12 +71,14 @@ export default function Map() {
     const [limitReached, setLimitReached] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
     const { user } = useContext(AuthContext);
+    const { openModal } = useContext(ModalContext);
 
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [users, setUsers] = useState<UserLocation[]>([]);
 
     useEffect(() => {
         if (!user) {
+            openModal('login');
             return;
         }
 
@@ -133,8 +137,8 @@ export default function Map() {
 
     if (limitReached) {
         return (
-            <div className="h-screen w-full flex justify-center items-center">
-                <span className="text-red-500">{errorMsg}</span>
+            <div className="h-screen w-full flex flex-col justify-center items-center">
+                <span className="text-red-500 text-center">{errorMsg}</span>
             </div>
         );
     }
@@ -154,38 +158,55 @@ export default function Map() {
     }
 
     return (
-        <div className="w-full h-[85vh] sm:h-[80vh] rounded-2xl overflow-hidden shadow-lg">
-            <MapContainer
-                center={position ?? [23.209871, 77.442187]}
-                zoom={13}
-                scrollWheelZoom
-                className="w-full h-full"
-            >
-                <TileLayer
-                    attribution="© OpenStreetMap contributors"
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
+        <div className="flex flex-col">
+            <div className="w-full grid content-center sm:p-10 p-5">
+                <div className="text-3xl sm:text-4xl flex sm:flex-row flex-col gap-3 justify-center items-center text-center text-(--text-color)">
+                    <h1>
+                        Find{' '}
+                        <span className="border-b-2 border-pink-500">
+                            people
+                        </span>{' '}
+                        nearby{' '}
+                    </h1>
+                    <div className="flex flex-col justify-center items-center">
+                        <FaLocationDot className="h-10 w-10 fill-pink-500" />
+                        <span className="text-sm">5km</span>
+                    </div>
+                </div>
+            </div>
+            <div className="w-full h-[85vh] sm:h-[80vh] rounded-2xl overflow-hidden shadow-lg">
+                <MapContainer
+                    center={position ?? [23.209871, 77.442187]}
+                    zoom={13}
+                    scrollWheelZoom
+                    className="w-full h-full"
+                >
+                    <TileLayer
+                        attribution="© OpenStreetMap contributors"
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
 
-                {position && <Recenter position={position} />}
+                    {position && <Recenter position={position} />}
 
-                <CenterButton position={position} />
+                    <CenterButton position={position} />
 
-                <MarkerClusterGroup>
-                    {users.map((user) => (
-                        <Marker
-                            key={user.id}
-                            position={[user.lat, user.lng]}
-                        >
-                            <Tooltip
-                                permanent
-                                direction="top"
+                    <MarkerClusterGroup>
+                        {users.map((user) => (
+                            <Marker
+                                key={user.id}
+                                position={[user.lat, user.lng]}
                             >
-                                {user.name} 📍
-                            </Tooltip>
-                        </Marker>
-                    ))}
-                </MarkerClusterGroup>
-            </MapContainer>
+                                <Tooltip
+                                    permanent
+                                    direction="top"
+                                >
+                                    {user.username} 📍
+                                </Tooltip>
+                            </Marker>
+                        ))}
+                    </MarkerClusterGroup>
+                </MapContainer>
+            </div>
         </div>
     );
 }

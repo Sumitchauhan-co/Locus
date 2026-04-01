@@ -31,13 +31,11 @@ const getLocation = async (req, res) => {
                     },
                 },
             })
-            .select('userId name location');
-
-        const usersData = await locationModel.find({});
+            .select('userId username location');
 
         const formattedUsers = users.map((user) => ({
             id: user.userId,
-            name: user.name,
+            username: user.username,
             lat: user.location.coordinates[1],
             lng: user.location.coordinates[0],
         }));
@@ -69,7 +67,7 @@ const updateLocation = async (req, res) => {
             { userId },
             {
                 userId,
-                name: req.user.username,
+                username: req.user.username,
                 location: {
                     type: 'Point',
                     coordinates: [longitude, latitude],

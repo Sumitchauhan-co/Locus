@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <footer className="h-fit w-full p-10 pb-20 flex relative z-9999 bottom-0 bg-(--secondary-color)">
+        <footer className="h-fit w-full p-10 flex relative z-9999 bottom-0 bg-(--secondary-color)">
             <div className="w-1/2 flex justify-center items-center">
                 <SiReactivex className="h-10 w-10" />
             </div>
