@@ -4,7 +4,7 @@ Locus is a high-performance, full-stack social networking application built to e
 
 🌐 **Live Demo:** [https://locus-space.vercel.app/](https://locus-space.vercel.app/)
 
-💻 **GitHub Repository:** [https://github.com/sumitchauhan-co/Posto](https://github.com/sumitchauhan-co/Posto)
+💻 **GitHub Repository:** [https://github.com/sumitchauhan-co/Locus](https://github.com/sumitchauhan-co/Locus)
 
 ---
 
@@ -37,8 +37,8 @@ Locus is a high-performance, full-stack social networking application built to e
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/sumitchauhan-co/Posto.git](https://github.com/sumitchauhan-co/Posto.git)
-cd Posto
+git clone [https://github.com/sumitchauhan-co/Locus.git](https://github.com/sumitchauhan-co/Locus.git)
+cd Locus
 ```
 
 ### 2. Backend setup

@@ -18,7 +18,7 @@ const uploadToImageKit = async ({ buffer, originalname }) => {
     const response = await client.files.upload({
         file: buffer.toString('base64'),
         fileName: originalname,
-        folder: 'project-1/posto/',
+        folder: 'project-1/locus/',
     });
 
     return response;
@@ -28,7 +28,7 @@ const uploadToCloudinary = async ({ buffer, originalname }) => {
     const response = new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
             {
-                folder: 'project-1/posto/',
+                folder: 'project-1/locus/',
                 public_id: originalname.split('.')[0],
                 resource_type: 'auto',
             },

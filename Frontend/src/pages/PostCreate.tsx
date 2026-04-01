@@ -144,7 +144,7 @@ const PostCreate: React.FC = () => {
                             <div className="h-fit w-[90%] border-2 grid content-center rounded-xl border-(--input-ring-color)">
                                 <textarea
                                     {...captionRegister}
-                                    placeholder={`Posto...${random}`}
+                                    placeholder={`Locus...${random}`}
                                     className="h-fit w-full p-2 resize-none text-[1rem] appearance-none focus:ring-0 outline-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                                     ref={(e) => {
                                         captionRef(e);
