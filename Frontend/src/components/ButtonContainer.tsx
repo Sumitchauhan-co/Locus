@@ -80,7 +80,7 @@ const ButtonContainer: React.FC = () => {
                         {currentDiceIndex === 5 ? (
                             <div className="text-center">
                                 <div>
-                                    You won the
+                                    You won the{' '}
                                     <p className="inline text-pink-300">luck</p>
                                     ,
                                 </div>
