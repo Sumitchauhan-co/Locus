@@ -6,7 +6,7 @@ const BALL_FREQ = 250;
 const FALL_DURATION = 6;
 const INTERACTION_WINDOW = 6000;
 
-const GRID_COLS_MOBILE = 6;
+const GRID_COLS_MOBILE = 5;
 const GRID_COLS_DESKTOP = 12;
 const TOTAL_TILES = 120;
 
