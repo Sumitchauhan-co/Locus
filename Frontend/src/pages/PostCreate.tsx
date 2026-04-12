@@ -188,8 +188,8 @@ const PostCreate: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
-                    <div className="text-yellow-500 text-center">
-                        <p className="font-bold inline">Note</p> : Create post
+                    <div className="text-yellow-500/50 text-center">
+                        <p className="font-bold inline text-sm">Note</p> : Create post
                         with media & caption or just message or only with media
                     </div>
                     {error && (

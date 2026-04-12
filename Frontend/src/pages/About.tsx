@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollToTop } from '../components/ScrollTo';
 import { motion, AnimatePresence } from 'framer-motion';
-import { RxCross1 } from 'react-icons/rx';
+import { Icons } from '../utils/icons';
 
 const faqData = [
     {
@@ -44,7 +44,7 @@ const About: React.FC = () => {
                                 <span className="font-medium text-[1rem] sm:text-lg">
                                     {item.question}
                                 </span>
-                                <span>{activeIndex === index ? (<RxCross1 className='transition-all duration-300'/>) : (<RxCross1 className='rotate-45 transition-all duration-300'/>)}</span>
+                                <span>{activeIndex === index ? (<Icons.cross className='transition-all duration-300'/>) : (<Icons.cross className='rotate-45 transition-all duration-300'/>)}</span>
                             </button>
 
                             <AnimatePresence>

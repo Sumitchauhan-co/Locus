@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-import { SiReactivex } from 'react-icons/si';
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
-import { TiThMenu } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
+import { Icons } from '../utils/icons';
 
 const linkVariants: Variants = {
     hover: { scale: 1.125, y: 1 },
@@ -45,7 +44,7 @@ const Navbar: React.FC = () => {
                 transition={{ duration: 0.8 }}
                 className="h-10 w-10 flex justify-center items-center cursor-grab active:cursor-grabbing"
             >
-                <SiReactivex className="h-10 w-10" />
+                <Icons.logo className="h-10 w-10" />
             </motion.div>
 
             {/* Desktop Links Container */}
@@ -102,7 +101,7 @@ const Navbar: React.FC = () => {
 
             {/* Mobile Menu Icon */}
             <div onClick={() => navigate('/menu')} className="md:hidden flex cursor-pointer">
-                <TiThMenu className="h-7 w-7" />
+                <Icons.menu className="h-7 w-7" />
             </div>
         </nav>
     );

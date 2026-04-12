@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import AppRoute from './routes/AppRoute';
 import { AuthContext } from './contexts/AuthContext';
-import Loader3 from './components/Loader3';
+import Loader from './components/Loader';
 import Container from './components/LayoutContainer';
 import Loading2 from './components/Loading2';
 
@@ -43,9 +43,8 @@ function App(): React.ReactNode {
         );
     }
 
-    // 🔹 Loader logic
     if (loading || !showApp) {
-        return <Loader3 onFinish={() => setShowApp(true)} />;
+        return <Loader onFinish={() => setShowApp(true)} />;
     }
 
     return <AppRoute />;

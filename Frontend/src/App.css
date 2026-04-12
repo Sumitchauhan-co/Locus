@@ -1,13 +1,16 @@
 .font-tahoma {
-  font-family: Tahoma, Verdana, Segoe UI, sans-serif;
+    font-family:
+        Tahoma,
+        Verdana,
+        Segoe UI,
+        sans-serif;
 }
 
 @import 'tailwindcss';
 
-
 @theme {
-  --breakpoint-sm: 575px;
-  --breakpoint-x-sm: 425px;
+    --breakpoint-sm: 575px;
+    --breakpoint-x-sm: 425px;
 }
 
 :root {

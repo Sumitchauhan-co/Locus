@@ -1,11 +1,8 @@
 import React, { useRef } from 'react';
 import Introduction from '../components/Introduction';
 import ButtonContainer from '../components/ButtonContainer';
-import { BsEmojiGrin } from 'react-icons/bs';
-import { BsEmojiHeartEyes } from 'react-icons/bs';
-import { BsEmojiSunglasses } from 'react-icons/bs';
+import { Icons } from '../utils/icons';
 import { ScrollToBottom, ScrollToTop } from '../components/ScrollTo';
-import { FaArrowAltCircleDown } from 'react-icons/fa';
 import { useScroll, useTransform, motion } from 'framer-motion';
 
 const Home: React.FC = () => {
@@ -30,13 +27,13 @@ const Home: React.FC = () => {
                     <h1> make friends!</h1>
                     <div className="relative">
                         <div className="absolute top-0 left-75">
-                            <BsEmojiGrin className="flex h-5 w-5" />
+                            <Icons.emoji1 className="flex h-5 w-5" />
                         </div>
                         <div className="absolute -top-25 left-85">
-                            <BsEmojiHeartEyes className="flex h-5 w-5" />
+                            <Icons.emoji2 className="flex h-5 w-5" />
                         </div>
                         <div className="absolute -top-10 right-75">
-                            <BsEmojiSunglasses className="flex h-5 w-5" />
+                            <Icons.emoji3 className="flex h-5 w-5" />
                         </div>
                     </div>
                 </div>
@@ -57,7 +54,7 @@ const Home: React.FC = () => {
             >
                 <span>Scroll down</span>
                 <div className="h-10 w-10 flex justify-center items-center">
-                    <FaArrowAltCircleDown className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></FaArrowAltCircleDown>
+                    <Icons.arrowdown className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></Icons.arrowdown>
                 </div>
             </motion.div>
         </section>

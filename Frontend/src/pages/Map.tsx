@@ -14,11 +14,11 @@ import L from 'leaflet';
 import { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { AuthContext } from '../contexts/AuthContext.js';
-import { BiTargetLock } from 'react-icons/bi';
 import Loading from '../components/Loading.js';
 import axios from 'axios';
 import { ModalContext } from '../contexts/ModalContext.js';
-import { FaLocationDot } from 'react-icons/fa6';
+import { LoadingText } from '../utils/loader.js';
+import { Icons } from '../utils/icons.js';
 
 const DefaultIcon = L.icon({
     iconRetinaUrl: 'https://unpkg.com/leaflet/dist/images/marker-icon-2x.png',
@@ -59,7 +59,7 @@ function CenterButton({ position }: { position: [number, number] | null }) {
                     className="bg-white p-3 sm:px-2 py-3 sm:py-2 my-4 cursor-pointer rounded-[50%]"
                     onClick={() => map.flyTo(position, 16)}
                 >
-                    <BiTargetLock className="h-6 w-6 sm:h-5 sm:w-5 fill-black"></BiTargetLock>
+                    <Icons.target className="h-6 w-6 sm:h-5 sm:w-5 fill-black"></Icons.target>
                 </button>
             </div>
         </div>
@@ -138,7 +138,9 @@ export default function Map() {
     if (limitReached) {
         return (
             <div className="h-screen w-full flex flex-col justify-center items-center">
-                <span className="text-red-500 text-center font-semibold text-lg">{errorMsg}</span>
+                <span className="text-red-500 text-center font-semibold text-lg">
+                    {errorMsg}
+                </span>
             </div>
         );
     }
@@ -148,8 +150,15 @@ export default function Map() {
             <>
                 <Loading>
                     {!user && (
-                        <span className="text-yellow-500">
+                        <span className="sm:text-lg text-sm text-yellow-500/50">
                             Ensure you are already logged in!
+                        </span>
+                    )}
+                    {user && (
+                        <span className="text-pink-500/75 flex gap-1 items-center">
+                            <Icons.heart className="rotate-15" />
+                            <p>Rendering the world for you</p>
+                            <LoadingText />
                         </span>
                     )}
                 </Loading>
@@ -169,7 +178,7 @@ export default function Map() {
                         nearby{' '}
                     </h1>
                     <div className="flex flex-col justify-center items-center">
-                        <FaLocationDot className="h-10 w-10 fill-pink-500" />
+                        <Icons.location className="h-10 w-10 fill-pink-500" />
                         <span className="text-sm">5km</span>
                     </div>
                 </div>
@@ -200,7 +209,7 @@ export default function Map() {
                                     permanent
                                     direction="top"
                                 >
-                                    {user.username} 📍
+                                    {user.username}
                                 </Tooltip>
                             </Marker>
                         ))}

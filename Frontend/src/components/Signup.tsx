@@ -1,11 +1,10 @@
 import React, { useContext, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaArrowAltCircleUp, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Loading2 from './Loading2';
+import { Icons } from '../utils/icons';
 
 interface FormInputs {
     username: string;
@@ -75,7 +74,7 @@ const Signup: React.FC = () => {
                 onClick={() => closeModal()}
                 className="absolute top-5 right-5 mt-15"
             >
-                <RxCross1 className="h-7 w-7" />
+                <Icons.cross className="h-7 w-7" />
             </div>
             <div className="h-fit w-full flex justify-center mt-25">
                 <span className="bg-transparent text-3xl md:text-4xl relative top-6 sm:top-12 font-semibold">
@@ -164,7 +163,7 @@ const Signup: React.FC = () => {
                                 onClick={() => setShowPassword((prev) => !prev)}
                                 className="h-full w-10 bg-neutral-700 border border-neutral-300 rounded-r-xl absolute cursor-pointer select-none flex justify-center items-center"
                             >
-                                {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                {showPassword ? <Icons.openEye /> : <Icons.closeEye />}
                             </span>
                         </div>
                         {errors.password?.message && (
@@ -203,7 +202,7 @@ const Signup: React.FC = () => {
             >
                 <span>Scroll Up</span>
                 <div className="h-10 w-10 flex justify-center items-center">
-                    <FaArrowAltCircleUp className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></FaArrowAltCircleUp>
+                    <Icons.arrowUp className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></Icons.arrowUp>
                 </div>
             </motion.div>
         </section>

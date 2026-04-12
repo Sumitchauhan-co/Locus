@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaHeart, FaRegHeart } from 'react-icons/fa6';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { RxCross1 } from 'react-icons/rx';
 import { formatPostTime } from '../utils/time.ts';
 import type { Post } from '../types/Posts.ts';
-import { ImBin } from 'react-icons/im';
-import { FaRegComment } from 'react-icons/fa';
 import Comment from './Comment.tsx';
+import { Icons } from '../utils/icons.ts';
 
 interface PostCardProps {
     post: Post;
@@ -58,7 +54,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             onClick={() => onToggleOptions(isActive ? null : post._id)}
                             className="absolute top-0 right-0 p-1"
                         >
-                            <BsThreeDotsVertical className="h-4 w-4" />
+                            <Icons.threeDots className="h-4 w-4" />
                         </motion.button>
                     )}
                 </div>
@@ -101,9 +97,9 @@ const PostCard: React.FC<PostCardProps> = ({
                         className="flex flex-col items-center"
                     >
                         {isLiked ? (
-                            <FaHeart className="h-5 w-5 fill-pink-700" />
+                            <Icons.likeHeart className="h-5 w-5 fill-pink-700" />
                         ) : (
-                            <FaRegHeart className="h-5 w-5" />
+                            <Icons.unlikeHeart className="h-5 w-5" />
                         )}
                         <span className="text-sm">
                             {post.likesCount?.length || 0}
@@ -115,7 +111,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         type="button"
                         className=""
                     >
-                        <FaRegComment className="h-5 w-5 " />
+                        <Icons.comment className="h-5 w-5 " />
                         <span className="text-sm">
                             {post.comments?.length || 0}
                         </span>
@@ -132,7 +128,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         onClick={() => onRemove(post._id)}
                         className="w-full flex justify-center items-center py-3 my-5 sm:my-4 hover:bg-(--options-div-color) transition-colors text-sm font-medium"
                     >
-                        <ImBin className="fill-red-500 h-7 w-7 sm:h-5 sm:w-5"></ImBin>
+                        <Icons.bin className="fill-red-500 h-7 w-7 sm:h-5 sm:w-5"></Icons.bin>
                     </button>
                     <button
                         title="cancel"
@@ -140,7 +136,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         onClick={() => onToggleOptions(null)}
                         className="absolute top-1 right-1 p-2 hover:bg-white/10 rounded-full"
                     >
-                        <RxCross1 className="h-6 w-6 sm:h-4 sm:w-4" />
+                        <Icons.cross className="h-6 w-6 sm:h-4 sm:w-4" />
                     </button>
                 </div>
             )}

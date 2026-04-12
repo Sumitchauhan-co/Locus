@@ -1,28 +1,19 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import {
-    GiPerspectiveDiceSixFacesRandom,
-    GiPerspectiveDiceSixFacesOne,
-    GiPerspectiveDiceSixFacesTwo,
-    GiPerspectiveDiceSixFacesThree,
-    GiPerspectiveDiceSixFacesFour,
-    GiPerspectiveDiceSixFacesFive,
-    GiPerspectiveDiceSixFacesSix,
-} from 'react-icons/gi';
-import {} from 'react-icons/gi';
 import Button from './Button';
+import { Icons } from '../utils/icons';
 
 const ButtonContainer: React.FC = () => {
     const [lucky, setLucky] = useState(false);
 
     const diceIcons = [
-        GiPerspectiveDiceSixFacesOne,
-        GiPerspectiveDiceSixFacesTwo,
-        GiPerspectiveDiceSixFacesThree,
-        GiPerspectiveDiceSixFacesFour,
-        GiPerspectiveDiceSixFacesFive,
-        GiPerspectiveDiceSixFacesSix,
+        Icons.oneFaceDie,
+        Icons.twoFaceDie,
+        Icons.threeFaceDie,
+        Icons.fourFaceDie,
+        Icons.fiveFaceDie,
+        Icons.sixFaceDie,
     ];
 
     const [currentDiceIndex, setCurrentDiceIndex] = useState<number | null>(
@@ -55,7 +46,7 @@ const ButtonContainer: React.FC = () => {
     const SelectedIcon =
         currentDiceIndex !== null
             ? diceIcons[currentDiceIndex]
-            : GiPerspectiveDiceSixFacesRandom;
+            : Icons.randomFaceDie;
 
     return (
         <section

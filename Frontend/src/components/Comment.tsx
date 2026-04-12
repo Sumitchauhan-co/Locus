@@ -1,12 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import api from '../api/axios';
-import { RxCross1 } from 'react-icons/rx';
 import { twMerge } from 'tailwind-merge';
-import { ImBin } from 'react-icons/im';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 import Loading2 from './Loading2';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
+import { Icons } from '../utils/icons';
 
 interface CommentProps {
     className: string;
@@ -116,7 +114,7 @@ const Comment: React.FC<CommentProps> = ({
                         onClick={setCommentOff}
                         className="absolute top-5 right-5"
                     >
-                        <RxCross1 className="h-5 w-5" />
+                        <Icons.cross className="h-5 w-5" />
                     </div>
                     <div className="text-2xl sm:text-xl p-3">
                         <h3>Comments</h3>
@@ -154,7 +152,7 @@ const Comment: React.FC<CommentProps> = ({
                                                     }
                                                     className="absolute top-0 right-0 p-1"
                                                 >
-                                                    <BsThreeDotsVertical className="h-4 w-4" />
+                                                    <Icons.threeDots className="h-4 w-4" />
                                                 </button>
                                             )}
                                         </div>
@@ -170,7 +168,7 @@ const Comment: React.FC<CommentProps> = ({
                                                     }
                                                     className="w-full flex justify-center items-center py-3 my-5 sm:my-4 hover:bg-(--options-div-color) transition-colors text-sm font-medium"
                                                 >
-                                                    <ImBin className="fill-red-500 h-7 w-7 sm:h-5 sm:w-5"></ImBin>
+                                                    <Icons.bin className="fill-red-500 h-7 w-7 sm:h-5 sm:w-5"></Icons.bin>
                                                 </button>
                                                 <button
                                                     title="cancel"
@@ -180,7 +178,7 @@ const Comment: React.FC<CommentProps> = ({
                                                     }
                                                     className="absolute top-1 right-1 p-2 hover:bg-white/10 rounded-full"
                                                 >
-                                                    <RxCross1 className="h-6 w-6 sm:h-4 sm:w-4" />
+                                                    <Icons.cross className="h-6 w-6 sm:h-4 sm:w-4" />
                                                 </button>
                                             </div>
                                         )}

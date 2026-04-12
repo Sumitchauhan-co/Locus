@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { RxCross1 } from 'react-icons/rx';
+import { Icons } from '../utils/icons';
 import { useNavigate } from 'react-router-dom';
 import Container from '../components/LayoutContainer';
 import { ModalContext } from '../contexts/ModalContext';
@@ -43,7 +43,7 @@ const Menu: React.FC = () => {
             <section className="min-h-screen max-w-screen flex justify-center items-start relative">
                 <div className="absolute right-0">
                     <div className="p-5 grid content-center">
-                        <RxCross1
+                        <Icons.cross
                             onClick={() => (navigate(-1), closeModal())}
                             className="h-7 w-7 opacity-75"
                         />

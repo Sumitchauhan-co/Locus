@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAccessToken, setAccessToken } from '../utils/TokenService.ts';
+import { getAccessToken, setAccessToken } from '../utils/tokenService';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -9,9 +9,13 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
     const token = getAccessToken();
 
-    const skipUrls = ['/api/auth/login', '/api/auth/register', '/api/auth/refresh'];
+    const skipUrls = [
+        '/api/auth/login',
+        '/api/auth/register',
+        '/api/auth/refresh',
+    ];
 
-    if (skipUrls.some(url => config.url?.includes(url))) {
+    if (skipUrls.some((url) => config.url?.includes(url))) {
         return config;
     }
 
@@ -49,11 +53,11 @@ api.interceptors.response.use(
 
                 setAccessToken(newAccessToken);
 
-                api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                api.defaults.headers.common['Authorization'] =
+                    `Bearer ${newAccessToken}`;
 
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
-
             } catch (err) {
                 setAccessToken(null);
                 return Promise.reject(err);
@@ -61,7 +65,7 @@ api.interceptors.response.use(
         }
 
         return Promise.reject(error);
-    }
+    },
 );
 
 export default api;
