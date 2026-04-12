@@ -13,7 +13,7 @@ const createPost = async (req, res) => {
 
         if (!file && (!caption || caption.trim() === '')) {
             return res.status(400).json({
-                message: 'Post must have either media or caption',
+                message: 'Post must have media or caption/message',
             });
         }
 

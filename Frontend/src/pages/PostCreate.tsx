@@ -67,12 +67,10 @@ const PostCreate: React.FC = () => {
                 navigate('/posts');
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
-                    if (err.status == 400) {
-                        setError(
-                            err.response?.data.message ||
-                                'Something went wrong...Please try again later!',
-                        );
-                    }
+                    setError(
+                        err.response?.data?.message ||
+                            'Something went wrong...Please try again later!',
+                    );
                 }
             } finally {
                 setLoading(false);
@@ -82,7 +80,7 @@ const PostCreate: React.FC = () => {
 
     const { ref: captionRef, ...captionRegister } = register('caption', {
         maxLength: {
-            value: 2,
+            value: 500,
             message: 'Caption is too long!',
         },
     });
@@ -128,6 +126,9 @@ const PostCreate: React.FC = () => {
                                 className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
+                            <div className="w-full p-2 text-yellow-500/50 italic">
+                                <p>{'(size < 50MB)'}</p>
+                            </div>
                             {errors.media?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
                                     {errors.media.message}
@@ -150,9 +151,12 @@ const PostCreate: React.FC = () => {
                                         captionRef(e);
                                         textareaRef.current = e;
                                     }}
-                                    maxLength={101}
+                                    maxLength={501}
                                     rows={1}
                                 />
+                            </div>
+                            <div className="w-full p-2 text-yellow-500/50 italic">
+                                <p>{'(word limit : 500)'}</p>
                             </div>
                             {errors.caption?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
@@ -189,11 +193,14 @@ const PostCreate: React.FC = () => {
                         </motion.button>
                     </div>
                     <div className="text-yellow-500/50 text-center">
-                        <p className="font-bold inline text-sm">Note</p> : Create post
-                        with media & caption or just message or only with media
+                        <p className="font-bold inline text-sm">Note</p> :
+                        Create post with media & caption or just message or only
+                        with media
                     </div>
                     {error && (
-                        <p className="text-red-500 text-center text-lg">{error}</p>
+                        <p className="text-red-500 text-center text-lg">
+                            {error}
+                        </p>
                     )}
                 </div>
             </form>

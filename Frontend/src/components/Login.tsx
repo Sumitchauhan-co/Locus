@@ -55,11 +55,13 @@ const Login: React.FC = () => {
         };
 
         try {
-            setLoading(true)
+            setLoading(true);
             const res = await login(payload);
-            if (res?.statusCode == 404 || res?.statusCode == 401) {
+            console.log(res);
+
+            if (res?.errorMessage) {
                 setError(
-                    res.errorMessage ||
+                    res?.errorMessage ||
                         'Something went wrong...Please try again later!',
                 );
                 return;
@@ -69,10 +71,9 @@ const Login: React.FC = () => {
         } catch (error) {
             console.log(error);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
-
 
     return (
         <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-9999 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
@@ -139,7 +140,11 @@ const Login: React.FC = () => {
                                 onClick={() => setShowPassword((prev) => !prev)}
                                 className="h-full w-10 bg-neutral-700 border border-neutral-300 rounded-r-xl absolute cursor-pointer select-none flex justify-center items-center"
                             >
-                                {showPassword ? <Icons.openEye /> : <Icons.closeEye />}
+                                {showPassword ? (
+                                    <Icons.openEye />
+                                ) : (
+                                    <Icons.closeEye />
+                                )}
                             </span>
                         </div>
                         {errors.password?.message && (

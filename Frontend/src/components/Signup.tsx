@@ -49,22 +49,21 @@ const Signup: React.FC = () => {
 
     const onSubmit = async (data: FormInputs) => {
         try {
-            setLoading(true)
+            setLoading(true);
             const res = await signup(data);
-            if (res?.statusCode == 409) {
+            if (res?.statusCode) {
                 setError(
                     res.errorMessage ||
                         'Something went wrong...Please try again later!',
                 );
                 return;
             }
-
             reset();
             closeModal();
         } catch (error) {
             console.log(error);
-        } finally{
-            setLoading(false)
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -163,7 +162,11 @@ const Signup: React.FC = () => {
                                 onClick={() => setShowPassword((prev) => !prev)}
                                 className="h-full w-10 bg-neutral-700 border border-neutral-300 rounded-r-xl absolute cursor-pointer select-none flex justify-center items-center"
                             >
-                                {showPassword ? <Icons.openEye /> : <Icons.closeEye />}
+                                {showPassword ? (
+                                    <Icons.openEye />
+                                ) : (
+                                    <Icons.closeEye />
+                                )}
                             </span>
                         </div>
                         {errors.password?.message && (
