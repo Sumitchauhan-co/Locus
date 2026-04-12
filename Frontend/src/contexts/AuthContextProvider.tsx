@@ -3,7 +3,7 @@ import { AuthContext } from './AuthContext';
 import { type User, type Data } from './AuthContext';
 import api from '../api/axios';
 import axios from 'axios';
-import { setAccessToken } from '../utils/tokenService';
+import { setAccessToken } from '../utils/TokenService';
 
 interface ProviderProps {
     children: ReactNode;
