@@ -5,7 +5,7 @@ import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Loading from './Loading';
+import Loading2 from './Loading2';
 
 interface FormInputs {
     username: string;
@@ -15,12 +15,14 @@ interface FormInputs {
 
 const Signup: React.FC = () => {
     const [error, setError] = useState<string | undefined>(undefined);
-    const { loading } = useContext(AuthContext);
+    // const { loading } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
+
     const { signup } = useContext(AuthContext);
     const { closeModal } = useContext(ModalContext);
     const [showPassword, setShowPassword] = useState(false);
 
-    const [username, setUsername] = useState('')
+    const [username, setUsername] = useState('');
 
     const targetRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,9 +50,13 @@ const Signup: React.FC = () => {
 
     const onSubmit = async (data: FormInputs) => {
         try {
+            setLoading(true)
             const res = await signup(data);
             if (res?.statusCode == 409) {
-                setError(res.errorMessage || 'Something went wrong');
+                setError(
+                    res.errorMessage ||
+                        'Something went wrong...Please try again later!',
+                );
                 return;
             }
 
@@ -58,6 +64,8 @@ const Signup: React.FC = () => {
             closeModal();
         } catch (error) {
             console.log(error);
+        } finally{
+            setLoading(false)
         }
     };
 
@@ -97,10 +105,10 @@ const Signup: React.FC = () => {
                             onChange={(e) => setUsername(e.target.value)}
                         />
                         <div className="text-start text-yellow-500">
-                            <p>{username.trim().split(/\s+/).join("_")}</p>
+                            <p>{username.trim().split(/\s+/).join('_')}</p>
                         </div>
                         {errors.username?.message && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-sm text-red-500 font-semibold">
                                 {errors.username.message}
                             </p>
                         )}
@@ -126,7 +134,7 @@ const Signup: React.FC = () => {
                             })}
                         />
                         {errors.email?.message && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-sm text-red-500 font-semibold">
                                 {errors.email.message}
                             </p>
                         )}
@@ -160,7 +168,7 @@ const Signup: React.FC = () => {
                             </span>
                         </div>
                         {errors.password?.message && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-sm text-red-500 font-semibold">
                                 {errors.password.message}
                             </p>
                         )}
@@ -173,7 +181,7 @@ const Signup: React.FC = () => {
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center`}
                         >
                             {loading ? (
-                                <Loading />
+                                <Loading2 />
                             ) : (
                                 <>
                                     <span>Sign up</span>
@@ -182,7 +190,7 @@ const Signup: React.FC = () => {
                         </motion.button>
                     </div>
                     {error && (
-                        <p className="text-sm text-red-500 text-center">
+                        <p className="text-lg text-red-500 text-center font-semibold">
                             {error}
                         </p>
                     )}

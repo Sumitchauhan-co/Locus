@@ -138,7 +138,7 @@ export default function Map() {
     if (limitReached) {
         return (
             <div className="h-screen w-full flex flex-col justify-center items-center">
-                <span className="text-red-500 text-center">{errorMsg}</span>
+                <span className="text-red-500 text-center font-semibold text-lg">{errorMsg}</span>
             </div>
         );
     }

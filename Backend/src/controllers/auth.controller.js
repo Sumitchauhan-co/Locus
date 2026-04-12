@@ -7,12 +7,18 @@ const registerUser = async (req, res) => {
         const { email, password } = req.body;
         const username = req.body.username.trim().split(/\s+/).join('_');
 
-        const isUserExists = await authModel.findOne({
+        const existingUser = await authModel.findOne({
             $or: [{ username }, { email }],
         });
 
-        if (isUserExists) {
-            return res.status(409).json({ message: 'User already exists' });
+        if (existingUser) {
+            if (existingUser.username === username) {
+                return res.status(409).json({ message: 'Username already taken' });
+            }
+
+            if (existingUser.email === email) {
+                return res.status(409).json({ message: "Registration failed. Please check your details or try logging in." });
+            }
         }
 
         const hash = await bcrypt.hash(password, 10);
@@ -132,7 +138,7 @@ const refreshAccessToken = async (req, res) => {
         const token = req.cookies.refreshToken;
 
         if (!token) {
-            return res.status(401).json({ message: 'No refresh token' });
+            return res.status(401).json({ message: 'Not authorized for action' });
         }
 
         const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
@@ -140,7 +146,7 @@ const refreshAccessToken = async (req, res) => {
         const user = await authModel.findById(decoded.id);
 
         if (!user || user.refreshToken !== token) {
-            return res.status(403).json({ message: 'Invalid refresh token' });
+            return res.status(403).json({ message: 'User identity missing' });
         }
 
         const newAccessToken = jwt.sign(

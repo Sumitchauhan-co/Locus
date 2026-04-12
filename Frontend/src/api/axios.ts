@@ -9,6 +9,12 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
     const token = getAccessToken();
 
+    const skipUrls = ['/api/auth/login', '/api/auth/register', '/api/auth/refresh'];
+
+    if (skipUrls.some(url => config.url?.includes(url))) {
+        return config;
+    }
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -21,27 +27,33 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (!originalRequest._retryCount) {
-            originalRequest._retryCount = 0;
+        if (!originalRequest || originalRequest._retry) {
+            return Promise.reject(error);
         }
 
         if (
-            error.response?.status === 401 &&
-            originalRequest._retryCount < 2 &&
-            !originalRequest.url.includes('/auth/refresh')
+            originalRequest.url?.includes('/api/auth/login') ||
+            originalRequest.url?.includes('/api/auth/register') ||
+            originalRequest.url?.includes('/api/auth/refresh')
         ) {
-            originalRequest._retryCount += 1;
+            return Promise.reject(error);
+        }
+
+        if (error.response?.status === 401) {
+            originalRequest._retry = true;
 
             try {
                 const res = await api.post('/api/auth/refresh');
 
-                const newToken = res.data.accessToken;
+                const newAccessToken = res.data.accessToken;
 
-                setAccessToken(newToken);
+                setAccessToken(newAccessToken);
 
-                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
 
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                 return api(originalRequest);
+
             } catch (err) {
                 setAccessToken(null);
                 return Promise.reject(err);
@@ -49,7 +61,7 @@ api.interceptors.response.use(
         }
 
         return Promise.reject(error);
-    },
+    }
 );
 
-export default api
+export default api;

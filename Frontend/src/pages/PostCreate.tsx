@@ -70,7 +70,7 @@ const PostCreate: React.FC = () => {
                     if (err.status == 400) {
                         setError(
                             err.response?.data.message ||
-                                'Something went wrong',
+                                'Something went wrong...Please try again later!',
                         );
                     }
                 }
@@ -82,7 +82,7 @@ const PostCreate: React.FC = () => {
 
     const { ref: captionRef, ...captionRegister } = register('caption', {
         maxLength: {
-            value: 100,
+            value: 2,
             message: 'Caption is too long!',
         },
     });
@@ -129,7 +129,7 @@ const PostCreate: React.FC = () => {
                                 type="file"
                             />
                             {errors.media?.message && (
-                                <p className="text-sm text-red-500 p-2">
+                                <p className="text-sm text-red-500 p-2 font-semibold">
                                     {errors.media.message}
                                 </p>
                             )}
@@ -150,12 +150,12 @@ const PostCreate: React.FC = () => {
                                         captionRef(e);
                                         textareaRef.current = e;
                                     }}
-                                    rows={1}
                                     maxLength={101}
+                                    rows={1}
                                 />
                             </div>
                             {errors.caption?.message && (
-                                <p className="text-sm text-red-500 p-2">
+                                <p className="text-sm text-red-500 p-2 font-semibold">
                                     {errors.caption.message}
                                 </p>
                             )}
@@ -193,7 +193,7 @@ const PostCreate: React.FC = () => {
                         with media & caption or just message or only with media
                     </div>
                     {error && (
-                        <p className="text-red-500 text-center">{error}</p>
+                        <p className="text-red-500 text-center text-lg">{error}</p>
                     )}
                 </div>
             </form>

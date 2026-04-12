@@ -5,7 +5,7 @@ import { RxCross1 } from 'react-icons/rx';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Loading from './Loading';
+import Loading2 from './Loading2';
 
 interface FormInputs {
     input: string;
@@ -14,7 +14,8 @@ interface FormInputs {
 
 const Login: React.FC = () => {
     const [error, setError] = useState<string | undefined>(undefined);
-    const { loading } = useContext(AuthContext);
+    // const { loading } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
     const { openModal } = useContext(ModalContext);
 
     const { login } = useContext(AuthContext);
@@ -55,17 +56,24 @@ const Login: React.FC = () => {
         };
 
         try {
+            setLoading(true)
             const res = await login(payload);
             if (res?.statusCode == 404 || res?.statusCode == 401) {
-                setError(res.errorMessage || 'Something went wrong');
+                setError(
+                    res.errorMessage ||
+                        'Something went wrong...Please try again later!',
+                );
                 return;
             }
             reset();
             closeModal();
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false)
         }
     };
+
 
     return (
         <section className="min-h-screen w-full text-(--text-color) absolute inset-0 z-9999 flex flex-col items-center justify-start bg-(--backdrop-color) backdrop-blur-lg overflow-y-auto">
@@ -101,7 +109,7 @@ const Login: React.FC = () => {
                             })}
                         />
                         {errors.input?.message && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-sm text-red-500 font-semibold">
                                 {errors.input.message}
                             </p>
                         )}
@@ -136,7 +144,7 @@ const Login: React.FC = () => {
                             </span>
                         </div>
                         {errors.password?.message && (
-                            <p className="text-sm text-red-500">
+                            <p className="text-sm text-red-500 font-semibold">
                                 {errors.password.message}
                             </p>
                         )}
@@ -149,7 +157,7 @@ const Login: React.FC = () => {
                             className={` ${loading ? 'cursor-not-allowed' : 'cursor-pointer'} w-full p-2 font-semibold text-lg bg-(--button-color) hover:bg-(--button-hover-color) active:bg-(--button-hover-color) text-black rounded-2xl flex justify-center items-center`}
                         >
                             {loading ? (
-                                <Loading />
+                                <Loading2 />
                             ) : (
                                 <>
                                     <span>Login</span>
@@ -168,7 +176,7 @@ const Login: React.FC = () => {
                     </div>
 
                     {error && (
-                        <p className="text-sm text-red-500 text-center">
+                        <p className="text-lg text-red-500 text-center font-semibold">
                             {error}
                         </p>
                     )}
