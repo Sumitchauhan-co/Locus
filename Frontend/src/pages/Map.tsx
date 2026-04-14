@@ -145,7 +145,7 @@ export default function Map() {
         );
     }
 
-    if (loading) {
+    if (!loading) {
         return (
             <>
                 <Loading>
@@ -156,7 +156,7 @@ export default function Map() {
                     )}
                     {user && (
                         <span className="text-pink-500/75 flex gap-1 items-center">
-                            <Icons.heart className="rotate-15" />
+                            <Icons.heart className="animate-wiggle" />
                             <p>Rendering the world for you</p>
                             <LoadingDots />
                         </span>
