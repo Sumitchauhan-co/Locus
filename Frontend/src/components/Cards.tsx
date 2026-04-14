@@ -7,7 +7,7 @@ const Cards: React.FC = () => {
 
     return (
         <div className="h-fit w-full flex flex-col mt-50 mb-25 gap-10">
-            <div className="text-5xl sm:text-6xl flex flex-col gap-3 text-center text-(--dark-pink-color)">
+            <div className="text-5xl sm:text-6xl flex flex-col gap-3 text-center">
                 <h2>Share your journey instantly</h2>
                 <div className="h-full flex justify-center items-center">
                     <motion.div
