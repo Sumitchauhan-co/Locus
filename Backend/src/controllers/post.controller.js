@@ -5,16 +5,21 @@ import compressImage from '../utils/compressImage.js';
 import compressVideo from '../utils/compressVideo.js';
 import fs from 'fs';
 import authModel from '../models/auth.model.js';
+import path from 'path';
+import { log } from 'console';
 
 const createPost = async (req, res) => {
+    let inputPath = null;
+    let outputPath = null;
+
     try {
-        const caption = req.body.caption;
+        const { caption } = req.body;
         const file = req.file;
 
-        if (!file && (!caption || caption.trim() === '')) {
-            return res.status(400).json({
-                message: 'Post must have media or caption/message',
-            });
+        if (!file && (!caption || !caption.trim())) {
+            return res
+                .status(400)
+                .json({ message: 'Post must have media or caption' });
         }
 
         let mediaURL = null;
@@ -22,40 +27,29 @@ const createPost = async (req, res) => {
 
         if (file) {
             const mime = file.mimetype;
-            let buffer;
-
-            if (!mime.startsWith('image') && !mime.startsWith('video')) {
-                return res.status(400).json({
-                    message: 'Only image or video uploads are allowed',
-                });
-            }
+            const tempDir = path.join(process.cwd(), 'public', 'temp');
+            if (!fs.existsSync(tempDir))
+                fs.mkdirSync(tempDir, { recursive: true });
 
             if (mime.startsWith('image')) {
-                buffer = await compressImage(file);
+                outputPath = await compressImage(file);
                 mediaType = 'image';
-            }
-
-            if (mime.startsWith('video')) {
-                const inputPath = `public/temp/${Date.now()}-${file.originalname}`;
-                const outputPath = `public/temp/compressed-${Date.now()}.mp4`;
+            } else if (mime.startsWith('video')) {
+                inputPath = path.join(tempDir, `${Date.now()}-input.mp4`);
+                outputPath = path.join(tempDir, `${Date.now()}-out.mp4`);
 
                 fs.writeFileSync(inputPath, file.buffer);
 
                 await compressVideo(inputPath, outputPath);
-
-                buffer = fs.readFileSync(outputPath);
-
-                fs.unlinkSync(inputPath);
-                fs.unlinkSync(outputPath);
-
                 mediaType = 'video';
             }
 
+            const finalUploadPath = outputPath || inputPath;
+
             const result = await uploadFile({
-                buffer,
+                filePath: finalUploadPath,
                 originalname: file.originalname,
             });
-
             mediaURL = result.url;
         }
 
@@ -63,17 +57,25 @@ const createPost = async (req, res) => {
             mediaURL,
             mediaType,
             caption: caption || '',
-            user: req.user,
-            likesCount: [],
+            user: req.user._id,
         });
 
-        return res.status(201).json({
-            message: 'Post created successfully',
-            post,
-        });
+        return res
+            .status(201)
+            .json({ message: 'Post created successfully', post });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Failed to create post' });
+        console.error('Create Post Error:', error);
+        return res
+            .status(500)
+            .json({ message: error.message || 'Internal Server Error' });
+    } finally {
+        try {
+            if (inputPath && fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+            if (outputPath && fs.existsSync(outputPath))
+                fs.unlinkSync(outputPath);
+        } catch (e) {
+            console.error('Cleanup failed:', e);
+        }
     }
 };
 
@@ -140,7 +142,7 @@ const removePost = async (req, res) => {
             return res.status(400).json({ message: 'Invalid Post ID format' });
         }
 
-        const isAdmin = req.user.email === 'chauhan.sumit3012@gmail.com';
+        const isAdmin = req.user.email === `${process.env.ADMIN}`;
 
         let deletedPost;
 
@@ -220,7 +222,8 @@ const createComment = async (req, res) => {
             return res.status(404).json({ message: 'Post not found' });
         }
 
-        const newComment = updatedPost.comments[updatedPost.comments.length - 1];
+        const newComment =
+            updatedPost.comments[updatedPost.comments.length - 1];
 
         res.status(201).json({
             message: 'Comment added successfully',
@@ -231,7 +234,6 @@ const createComment = async (req, res) => {
         res.status(500).json({ message: 'Server failed to add comment' });
     }
 };
-
 
 export const deleteComment = async (req, res) => {
     try {

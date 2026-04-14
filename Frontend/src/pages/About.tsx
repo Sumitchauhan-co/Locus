@@ -30,7 +30,7 @@ const About: React.FC = () => {
             <ScrollToTop />
 
             <div className="h-full w-full flex flex-col justify-around items-center gap-10">
-                <h2 className="text-4xl sm:text-5xl text-center">FAQs</h2>
+                <h2 className="text-4xl sm:text-5xl text-center font-semibold">FAQs</h2>
                 <div className="w-full flex flex-col justify-center items-center">
                     {faqData.map((item, index) => (
                         <div
@@ -56,7 +56,7 @@ const About: React.FC = () => {
                                         className="overflow-hidden"
                                     >
                                         <p
-                                            className="py-2 text-neutral-400 italic text-[1rem] sm:text-lg"
+                                            className="py-2 text-neutral-300 italic text-[1rem] sm:text-lg"
                                         >
                                             {item.answer}
                                         </p>

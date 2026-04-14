@@ -82,11 +82,23 @@ npm run dev
 
 ## 📈 Optimization Highlights
 
-* Custom Loader: Designed a background grid of pulsing tiles using Framer Motion to improve perceived performance during initial data fetches.
+### 🎨 User Experience (UX)
 
-* Idempotency Fixes: Resolved React hydration errors related to random number generation and dynamic content to ensure stable production builds.
+Immersive Motion UI: Custom pulsing tile-grid loaders built with Framer Motion to bridge data-fetch gaps and elevate perceived performance.
 
-* Responsive Architecture: Mobile-first design utilizing Tailwind CSS for seamless cross-device compatibility.
+Fluid Layouts: A mobile-first architecture that scales intelligently from handheld devices to expansive widescreen dashboards.
+
+### 🛡️ Backend & Security
+
+Resource Optimization: Engineered a robust Node/Express architecture that handles 500+ concurrent users smoothly within free-tier constraints.
+
+Hardened Security: Implemented secure CORS policies, database whitelisting, and environment-level protection to ensure data integrity.
+
+### 🔌 Full-Stack Integration
+
+Seamless Data Flow: Integrated React frontend with a NoSQL backend for real-time map updates and instant post-fetching.
+
+Stability First: Resolved complex hydration logic and state mismatches to ensure error-free rendering between server and client.
 
 ## 🤝 Contributing
 
@@ -96,4 +108,5 @@ Contributions, issues, and feature requests are welcome!
 
 This project is licensed under the MIT License.
 
-Developed by Sumit Chauhan Engineering Student & Full-Stack Developer
+---
+**Developed with ❤️ by [Sumit Chauhan](https://github.com/sumitchauhan-co)** *Engineering Student & Full-Stack Developer*

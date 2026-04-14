@@ -17,7 +17,7 @@ import { AuthContext } from '../contexts/AuthContext.js';
 import Loading from '../components/Loading.js';
 import axios from 'axios';
 import { ModalContext } from '../contexts/ModalContext.js';
-import { LoadingText } from '../utils/loader.js';
+import { LoadingDots } from '../utils/LoadingDots.js';
 import { Icons } from '../utils/icons.js';
 
 const DefaultIcon = L.icon({
@@ -150,7 +150,7 @@ export default function Map() {
             <>
                 <Loading>
                     {!user && (
-                        <span className="sm:text-lg text-sm text-yellow-500/50">
+                        <span className="sm:text-lg text-sm text-neutral-400/75 italic">
                             Ensure you are already logged in!
                         </span>
                     )}
@@ -158,7 +158,7 @@ export default function Map() {
                         <span className="text-pink-500/75 flex gap-1 items-center">
                             <Icons.heart className="rotate-15" />
                             <p>Rendering the world for you</p>
-                            <LoadingText />
+                            <LoadingDots />
                         </span>
                     )}
                 </Loading>
@@ -172,13 +172,13 @@ export default function Map() {
                 <div className="text-3xl sm:text-4xl flex sm:flex-row flex-col gap-3 justify-center items-center text-center text-(--text-color)">
                     <h1>
                         Find{' '}
-                        <span className="border-b-2 border-pink-500">
+                        <span className="border-b-2 border-(--dark-pink-color)">
                             people
                         </span>{' '}
                         nearby{' '}
                     </h1>
                     <div className="flex flex-col justify-center items-center">
-                        <Icons.location className="h-10 w-10 fill-pink-500" />
+                        <Icons.location className="h-10 w-10 fill-(--dark-pink-color)" />
                         <span className="text-sm">5km</span>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ export default function Map() {
                     center={position ?? [23.209871, 77.442187]}
                     zoom={13}
                     scrollWheelZoom
-                    className="w-full h-full"
+                    className="w-full h-full brightness-90"
                 >
                     <TileLayer
                         attribution="© OpenStreetMap contributors"

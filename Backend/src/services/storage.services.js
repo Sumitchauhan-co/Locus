@@ -1,6 +1,7 @@
 import { ImageKit } from '@imagekit/nodejs';
 import { v2 as cloudinary } from 'cloudinary';
-import streamifier from 'streamifier';
+// import streamifier from 'streamifier'; // buffer to chunks (cloudinary)
+import fs from 'fs';
 
 const client = new ImageKit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -14,69 +15,82 @@ cloudinary.config({
 
 // -------------------- Uploaders --------------------
 
-const uploadToImageKit = async ({ buffer, originalname }) => {
+const uploadToImageKit = async ({ filePath, originalname }) => {
+    // const fileBuffer = fs.readFileSync(filePath); // Read the file from the path
+    const fileStream = fs.createReadStream(filePath);
+
     const response = await client.files.upload({
-        file: buffer.toString('base64'),
+        file: fileStream,
         fileName: originalname,
-        folder: 'project-1/locus/',
+        folder: 'locus/',
     });
 
     return response;
 };
 
-const uploadToCloudinary = async ({ buffer, originalname }) => {
-    const response = new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            {
-                folder: 'project-1/locus/',
-                public_id: originalname.split('.')[0],
-                resource_type: 'auto',
-            },
-            (error, result) => {
-                if (error) return reject(error);
-                resolve(result);
-            },
-        );
-        streamifier.createReadStream(buffer).pipe(stream);
+const uploadToCloudinary = async ({ filePath, originalname }) => {
+    // Cloudinary handles the file path directly
+    const response = await cloudinary.uploader.upload(filePath, {
+        folder: 'locus/',
+        public_id: originalname.split('.')[0],
+        resource_type: 'auto',
     });
+
     return response;
 };
+
+// ----- buffer ------
+
+// const uploadToImageKit = async ({ buffer, originalname }) => {
+//     const response = await client.files.upload({
+//         file: buffer.toString('base64'),
+//         fileName: originalname,
+//         folder: 'locus/',
+//     });
+
+//     return response;
+// };
+
+// const uploadToCloudinary = async ({ buffer, originalname }) => {
+//     const response = new Promise((resolve, reject) => {
+//         const stream = cloudinary.uploader.upload_stream(
+//             {
+//                 folder: 'locus/',
+//                 public_id: originalname.split('.')[0],
+//                 resource_type: 'auto',
+//             },
+//             (error, result) => {
+//                 if (error) return reject(error);
+//                 resolve(result);
+//             },
+//         );
+//         streamifier.createReadStream(buffer).pipe(stream);
+//     });
+//     return response;
+// };
 
 // -------------------- Failover Wrapper --------------------
 
-const providers = [uploadToImageKit, uploadToCloudinary];
-
-const isValidMedia = async (url) => {
-    try {
-        const res = await fetch(url, { method: 'HEAD' });
-
-        return res.ok;
-    } catch {
-        return false;
-    }
-};
-
-const uploadFile = async (file) => {
+const uploadFile = async (fileData) => {
     let lastError;
+    const providers = [
+        { name: 'ImageKit', fn: uploadToImageKit },
+        { name: 'Cloudinary', fn: uploadToCloudinary },
+    ];
+
     for (const provider of providers) {
         try {
-            const res = await provider({ ...file });
+            const res = await provider.fn(fileData);
 
-            const valid = await isValidMedia(res.url);
-
-            if (!valid) {
-                throw new Error('Media not accessible');
-            }
-
-            console.log(`${provider.name} is working`);
+            // Note: Removed isValidMedia check to prevent CDN propagation errors
+            console.log(`${provider.name} upload successful`);
             return res;
-
         } catch (error) {
             lastError = error;
-            console.log(`${provider.name} failed:`, error.message);
+            console.error(`${provider.name} failed:`, error.message || error);
         }
     }
-    throw new Error(`All upload providers failed! , Error : ${lastError}`);
+    throw new Error(`All upload providers failed. Last Error: ${lastError}`);
 };
 
 export default uploadFile;

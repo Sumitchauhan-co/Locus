@@ -102,7 +102,7 @@ const Signup: React.FC = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                        <div className="text-start text-yellow-500">
+                        <div className="text-start text-neutral-500/50">
                             <p>{username.trim().split(/\s+/).join('_')}</p>
                         </div>
                         {errors.username?.message && (

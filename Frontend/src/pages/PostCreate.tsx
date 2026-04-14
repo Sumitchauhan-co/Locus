@@ -8,6 +8,7 @@ import { ModalContext } from '../contexts/ModalContext';
 import api from '../api/axios';
 import { ScrollToTop } from '../components/ScrollTo';
 import Loading2 from '../components/Loading2';
+import { LoadingDots } from '../utils/LoadingDots';
 
 interface FormInputs {
     media?: FileList;
@@ -25,6 +26,7 @@ const PostCreate: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const { openModal } = useContext(ModalContext);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const navigate = useNavigate();
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -60,8 +62,22 @@ const PostCreate: React.FC = () => {
             formData.append('caption', data.caption || '');
 
             try {
+                setError(undefined);
+                setUploadProgress(0);
                 setLoading(true);
-                await api.post('/api/post/create', formData);
+                await api.post('/api/post/create', formData, {
+                    onUploadProgress: (progressEvent) => {
+                        const total = progressEvent.total || 0;
+                        const current = progressEvent.loaded;
+
+                        if (total > 0) {
+                            const percentage = Math.floor(
+                                (current * 100) / total,
+                            );
+                            setUploadProgress(percentage);
+                        }
+                    },
+                });
 
                 reset();
                 navigate('/posts');
@@ -95,6 +111,33 @@ const PostCreate: React.FC = () => {
         }
     }, [captionValue]);
 
+    if (loading) {
+        return (
+            <div className="h-screen w-full flex flex-col items-center justify-center gap-2 mb-4">
+                <div className="flex justify-between w-3/5 sm:w-1/4 text-sm font-medium text-(--text-color)">
+                    <span>
+                        {uploadProgress < 100
+                            ? (<p>Uploading<LoadingDots/></p>)
+                            : (<p>Processing on server<LoadingDots/></p>)}
+                    </span>
+                    <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-3/5 sm:w-1/4 bg-neutral-800 rounded-full h-2.5 overflow-hidden border border-white/10">
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${uploadProgress}%` }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 50,
+                            damping: 15,
+                        }}
+                        className="bg-pink-500 h-full shadow-[0_0_10px_#ec4899]"
+                    />
+                </div>
+            </div>
+        );
+    }
+
     return (
         <section className="h-fit py-20">
             <ScrollToTop />
@@ -117,7 +160,7 @@ const PostCreate: React.FC = () => {
             >
                 <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] md:w-[85vmin] xl:w-2/5 hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="flex flex-col gap-5">
-                        <label className="text-2xl text-(--text-color)">
+                        <label className="text-xl text-(--text-color) font-semibold">
                             <span>Post</span>
                         </label>
                         <div className="flex flex-col justify-center items-center">
@@ -126,8 +169,8 @@ const PostCreate: React.FC = () => {
                                 className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
-                            <div className="w-full p-2 text-yellow-500/50 italic">
-                                <p>{'(size < 50MB)'}</p>
+                            <div className="w-full text-sm p-2 text-neutral-400/75 italic">
+                                <p>{'*(size < 50MB)'}</p>
                             </div>
                             {errors.media?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
@@ -138,7 +181,7 @@ const PostCreate: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col gap-5">
-                        <label className="text-2xl text-(--text-color) transition-all ease-in-out">
+                        <label className="text-xl text-(--text-color) transition-all ease-in-out font-semibold">
                             <span>Caption or Message</span>
                         </label>
                         <div className="flex flex-col justify-center items-center">
@@ -155,8 +198,8 @@ const PostCreate: React.FC = () => {
                                     rows={1}
                                 />
                             </div>
-                            <div className="w-full p-2 text-yellow-500/50 italic">
-                                <p>{'(word limit : 500)'}</p>
+                            <div className="w-full text-sm p-2 text-neutral-400/75 italic">
+                                <p>{'*(word limit : 500)'}</p>
                             </div>
                             {errors.caption?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
@@ -192,8 +235,8 @@ const PostCreate: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
-                    <div className="text-yellow-500/50 text-center">
-                        <p className="font-bold inline text-sm">Note</p> :
+                    <div className="text-neutral-400/75 text-center">
+                        <p className="font-bold inline text-sm">*Note</p> :
                         Create post with media & caption or just message or only
                         with media
                     </div>

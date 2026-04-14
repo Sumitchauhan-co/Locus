@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const LoadingText = () => {
+export const LoadingDots = () => {
     const [dots, setDots] = useState('');
 
     useEffect(() => {

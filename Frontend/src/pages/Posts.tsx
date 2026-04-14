@@ -6,7 +6,7 @@ import { ScrollToTop } from '../components/ScrollTo.tsx';
 import PostsFeed from '../components/PostsFeed.tsx';
 import type { Post } from '../types/Posts.ts';
 import Loading from '../components/Loading.tsx';
-import { LoadingText } from '../utils/loader.tsx';
+import { LoadingDots } from '../utils/LoadingDots.tsx';
 
 const Posts: React.FC = () => {
     const [posts, setPosts] = useState<Array<Post>>([]);
@@ -32,8 +32,8 @@ const Posts: React.FC = () => {
     if (loading) {
         return (
             <Loading>
-                <span className="text-sm sm:text-lg text-neutral-400 flex gap-1 items-center">
-                    Hold tight, while we fetch your data <LoadingText />
+                <span className="text-sm sm:text-lg text-neutral-300 flex gap-1 items-center">
+                    Hold tight, while we fetch your data <LoadingDots />
                 </span>
             </Loading>
         );

@@ -51,7 +51,7 @@ const ButtonContainer: React.FC = () => {
     return (
         <section
             title="Click on a die"
-            className="relative h-[25vh] grid content-center"
+            className="relative grid content-center"
         >
             <div className="flex flex-col justify-between items-center gap-5 group">
                 <Button className="font-semibold" />

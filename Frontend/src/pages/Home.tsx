@@ -2,17 +2,11 @@ import React, { useRef } from 'react';
 import Introduction from '../components/Introduction';
 import ButtonContainer from '../components/ButtonContainer';
 import { Icons } from '../utils/icons';
-import { ScrollToBottom, ScrollToTop } from '../components/ScrollTo';
-import { useScroll, useTransform, motion } from 'framer-motion';
+import { ScrollToTop } from '../components/ScrollTo';
+import Cards from '../components/Cards';
 
 const Home: React.FC = () => {
     const targetRef = useRef<HTMLDivElement | null>(null);
-
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: ['start end', 'end start'],
-    });
-    const opacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
 
     return (
         <section
@@ -39,24 +33,15 @@ const Home: React.FC = () => {
                 </div>
             </div>
             <div className="w-full flex justify-center text-6xl sm:text-7xl my-15 font-sans">
-                <h1 className="tracking-[0.2rem] sm:tracking-[0.3rem] font-[cursive] text-pink-500">
+                <h1 className="tracking-[0.2rem] sm:tracking-[0.3rem] font-[cursive] text-(--dark-pink-color)">
                     LOCUS
                 </h1>
             </div>
 
             <Introduction />
             {/* <Intro/> */}
+            <Cards />
             <ButtonContainer />
-            <motion.div
-                onClick={ScrollToBottom}
-                style={{ opacity }}
-                className="w-full pb-10 cursor-pointer sticky flex flex-col justify-center items-center bottom-0 sm:text-lg text-[1rem] gap-2"
-            >
-                <span>Scroll down</span>
-                <div className="h-10 w-10 flex justify-center items-center">
-                    <Icons.arrowdown className="h-7 w-7 sm:h-8 sm:w-8 animate-bounce"></Icons.arrowdown>
-                </div>
-            </motion.div>
         </section>
     );
 };

@@ -57,7 +57,6 @@ const Login: React.FC = () => {
         try {
             setLoading(true);
             const res = await login(payload);
-            console.log(res);
 
             if (res?.errorMessage) {
                 setError(
