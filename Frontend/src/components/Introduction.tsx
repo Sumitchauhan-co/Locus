@@ -47,7 +47,7 @@ const Introduction: React.FC = () => {
             }}
             ref={targetRef}
             viewport={{ once: true, amount: 0.2 }}
-            className="h-[350vh] sm:py-25 sm:px-5 px-2"
+            className="h-[375vh] sm:py-25 sm:px-5 px-2"
         >
             <div className="sticky h-screen top-0 overflow-hidden flex items-center">
                 <motion.div
@@ -57,7 +57,7 @@ const Introduction: React.FC = () => {
                     {words.map((word, i) => (
                         <span
                             key={i}
-                            className={`transition duration-300 font-[sans-serif] ${
+                            className={`transition duration-300 font-[sans-serif] tracking-[0.5rem] italic ${
                                 i <= currentWord
                                     ? 'text-(--text-pink-color)'
                                     : 'text-(--text-pink-color2)'
