@@ -6,7 +6,7 @@ import {
 } from 'framer-motion';
 import React, { useRef, useState } from 'react';
 
-const text = 'Here, you can post your social life and get to see others!';
+const text = 'The central point where your moments meet the map. Pin your life to the world and discover the social pulse of every place.';
 const words = text.split('');
 
 const Introduction: React.FC = () => {
@@ -17,7 +17,7 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['100%', '-175%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['75%', '-150%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
@@ -47,7 +47,7 @@ const Introduction: React.FC = () => {
             }}
             ref={targetRef}
             viewport={{ once: true, amount: 0.2 }}
-            className="h-[275vh] sm:py-25 sm:px-5 px-2"
+            className="h-[350vh] sm:py-25 sm:px-5 px-2"
         >
             <div className="sticky h-screen top-0 overflow-hidden flex items-center">
                 <motion.div

@@ -35,7 +35,6 @@ const Navbar: React.FC = () => {
 
     return (
         <nav className="relative p-5 z-99999 flex justify-between items-center">
-            {/* Logo Section */}
             <motion.div
                 style={{ rotate }}
                 drag
@@ -47,10 +46,8 @@ const Navbar: React.FC = () => {
                 <Icons.logo className="h-10 w-10" />
             </motion.div>
 
-            {/* Desktop Links Container */}
-            <div className={`h-full ${user ? 'lg:w-4/7 w-5/7' : 'w-4/5 lg:w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}>
+            <div className={`h-full ${user ? 'lg:w-4/7 w-3/4' : 'w-6/7 lg:w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}>
                 
-                {/* Map through base links */}
                 {baseLinks.map((link) => (
                     <motion.div
                         key={link.path}
@@ -64,7 +61,6 @@ const Navbar: React.FC = () => {
                     </motion.div>
                 ))}
 
-                {/* Auth-Dependent Links */}
                 {!user ? (
                     <>
                         <motion.div
@@ -99,7 +95,6 @@ const Navbar: React.FC = () => {
                 )}
             </div>
 
-            {/* Mobile Menu Icon */}
             <div onClick={() => navigate('/menu')} className="md:hidden flex cursor-pointer">
                 <Icons.menu className="h-7 w-7" />
             </div>
