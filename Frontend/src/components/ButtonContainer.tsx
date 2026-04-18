@@ -49,9 +49,12 @@ const ButtonContainer: React.FC = () => {
             : Icons.randomFaceDie;
 
     return (
-        <section
+        <motion.section
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1 }}
             title="Click on a die"
-            className="relative grid content-center"
+            className="relative grid content-center mb-15"
         >
             <div className="flex flex-col justify-between items-center gap-5 group">
                 <Button className="font-semibold" />
@@ -83,7 +86,7 @@ const ButtonContainer: React.FC = () => {
                     </span>
                 </div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

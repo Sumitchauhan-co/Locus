@@ -1,14 +1,39 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { useMediaQuery } from '@react-hook/media-query';
 import { NavLink } from 'react-router-dom';
 
 const Cards: React.FC = () => {
     const isDesktop = useMediaQuery('(min-width: 640px)');
 
+    const cardVariants: Variants = {
+        hidden: {
+            y: 50,
+            opacity: 0,
+        },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 1,
+                ease: 'easeOut',
+            },
+        },
+    };
+
     return (
-        <section className="h-fit w-full flex flex-col mt-50 mb-25 gap-10">
-            <div className="text-5xl md:text-6xl flex flex-col gap-3 text-center">
+        <section className="h-fit w-full flex flex-col my-50 gap-10">
+            <motion.div
+                initial={{ y: 75, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{
+                    type: 'spring',
+                    stiffness: 150,
+                    damping: 12,
+                    duration: 1,
+                }}
+                className="text-5xl md:text-6xl flex flex-col gap-3 text-center"
+            >
                 <h2>Share your journey instantly</h2>
                 <div className="h-full flex justify-center items-center">
                     <motion.div
@@ -18,12 +43,12 @@ const Cards: React.FC = () => {
                         className="h-1 bg-pink-500 rounded-full"
                     ></motion.div>
                 </div>
-            </div>
+            </motion.div>
             <div className="h-fit w-full flex flex-col p-5 md:mt-25 mt-15 gap-10 md:gap-25">
                 <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1 }}
+                    variants={cardVariants}
+                    initial="hidden"
+                    whileInView="visible"
                     className="h-fit w-full border border-(--border-color) rounded-lg hover:bg-(--secondary-color) p-5 md:p-10 flex md:flex-row flex-col gap-10"
                 >
                     <div className="md:w-1/2 w-full flex flex-col items-center justify-center md:gap-10 gap-5">
@@ -46,7 +71,7 @@ const Cards: React.FC = () => {
                                 className="lg:h-175 md:h-150 aspect-[16:9]"
                                 src="/feat-post.webp"
                                 alt="post feature"
-                                loading='lazy'
+                                loading="lazy"
                                 height={700}
                                 width={400}
                             />
@@ -54,9 +79,9 @@ const Cards: React.FC = () => {
                     </div>
                 </motion.div>
                 <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1 }}
+                    variants={cardVariants}
+                    initial="hidden"
+                    whileInView="visible"
                     className="h-fit w-full border border-(--border-color) rounded-lg hover:bg-(--secondary-color) p-5 md:p-10 flex md:flex-row flex-col gap-10"
                 >
                     <div className="md:w-1/2 w-full flex flex-col justify-center items-center md:gap-10 gap-5">
@@ -79,7 +104,7 @@ const Cards: React.FC = () => {
                                 className="lg:h-175 md:h-150 aspect-[16:9]"
                                 src="/feat-comment.webp"
                                 alt="post feature"
-                                loading='lazy'
+                                loading="lazy"
                                 height={700}
                                 width={400}
                             />
@@ -87,9 +112,9 @@ const Cards: React.FC = () => {
                     </div>
                 </motion.div>
                 <motion.div
-                    initial={{ y: 50, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 1 }}
+                    variants={cardVariants}
+                    initial="hidden"
+                    whileInView="visible"
                     className="h-fit w-full border border-(--border-color) rounded-lg hover:bg-(--secondary-color) p-5 md:p-10 flex flex-col gap-10"
                 >
                     <div className="w-full flex flex-col items-center justify-center md:gap-10 gap-5 p-5">
@@ -112,7 +137,7 @@ const Cards: React.FC = () => {
                                 className="md:block hidden md:aspect-[16:9] aspect-[16:9]"
                                 src="/feat-map.webp"
                                 alt="post feature"
-                                loading='lazy'
+                                loading="lazy"
                                 height={700}
                                 width={1000}
                             />
@@ -120,7 +145,7 @@ const Cards: React.FC = () => {
                                 className="block md:hidden md:aspect-[16:9] aspect-[16:9]"
                                 src="/feat-map(phone).webp"
                                 alt="post feature"
-                                loading='lazy'
+                                loading="lazy"
                                 height={700}
                                 width={400}
                             />

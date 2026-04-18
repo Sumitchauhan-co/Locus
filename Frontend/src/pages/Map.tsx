@@ -17,7 +17,6 @@ import { AuthContext } from '../contexts/AuthContext.js';
 import Loading from '../components/Loading.js';
 import axios from 'axios';
 import { ModalContext } from '../contexts/ModalContext.js';
-import { LoadingDots } from '../utils/LoadingDots.js';
 import { Icons } from '../utils/icons.js';
 
 const DefaultIcon = L.icon({
@@ -145,7 +144,7 @@ export default function Map() {
         );
     }
 
-    if (!loading) {
+    if (loading) {
         return (
             <>
                 <Loading>
@@ -156,9 +155,8 @@ export default function Map() {
                     )}
                     {user && (
                         <span className="text-pink-500/75 flex gap-1 items-center">
-                            <Icons.heart className="animate-wiggle" />
+                            <Icons.heart className="animate-wiggle h-7 w-7" />
                             <p>Rendering the world for you</p>
-                            <LoadingDots />
                         </span>
                     )}
                 </Loading>

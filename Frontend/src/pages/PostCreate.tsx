@@ -170,7 +170,7 @@ const PostCreate: React.FC = () => {
                                 type="file"
                             />
                             <div className="w-full text-sm p-2 text-neutral-400/75 italic">
-                                <p>{'*(size < 50MB)'}</p>
+                                <p>{'*(size < 25MB)'}</p>
                             </div>
                             {errors.media?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
