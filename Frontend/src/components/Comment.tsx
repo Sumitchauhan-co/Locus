@@ -5,6 +5,7 @@ import Loading2 from './Loading2';
 import { AuthContext } from '../contexts/AuthContext';
 import { ModalContext } from '../contexts/ModalContext';
 import { Icons } from '../utils/icons';
+import { getBgColor } from '../utils/bgColor';
 
 interface CommentProps {
     className: string;
@@ -38,8 +39,11 @@ const Comment: React.FC<CommentProps> = ({
     const [comments, setComments] = useState<Array<Comment>>([]);
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
-    const {openModal} = useContext(ModalContext)
-    const {user} = useContext(AuthContext)
+    const { openModal } = useContext(ModalContext);
+    const { user } = useContext(AuthContext);
+
+    const initial = user?.username?.charAt(0).toUpperCase() || 'U';
+    const bgColor = getBgColor(user?.username || '');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -132,10 +136,17 @@ const Comment: React.FC<CommentProps> = ({
                                         key={comment?._id}
                                         className={`h-fit w-full relative p-2 flex flex-col border border-(--border-color)`}
                                     >
-                                        <div className="flex flex-col relative mb-2">
-                                            <span className="sm:text-sm text-(--text-color2) hover:underline cursor-pointer">
-                                                {comment?.username}
-                                            </span>
+                                        <div className="flex flex-col relative mb-2 gap-3">
+                                            <div className="flex justify-start items-center gap-2">
+                                                <div
+                                                    className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-sm shadow-sm`}
+                                                >
+                                                    <span>{initial}</span>
+                                                </div>
+                                                <span className="sm:text-sm text-(--text-color2) hover:underline cursor-pointer">
+                                                    {comment?.username}
+                                                </span>
+                                            </div>
                                             <p className="sm:text-[0.925rem] text-[1rem]">
                                                 {comment?.text}
                                             </p>
