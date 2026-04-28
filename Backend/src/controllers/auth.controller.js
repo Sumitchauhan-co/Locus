@@ -5,19 +5,32 @@ import bcrypt from 'bcryptjs';
 const registerUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const username = req.body.username.trim().split(/\s+/).join('_');
 
-        const existingUser = await authModel.findOne({
-            $or: [{ username }, { email }],
-        });
+        const username = req.body.username.trim().split(/\s+/).join(' ');
+
+        const isValid = /^[a-zA-Z0-9_\- .@]*$/.test(username);
+
+        if (!isValid) {
+            return res.status(400).json({
+                message:
+                    'Invalid username. You can only use letters, numbers, and the following symbols: _ - . @',
+            });
+        }
+
+        const existingUser = await authModel.findOne({ email });
 
         if (existingUser) {
             if (existingUser.username === username) {
-                return res.status(409).json({ message: 'Username already taken' });
+                return res
+                    .status(409)
+                    .json({ message: 'Username already taken' });
             }
 
             if (existingUser.email === email) {
-                return res.status(409).json({ message: "Registration failed. Please check your details or try logging in." });
+                return res.status(409).json({
+                    message:
+                        'Registration failed. Please check your details or try logging in.',
+                });
             }
         }
 
@@ -75,9 +88,7 @@ const loginUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const user = await authModel.findOne({
-            $or: [{ username }, { email }],
-        });
+        const user = await authModel.findOne({ email });
 
         if (!user) {
             return res.status(404).json({
@@ -135,10 +146,18 @@ const loginUser = async (req, res) => {
 
 const refreshAccessToken = async (req, res) => {
     try {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            return res.status(200).json({
+                message: 'Session is active, no refresh needed',
+            });
+        }
+
         const token = req.cookies.refreshToken;
 
         if (!token) {
-            return res.status(401).json({ message: 'Not authorized for action' });
+            return res
+                .status(401)
+                .json({ message: 'Not authorized for action' });
         }
 
         const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
@@ -186,21 +205,30 @@ const logoutUser = async (req, res) => {
     }
 };
 
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
     try {
-        const user = req.user;
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if (req.isAuthenticated()) {
+            return res.status(200).json({
+                message: 'User fetched via Google Session',
+                user: req.user,
+            });
         }
 
-        res.status(200).json({
-            message: 'User fetched successfully',
-            user,
-        });
+        const token = req.cookies.refreshToken;
+        if (token) {
+            const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+            const user = await authModel.findById(decoded.id);
+            if (user) {
+                return res.status(200).json({
+                    message: 'User fetched via JWT',
+                    user,
+                });
+            }
+        }
+
+        res.status(401).json({ message: 'No active session or token' });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'Failed to get user' });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 

@@ -12,10 +12,10 @@
     --breakpoint-sm: 575px;
     --breakpoint-x-sm: 425px;
 
-    --animate-wiggle: wiggle 1.5s ease-in-out infinite ;
+    --animate-wiggle: wiggle 1.5s ease-in-out infinite;
 
     @keyframes wiggle {
-        0%{
+        0% {
             transform: rotate(-30deg);
         }
         50% {

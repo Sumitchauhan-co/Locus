@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { ModalContext } from '../contexts/ModalContext';
 import { AuthContext } from '../contexts/AuthContext';
 import { Icons } from '../utils/icons';
+import { getBgColor } from '../utils/bgColor';
 
 const linkVariants: Variants = {
     hover: { scale: 1.125, y: 1 },
-    tap: { scale: 0.975 }
+    tap: { scale: 0.975 },
 };
 
 const Navbar: React.FC = () => {
@@ -16,6 +17,9 @@ const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const { scrollYProgress } = useScroll();
     const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+
+    const initial = user?.username?.charAt(0).toUpperCase() || 'U';
+    const bgColor = getBgColor(user?.username || '');
 
     const baseLinks = [
         { label: 'Home', path: '/' },
@@ -26,7 +30,8 @@ const Navbar: React.FC = () => {
         { label: 'About', path: '/about' },
     ];
 
-    const linkStyle = "p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg";
+    const linkStyle =
+        'p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg';
 
     const handleNavigation = (path: string) => {
         closeModal();
@@ -45,9 +50,9 @@ const Navbar: React.FC = () => {
             >
                 <Icons.logo className="h-10 w-10" />
             </motion.div>
-
-            <div className={`h-full ${user ? 'lg:w-4/7 w-3/4' : 'w-6/7 lg:w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}>
-                
+            <div
+                className={`h-full ${user ? 'lg:w-4/7 w-3/4' : 'w-6/7 lg:w-3/4'} hidden md:flex justify-between items-center font-[sans-serif]`}
+            >
                 {baseLinks.map((link) => (
                     <motion.div
                         key={link.path}
@@ -83,20 +88,36 @@ const Navbar: React.FC = () => {
                         </motion.div>
                     </>
                 ) : (
-                    <motion.div
-                        variants={linkVariants}
-                        whileHover="hover"
-                        whileTap="tap"
-                        onClick={() => logout()}
-                        className={linkStyle}
-                    >
-                        <span>Logout</span>
-                    </motion.div>
+                    <>
+                        <motion.div
+                            variants={linkVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                            onClick={() => logout()}
+                            className={linkStyle}
+                        >
+                            <span>Logout</span>
+                        </motion.div>
+                        <div
+                            className={`h-8 w-8 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white shadow-sm`}
+                        >
+                            <span>{initial}</span>
+                        </div>
+                    </>
                 )}
             </div>
-
-            <div onClick={() => navigate('/menu')} className="md:hidden flex cursor-pointer">
-                <Icons.menu className="h-7 w-7" />
+            <div className="flex justify-center items-center gap-5 md:hidden">
+                <div
+                    className={`h-8 w-8 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white shadow-sm`}
+                >
+                    <span>{initial}</span>
+                </div>
+                <div
+                    onClick={() => navigate('/menu')}
+                    className="flex cursor-pointer"
+                >
+                    <Icons.menu className="h-7 w-7" />
+                </div>
             </div>
         </nav>
     );

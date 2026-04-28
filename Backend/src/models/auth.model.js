@@ -4,7 +4,6 @@ const authSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
     },
     email: {
         type: String,
@@ -13,13 +12,20 @@ const authSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            const isOauth = this.googleId;
+            return !isOauth;
+        },
+    },
+    googleId: {
+        type: String,
+        default: null,
     },
     refreshToken: {
         type: String,
-    }
+    },
 });
 
 const authModel = mongoose.model('Auth', authSchema);
 
-export default authModel
+export default authModel;

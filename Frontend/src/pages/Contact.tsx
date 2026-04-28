@@ -40,7 +40,7 @@ const ContactUs: React.FC = () => {
             <ScrollToTop />
 
             <form
-                className="h-fit w-fit "
+                className="h-fit min-w-fit"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <div className="h-fit w-full mb-8">
@@ -60,30 +60,30 @@ const ContactUs: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Enter Your name"
-                        className="p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
+                        className="p-2 rounded-xl bg-(--input-color) pl-4 outline-none border-3 border-transparent focus-visible:border-(--input-ring-color)"
                         {...register('fullName', { required: true })}
                     />
                 </div>
                 <div className="w-fit flex sm:flex-row flex-col gap-4">
-                    <div className="h-fit w-full flex flex-col mb-8">
+                    <div className="flex w-1/2 flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Email
                         </label>
                         <input
                             type="text"
                             placeholder="Enter Your email"
-                            className="w-fit p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
+                            className="w-full p-2 rounded-xl bg-(--input-color) pl-4 outline-none border-3 border-transparent focus-visible:border-(--input-ring-color)"
                             {...register('email', { required: true })}
                         />
                     </div>
-                    <div className="h-fit w-fit flex flex-col mb-8">
+                    <div className="h-fit w-1/2 flex flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Phone (optional)
                         </label>
                         <input
                             type="text"
                             placeholder="Phone"
-                            className="w-fit p-2 rounded-xl bg-(--input-color) pl-4 outline-none focus-visible:border-3 focus-visible:border-(--input-ring-color)"
+                            className="w-full p-2 rounded-xl bg-(--input-color) pl-4 outline-none border-3 border-transparent focus-visible:border-(--input-ring-color)"
                             {...register('phone', { required: false })}
                         />
                     </div>
@@ -94,7 +94,7 @@ const ContactUs: React.FC = () => {
                     </label>
                     <div className="w-full relative group">
                         <select
-                            className="w-full p-2 rounded-xl bg-(--input-color) pl-4 outline-none appearance-none focus-visible:border-3 focus-visible:border-(--input-ring-color) cursor-pointer"
+                            className="w-full p-2 rounded-xl bg-(--input-color) pl-4 outline-none appearance-none border-3 border-transparent focus-visible:border-(--input-ring-color) cursor-pointer"
                             {...register('subject', { required: true })}
                         >
                             <option hidden>Enter a subject</option>
@@ -132,7 +132,7 @@ const ContactUs: React.FC = () => {
                         Message
                     </label>
                     <textarea
-                        className="text-sm mb-2 rounded-xl bg-(--input-color) p-2 outline-none focus-visible:border-3 transition-all ease-in duration-75 focus-visible:border-(--input-ring-color)"
+                        className="text-sm mb-2 rounded-xl bg-(--input-color) p-2 outline-none border-3 border-transparent focus-visible:border-(--input-ring-color) transition-all ease-in duration-75"
                         placeholder="Tell us how can we help you..."
                         rows={5}
                         {...register('message', { maxLength: 300 })}

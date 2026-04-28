@@ -4,6 +4,7 @@ import { formatPostTime } from '../utils/time.ts';
 import type { Post } from '../types/Posts.ts';
 import Comment from './Comment.tsx';
 import { Icons } from '../utils/icons.ts';
+import { getBgColor } from '../utils/bgColor.ts';
 
 interface PostCardProps {
     post: Post;
@@ -16,7 +17,7 @@ interface PostCardProps {
     currentUserId?: string;
     isAdmin?: boolean;
     showComment: boolean;
-    onToggleComments: (id: string) => void
+    onToggleComments: (id: string) => void;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -29,10 +30,13 @@ const PostCard: React.FC<PostCardProps> = ({
     currentUserId,
     isAdmin,
     showComment,
-    onToggleComments
+    onToggleComments,
 }) => {
     const [loaded, setLoaded] = useState(false);
     const isLiked = post.likesCount.includes(currentUserId ?? '');
+
+    const initial = post.user?.username?.charAt(0).toUpperCase() || 'U';
+    const bgColor = getBgColor(post.user?.username || '');
 
     return (
         <div className="relative group">
@@ -40,10 +44,17 @@ const PostCard: React.FC<PostCardProps> = ({
                 className={`${isActive ? 'blur-xs animate-pulse' : ''} 
                 h-fit w-full relative p-2 flex flex-col border border-(--border-color) rounded-xl ${isOwner ? 'rounded-tl-none' : ''} bg-(--tertiary-color) hover:bg-(--post-bg-color) transition-colors`}
             >
-                <div className="flex flex-col relative mb-2">
-                    <span className="sm:text-sm text-(--text-color2) hover:underline cursor-pointer">
-                        {post.user?.username}
-                    </span>
+                <div className="flex flex-col relative mb-2 gap-3">
+                    <div className="flex justify-start items-center gap-2">
+                        <div
+                            className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-sm shadow-sm`}
+                        >
+                            <span>{initial}</span>
+                        </div>
+                        <span className="sm:text-sm text-(--text-color2) hover:underline cursor-pointer">
+                            {post.user?.username}
+                        </span>
+                    </div>
                     <p className="sm:text-[0.925rem] text-[1rem]">
                         {post.caption}
                     </p>
@@ -51,7 +62,9 @@ const PostCard: React.FC<PostCardProps> = ({
                     {(isOwner || isAdmin) && (
                         <motion.button
                             whileTap={{ scale: 1.2 }}
-                            onClick={() => onToggleOptions(isActive ? null : post._id)}
+                            onClick={() =>
+                                onToggleOptions(isActive ? null : post._id)
+                            }
                             className="absolute top-0 right-0 p-1"
                         >
                             <Icons.threeDots className="h-4 w-4" />
@@ -61,7 +74,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
                 {/* Media Container */}
                 {post.mediaURL && (
-                    <div className="relative w-full aspect-4/5 rounded-lg bg-neutral-800 overflow-hidden mt-2">
+                    <div className="relative w-full aspect-5/6 rounded-lg bg-neutral-800 overflow-hidden mt-2">
                         {!loaded && (
                             <div className="absolute inset-0 animate-pulse bg-neutral-700" />
                         )}
@@ -142,14 +155,14 @@ const PostCard: React.FC<PostCardProps> = ({
             )}
             {showComment && (
                 <Comment
-                    className={`w-full h-full ${isOwner ? "rounded-tl-none" : ""}`}
+                    className={`w-full h-full ${isOwner ? 'rounded-tl-none' : ''}`}
                     currentUserId={currentUserId}
                     isOwner={isOwner}
                     isAdmin={isAdmin}
                     isActive={isActive}
                     postId={post._id}
                     showComment={showComment}
-                    setCommentOff={() => onToggleComments("")}
+                    setCommentOff={() => onToggleComments('')}
                 />
             )}
         </div>

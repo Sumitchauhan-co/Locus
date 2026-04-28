@@ -17,7 +17,7 @@ const Introduction: React.FC = () => {
         offset: ['start end', 'end start'],
     });
 
-    const translateX = useTransform(scrollYProgress, [0, 1], ['75%', '-150%']);
+    const translateX = useTransform(scrollYProgress, [0, 1], ['90%', '-90%']);
 
     const progressIndex = useTransform(
         scrollYProgress,
@@ -32,6 +32,11 @@ const Introduction: React.FC = () => {
     });
 
     const opacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.75]);
+
+    // 1. Syncing the line perfectly with the text movement range
+    // We adjust the range to [0.1, 0.9] so it doesn't move while the section is just entering the view
+    const lineSync = useTransform(scrollYProgress, [0.1, 0.9], [0, 1]);
+    const headPosition = useTransform(lineSync, [0, 1], ['0%', '100%']);
 
     return (
         <motion.section
@@ -49,7 +54,7 @@ const Introduction: React.FC = () => {
             viewport={{ once: true, amount: 0.2 }}
             className="h-[375vh] sm:py-25 sm:px-5 px-2"
         >
-            <div className="sticky h-screen top-0 overflow-hidden flex items-center">
+            <div className="sticky h-screen top-0 overflow-hidden flex flex-col justify-center items-center">
                 <motion.div
                     style={{ x: translateX }}
                     className="text-center text-7xl sm:text-8xl leading-relaxed font-medium whitespace-nowrap "
@@ -67,6 +72,28 @@ const Introduction: React.FC = () => {
                         </span>
                     ))}
                 </motion.div>
+
+                <div className="relative w-full max-w-3xl mt-24 px-4">
+                    
+                    <div className="relative h-[2px] w-full bg-pink-500/10 rounded-full">
+                        
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full mr-4 w-2 h-2 rounded-full border border-pink-500/50" />
+
+                        <motion.div 
+                            style={{ scaleX: lineSync, transformOrigin: "left" }}
+                            className="absolute inset-0 h-full bg-pink-500 shadow-[0_0_8px_#ec4899]"
+                        />
+
+                        <motion.div 
+                            style={{ left: headPosition }}
+                            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
+                        >
+                            <div className="w-3 h-3 bg-white rounded-full shadow-[0_0_12px_#ec4899] border-2 border-pink-500" />
+                        </motion.div>
+
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full ml-4 w-2 h-2 rounded-full border border-pink-500/50" />
+                    </div>
+                </div>
             </div>
         </motion.section>
     );

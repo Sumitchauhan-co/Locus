@@ -32,41 +32,57 @@ import { TiHeart } from 'react-icons/ti';
 
 import { BiTargetLock } from 'react-icons/bi';
 
+import { PiPersonSimpleRunBold, PiPersonSimpleBike } from 'react-icons/pi';
+
+import { GiSupersonicArrow, GiWindHole } from 'react-icons/gi';
+
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 export const Icons = {
-    randomFaceDie : GiPerspectiveDiceSixFacesRandom,
-    oneFaceDie : GiPerspectiveDiceSixFacesOne,
-    twoFaceDie : GiPerspectiveDiceSixFacesTwo,
-    threeFaceDie : GiPerspectiveDiceSixFacesThree,
-    fourFaceDie : GiPerspectiveDiceSixFacesFour,
-    fiveFaceDie : GiPerspectiveDiceSixFacesFive,
-    sixFaceDie : GiPerspectiveDiceSixFacesSix,
+    randomFaceDie: GiPerspectiveDiceSixFacesRandom,
+    oneFaceDie: GiPerspectiveDiceSixFacesOne,
+    twoFaceDie: GiPerspectiveDiceSixFacesTwo,
+    threeFaceDie: GiPerspectiveDiceSixFacesThree,
+    fourFaceDie: GiPerspectiveDiceSixFacesFour,
+    fiveFaceDie: GiPerspectiveDiceSixFacesFive,
+    sixFaceDie: GiPerspectiveDiceSixFacesSix,
 
-    cross : RxCross1,
-    bin : ImBin,
-    threeDots : BsThreeDotsVertical,
+    cross: RxCross1,
+    bin: ImBin,
+    threeDots: BsThreeDotsVertical,
 
-    logo : SiReactivex,
+    logo: SiReactivex,
 
-    arrowUp : FaArrowAltCircleUp,
-    arrowdown : FaArrowAltCircleDown,
+    arrowUp: FaArrowAltCircleUp,
+    arrowdown: FaArrowAltCircleDown,
 
-    openEye : FaEye,
-    closeEye : FaEyeSlash,
+    openEye: FaEye,
+    closeEye: FaEyeSlash,
 
-    menu : TiThMenu,
+    menu: TiThMenu,
 
-    likeHeart : FaHeart,
-    unlikeHeart : FaRegHeart,
+    likeHeart: FaHeart,
+    unlikeHeart: FaRegHeart,
 
-    comment : FaRegComment,
+    comment: FaRegComment,
 
-    emoji1 : BsEmojiGrin,
-    emoji2 : BsEmojiHeartEyes,
-    emoji3 : BsEmojiSunglasses,
+    emoji1: BsEmojiGrin,
+    emoji2: BsEmojiHeartEyes,
+    emoji3: BsEmojiSunglasses,
 
-    location : FaLocationDot,
-    heart : TiHeart,
+    location: FaLocationDot,
+    heart: TiHeart,
 
-    target : BiTargetLock
-}
+    target: BiTargetLock,
+
+    person: PiPersonSimpleRunBold,
+    personOnBike: PiPersonSimpleBike,
+
+    arrow: GiSupersonicArrow,
+
+    windGate: GiWindHole,
+
+    optOpenArrow: IoIosArrowDown,
+
+    optCloseArrow: IoIosArrowUp,
+};

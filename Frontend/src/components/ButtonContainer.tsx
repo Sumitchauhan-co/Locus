@@ -54,10 +54,10 @@ const ButtonContainer: React.FC = () => {
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ duration: 1 }}
             title="Click on a die"
-            className="relative grid content-center mb-15"
+            className="relative grid content-center mb-10 mt-20"
         >
             <div className="flex flex-col justify-between items-center gap-5 group">
-                <Button className="font-semibold" />
+                <Button text="Create Post"/>
                 <motion.div
                     onClick={rollDice}
                     whileTap={{

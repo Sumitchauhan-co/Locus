@@ -9,6 +9,7 @@ import api from '../api/axios';
 import { ScrollToTop } from '../components/ScrollTo';
 import Loading2 from '../components/Loading2';
 import { LoadingDots } from '../utils/LoadingDots';
+import { Icons } from '../utils/icons';
 
 interface FormInputs {
     media?: FileList;
@@ -30,6 +31,9 @@ const PostCreate: React.FC = () => {
 
     const navigate = useNavigate();
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const [openOpt1, setOpenOpt1] = useState(false);
+    const [openOpt2, setOpenOpt2] = useState(false);
 
     const {
         register,
@@ -96,7 +100,7 @@ const PostCreate: React.FC = () => {
 
     const { ref: captionRef, ...captionRegister } = register('caption', {
         maxLength: {
-            value: 500,
+            value: 300,
             message: 'Caption is too long!',
         },
     });
@@ -116,9 +120,17 @@ const PostCreate: React.FC = () => {
             <div className="h-screen w-full flex flex-col items-center justify-center gap-2 mb-4">
                 <div className="flex justify-between w-3/5 sm:w-1/4 text-sm font-medium text-(--text-color)">
                     <span>
-                        {uploadProgress < 100
-                            ? (<p>Uploading<LoadingDots/></p>)
-                            : (<p>Processing on server<LoadingDots/></p>)}
+                        {uploadProgress < 100 ? (
+                            <p>
+                                Uploading
+                                <LoadingDots />
+                            </p>
+                        ) : (
+                            <p>
+                                Processing on server
+                                <LoadingDots />
+                            </p>
+                        )}
                     </span>
                     <span>{uploadProgress}%</span>
                 </div>
@@ -169,9 +181,21 @@ const PostCreate: React.FC = () => {
                                 className={`w-[90%] border-2 border-(--input-ring-color) p-2 rounded-xl text-[1rem] ${hasImage ? 'text-white' : 'text-neutral-500'}`}
                                 type="file"
                             />
-                            <div className="w-full text-sm p-2 text-neutral-400/75 italic">
-                                <p>{'*(size < 25MB)'}</p>
+                            <div
+                                onClick={() => setOpenOpt1((prev) => !prev)}
+                                className="w-full flex justify-end"
+                            >
+                                {openOpt1 ? (
+                                    <Icons.optCloseArrow />
+                                ) : (
+                                    <Icons.optOpenArrow />
+                                )}
                             </div>
+                            {openOpt1 && (
+                                <div className="w-full text-sm p-2 text-neutral-400 italic">
+                                    <p>{'Max size < 25MB'}</p>
+                                </div>
+                            )}
                             {errors.media?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
                                     {errors.media.message}
@@ -194,13 +218,25 @@ const PostCreate: React.FC = () => {
                                         captionRef(e);
                                         textareaRef.current = e;
                                     }}
-                                    maxLength={501}
+                                    maxLength={301}
                                     rows={1}
                                 />
                             </div>
-                            <div className="w-full text-sm p-2 text-neutral-400/75 italic">
-                                <p>{'*(word limit : 500)'}</p>
+                            <div
+                                onClick={() => setOpenOpt2((prev) => !prev)}
+                                className="w-full flex justify-end"
+                            >
+                                {openOpt2 ? (
+                                    <Icons.optCloseArrow />
+                                ) : (
+                                    <Icons.optOpenArrow />
+                                )}
                             </div>
+                            {openOpt2 && (
+                                <div className="w-full text-sm p-2 text-neutral-400 italic">
+                                    <p>{'Word limit : 300'}</p>
+                                </div>
+                            )}
                             {errors.caption?.message && (
                                 <p className="text-sm text-red-500 p-2 font-semibold">
                                     {errors.caption.message}
@@ -236,9 +272,9 @@ const PostCreate: React.FC = () => {
                         </motion.button>
                     </div>
                     <div className="text-neutral-400/75 text-center">
-                        <p className="font-bold inline text-sm">*Note</p> :
-                        Create post with media & caption or just message or only
-                        with media
+                        <p className="font-bold inline text-sm">Note</p> : You
+                        can create post with "media & caption" or just "message"
+                        or only with "media"
                     </div>
                     {error && (
                         <p className="text-red-500 text-center text-lg">

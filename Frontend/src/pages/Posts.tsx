@@ -66,7 +66,7 @@ const Posts: React.FC = () => {
                         No posts yet!
                     </h3>
                     <div className="flex justify-center items-center gap-3">
-                        <Button className="font-semibold" />
+                        <Button text='Create Post' />
                     </div>
                 </div>
             )}

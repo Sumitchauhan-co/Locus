@@ -3,10 +3,14 @@ import authModel from '../models/auth.model.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            return next(); 
+        }
+
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ message: 'Unauthorized' });
+            return res.status(401).json({ message: 'Unauthorized: No session or token found' });
         }
 
         const token = authHeader.split(' ')[1];
@@ -22,9 +26,10 @@ export const authMiddleware = async (req, res, next) => {
         }
 
         req.user = user;
-
         next();
+        
     } catch (error) {
+        console.error("Auth Middleware Error:", error.message);
         return res.status(401).json({ message: 'Token expired or invalid' });
     }
 };
