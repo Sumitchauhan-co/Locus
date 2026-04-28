@@ -68,8 +68,12 @@ const Signup: React.FC = () => {
         }
     };
 
+    const callbackURL = import.meta.env.PROD
+        ? `${import.meta.env.VITE_API_URL}/auth/google/callback`
+        : 'http://localhost:3000/auth/google/callback';
+
     const handleOAuth = () => {
-        window.location.href = 'http://localhost:3000/auth/google';
+        window.location.href = `${callbackURL}`;
     };
 
     return (

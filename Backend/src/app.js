@@ -26,12 +26,19 @@ app.use(cookieParser());
 
 // OAuth config
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const callbackURL =
+    process.env.NODE_ENV === 'production'
+        ? `${process.env.BACKEND_URL}/auth/google/callback`
+        : 'http://localhost:3000/auth/google/callback';
+
 passport.use(
     new GoogleStrategy.Strategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'http://localhost:3000/auth/google/callback',
+            callbackURL: callbackURL,
             accessType: 'offline',
             prompt: 'consent',
         },
@@ -65,14 +72,21 @@ app.use(
         store: MongoStore.create({
             mongoUrl: process.env.MONGODB_URI,
             collectionName: 'sessions',
+            ttl: 14 * 24 * 60 * 60,
         }),
         cookie: {
-            secure: false,
+            secure: isProduction,
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000,
+            sameSite: isProduction ? 'none' : 'lax',
         },
+        proxy: isProduction,
     }),
 );
+
+if (isProduction) {
+    app.set('trust proxy', 1);
+}
 
 app.use(passport.initialize());
 app.use(passport.session());
