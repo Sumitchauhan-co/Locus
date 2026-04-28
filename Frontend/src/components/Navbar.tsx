@@ -107,11 +107,13 @@ const Navbar: React.FC = () => {
                 )}
             </div>
             <div className="flex justify-center items-center gap-5 md:hidden">
-                <div
-                    className={`h-8 w-8 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white shadow-sm`}
-                >
-                    <span>{initial}</span>
-                </div>
+                {user && (
+                    <div
+                        className={`h-8 w-8 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white shadow-sm`}
+                    >
+                        <span>{initial}</span>
+                    </div>
+                )}
                 <div
                     onClick={() => navigate('/menu')}
                     className="flex cursor-pointer"

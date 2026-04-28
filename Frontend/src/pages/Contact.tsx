@@ -65,7 +65,7 @@ const ContactUs: React.FC = () => {
                     />
                 </div>
                 <div className="w-fit flex sm:flex-row flex-col gap-4">
-                    <div className="flex w-1/2 flex-col mb-8">
+                    <div className="flex w-full flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Email
                         </label>
@@ -76,7 +76,7 @@ const ContactUs: React.FC = () => {
                             {...register('email', { required: true })}
                         />
                     </div>
-                    <div className="h-fit w-1/2 flex flex-col mb-8">
+                    <div className="h-fit w-full flex flex-col mb-8">
                         <label className="text-sm mb-2 font-semibold">
                             Phone (optional)
                         </label>
