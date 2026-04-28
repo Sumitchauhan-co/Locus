@@ -41,6 +41,7 @@ passport.use(
             callbackURL: callbackURL,
             accessType: 'offline',
             prompt: 'consent',
+            scope: ['profile', 'email'],
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -107,15 +108,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: err.message });
 });
 
-// ---------- OAuth -------------
+// OAuth endpoints 
 
 // Connect
-app.get(
-    '/auth/google',
-    passport.authenticate('google', {
-        scope: ['profile', 'email'],
-    }),
-);
+app.get('/auth/google', passport.authenticate('google'));
 
 // Callback
 app.get(
