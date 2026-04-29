@@ -6,7 +6,6 @@ const QnA = () => {
         {
             q: 'Why?',
             a: 'Scroll to find out!',
-            // Adjusted for mobile (closer to center) vs desktop
             pos: 'top-5 left-5 md:top-20 md:left-32 -rotate-12',
         },
         {
@@ -48,7 +47,6 @@ const QnA = () => {
             {prompts.map((item, index) => (
                 <div
                     key={index}
-                    // Removed 'hidden' so it shows on mobile, kept absolute positioning
                     className={`flex absolute ${item.pos} justify-center items-center flex-col gap-1 md:gap-2 text-(--primary-color) font-bold pointer-events-none z-10`}
                 >
                     <p className="text-lg md:text-2xl group-hover:rotate-0 group-hover:scale-110 sm:group-hover:text-neutral-500 text-neutral-500 transition-all duration-500">
@@ -60,12 +58,11 @@ const QnA = () => {
                 </div>
             ))}
 
-            {/* Featured content remains desktop-only to avoid cluttering small mobile screens */}
-            <div className="p-5 md:flex absolute hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-40 justify-center items-center flex-col gap-2 text-(--primary-color) font-bold pointer-events-none z-10">
-                <p className="text-3xl italic group-hover:text-neutral-500 transition-all duration-500">
+            <div className="p-5 flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-30 md:-translate-y-40 justify-center items-center flex-col gap-2 text-(--primary-color) font-bold pointer-events-none z-10">
+                <p className="md:text-3xl text-xl italic group-hover:text-neutral-500 group-active:text-neutral-500 transition-opacity duration-500">
                     {content.q}
                 </p>
-                <p className="text-sm tracking-tighter opacity-80 group-hover:text-neutral-700">
+                <p className="text-sm tracking-tighter opacity-80 group-hover:text-neutral-700 group-active:text-neutral-700 transition-opacity duration-500">
                     {content.a}
                 </p>
             </div>

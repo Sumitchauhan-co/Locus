@@ -51,7 +51,6 @@ export default function Loader3({ onFinish }: { onFinish: () => void }) {
 
     const tileVariants: Variants = useMemo(() => ({
         animate: (delay: number) => ({
-            // INCREASED: Peak opacity is now 0.7 for better visibility
             opacity: [0.15, 0.7, 0.15], 
             scale: [0.98, 1.03, 0.98],
             transition: { duration: 3, repeat: Infinity, delay: delay, ease: 'easeInOut' },
@@ -116,7 +115,6 @@ export default function Loader3({ onFinish }: { onFinish: () => void }) {
                                             custom={tile.delay}
                                             variants={tileVariants}
                                             animate="animate"
-                                            // UPDATED: Stronger border (pink-500/50) and brighter shadow
                                             className="absolute inset-0 border-[2px] border-pink-500/50 bg-pink-500/10 rounded-sm shadow-[0_0_15px_rgba(236,72,153,0.25)]"
                                         />
                                     )}

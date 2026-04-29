@@ -11,7 +11,6 @@ interface PostCardProps {
     isOwner: boolean;
     isActive: boolean;
     onLike: (id: string) => void;
-    // onComment: (id: string) => void;
     onRemove: (id: string) => void;
     onToggleOptions: (id: string | null) => void;
     currentUserId?: string;

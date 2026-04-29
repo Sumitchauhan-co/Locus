@@ -209,21 +209,22 @@ const createComment = async (req, res) => {
             {
                 $push: {
                     comments: {
-                        userId,
-                        username: user.username,
-                        text,
+                        $each: [{ userId, username: user.username, text }],
+                        $position: 0,
                     },
                 },
             },
-            { new: true },
+            {
+                returnDocument: 'after',
+                runValidators: true,
+            },
         );
 
         if (!updatedPost) {
             return res.status(404).json({ message: 'Post not found' });
         }
 
-        const newComment =
-            updatedPost.comments[updatedPost.comments.length - 1];
+        const newComment = updatedPost.comments[0];
 
         res.status(201).json({
             message: 'Comment added successfully',
@@ -284,7 +285,7 @@ export const deleteComment = async (req, res) => {
 const getComments = async (req, res) => {
     try {
         const { postId } = req.params;
-
+        
         if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.status(400).json({ message: 'Invalid Post ID' });
         }

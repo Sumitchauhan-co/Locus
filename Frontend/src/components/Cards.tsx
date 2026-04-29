@@ -93,7 +93,7 @@ const Cards: React.FC = () => {
                             <h2 className="w-full text-3xl md:text-4xl text-(--text-pink-color)/75 text-center">
                                 {card.heading}
                             </h2>
-                            <NavLink to={`${card.id === 3? '/Map': '/Post'}`}>
+                            <NavLink to={`${card.id === 3? '/map': '/posts'}`}>
                                 <Button
                                     text={card.btnText}
                                 />

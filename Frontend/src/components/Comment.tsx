@@ -58,7 +58,7 @@ const Comment: React.FC<CommentProps> = ({
             const newComment = res.data.comment || res.data.comments;
 
             if (newComment && newComment._id) {
-                setComments((prev) => [...prev, newComment]);
+                setComments((prev) => [newComment, ...prev]);
                 setText('');
             } else {
                 console.error(
@@ -108,12 +108,12 @@ const Comment: React.FC<CommentProps> = ({
     return (
         <section
             className={twMerge(
-                'h-fit z-1 flex flex-col absolute bottom-0 bg-(--primary-color) border border-(--border-color) rounded-xl',
+                'h-full z-1 flex flex-col absolute bottom-0 bg-(--primary-color) border border-(--border-color) rounded-xl',
                 className,
             )}
         >
             {showComment && (
-                <div className="w-full">
+                <div className="h-full w-full">
                     <div
                         onClick={setCommentOff}
                         className="absolute top-5 right-5"
@@ -136,7 +136,7 @@ const Comment: React.FC<CommentProps> = ({
                                         key={comment?._id}
                                         className={`h-fit w-full relative p-2 flex flex-col border border-(--border-color)`}
                                     >
-                                        <div className="flex flex-col relative mb-2 gap-3">
+                                        <div className="flex flex-col relative gap-2">
                                             <div className="flex justify-start items-center gap-2">
                                                 <div
                                                     className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-sm shadow-sm`}
@@ -204,13 +204,13 @@ const Comment: React.FC<CommentProps> = ({
 
             <form
                 onSubmit={handleSubmit}
-                className="flex justify-center items-center m-3"
+                className="h-full flex justify-center items-center m-3"
             >
                 <div className="w-full flex flex-col gap-5 items-center sm:mb-3">
                     <input
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        className="w-full p-2 sm:p-1 text-lg sm:text-sm border border-(--border-color) rounded-xl sm:rounded-lg"
+                        className="w-full outline-none p-2 sm:p-1 text-lg sm:text-sm border border-(--border-color) rounded-xl sm:rounded-lg"
                         type="text"
                         title="input"
                         placeholder="Write a comment"

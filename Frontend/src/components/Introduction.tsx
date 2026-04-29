@@ -33,8 +33,6 @@ const Introduction: React.FC = () => {
 
     const opacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.75]);
 
-    // 1. Syncing the line perfectly with the text movement range
-    // We adjust the range to [0.1, 0.9] so it doesn't move while the section is just entering the view
     const lineSync = useTransform(scrollYProgress, [0.1, 0.9], [0, 1]);
     const headPosition = useTransform(lineSync, [0, 1], ['0%', '100%']);
 

@@ -34,6 +34,7 @@ const PostCreate: React.FC = () => {
 
     const [openOpt1, setOpenOpt1] = useState(false);
     const [openOpt2, setOpenOpt2] = useState(false);
+    const [openOpt3, setOpenOpt3] = useState(false);
 
     const {
         register,
@@ -183,7 +184,7 @@ const PostCreate: React.FC = () => {
                             />
                             <div
                                 onClick={() => setOpenOpt1((prev) => !prev)}
-                                className="w-full flex justify-end"
+                                className="w-full flex justify-end cursor-pointer"
                             >
                                 {openOpt1 ? (
                                     <Icons.optCloseArrow />
@@ -224,7 +225,7 @@ const PostCreate: React.FC = () => {
                             </div>
                             <div
                                 onClick={() => setOpenOpt2((prev) => !prev)}
-                                className="w-full flex justify-end"
+                                className="w-full flex justify-end cursor-pointer"
                             >
                                 {openOpt2 ? (
                                     <Icons.optCloseArrow />
@@ -244,7 +245,7 @@ const PostCreate: React.FC = () => {
                             )}
                         </div>
                     </div>
-                    <div className="h-fit w-full flex justify-center items-center">
+                    <div className="h-fit w-full flex flex-col justify-center items-center">
                         <motion.button
                             type={loading ? 'reset' : 'submit'}
                             whileHover={{
@@ -270,12 +271,35 @@ const PostCreate: React.FC = () => {
                                 </>
                             )}
                         </motion.button>
+                        <div className="w-full flex flex-col gap-5">
+                            <div
+                                onClick={() => setOpenOpt3((prev) => !prev)}
+                                className="w-full flex justify-end cursor-pointer"
+                            >
+                                {openOpt3 ? (
+                                    <Icons.optCloseArrow />
+                                ) : (
+                                    <Icons.optOpenArrow />
+                                )}
+                            </div>
+                            {openOpt3 && (
+                                <div className="text-neutral-400/75 text-center">
+                                    <p className="font-bold inline text-sm">
+                                        Note
+                                    </p>{' '}
+                                    : You can create post with{' '}
+                                    <p className="inline underline">
+                                        media & caption
+                                    </p>{' '}
+                                    or just{' '}
+                                    <p className="inline underline">message</p>{' '}
+                                    or only with{' '}
+                                    <p className="inline underline">media</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    <div className="text-neutral-400/75 text-center">
-                        <p className="font-bold inline text-sm">Note</p> : You
-                        can create post with "media & caption" or just "message"
-                        or only with "media"
-                    </div>
+
                     {error && (
                         <p className="text-red-500 text-center text-lg">
                             {error}

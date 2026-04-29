@@ -14,7 +14,6 @@ interface FormInputs {
 
 const Signup: React.FC = () => {
     const [error, setError] = useState<string | undefined>(undefined);
-    // const { loading } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
 
     const { signup } = useContext(AuthContext);

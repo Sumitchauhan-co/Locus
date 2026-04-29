@@ -13,7 +13,6 @@ interface FormInputs {
 
 const Login: React.FC = () => {
     const [error, setError] = useState<string | undefined>(undefined);
-    // const { loading } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const { openModal } = useContext(ModalContext);
 
