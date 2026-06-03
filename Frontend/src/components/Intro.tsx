@@ -4,7 +4,7 @@ const Intro = () => {
     return (
         <>
             <div className="w-full grid content-center">
-                <div className="text-4xl sm:text-5xl flex flex-col px-3 text-center text-transparent bg-clip-text bg-linear-to-t from-neutral-400 to-white">
+                <div className="text-5xl md:text-6xl flex flex-col px-3 text-center text-transparent bg-clip-text bg-linear-to-t from-neutral-500 to-white">
                     <h1>New way to connect,</h1>
                     <h1> make friends!</h1>
                     <div className="relative">

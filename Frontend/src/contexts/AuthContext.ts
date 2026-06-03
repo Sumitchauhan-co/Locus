@@ -5,6 +5,7 @@ export type User = {
     username: string;
     email: string;
     accessToken: string;
+    authId?: string | undefined | null;
 };
 
 
@@ -21,6 +22,7 @@ interface returnObj {
 
 interface AuthContextType {
     user: User | null;
+    setUser: (user: User) => void;
     loading: boolean;
     setLoading: (arg: boolean) => void;
     getUser: () => void;
@@ -31,6 +33,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
+    setUser: () => {},
     loading: false,
     setLoading: () => {},
     getUser: () => {},

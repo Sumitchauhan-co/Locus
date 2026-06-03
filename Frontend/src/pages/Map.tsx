@@ -207,7 +207,7 @@ export default function Map() {
                                     permanent
                                     direction="top"
                                 >
-                                    {user.username}
+                                    📍{user.username}
                                 </Tooltip>
                             </Marker>
                         ))}

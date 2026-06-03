@@ -1,35 +1,41 @@
-import jwt from 'jsonwebtoken';
 import authModel from '../models/auth.model.js';
+import { verifyToken } from '../utils/verifyToken.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
         if (req.isAuthenticated && req.isAuthenticated()) {
-            return next(); 
+            return next();
         }
 
         const authHeader = req.headers.authorization;
+        const token = authHeader?.split(' ')[1];
 
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ message: 'Unauthorized: No session or token found' });
+        if (!token) {
+            return res.status(401).json({ message: 'Token missing' });
         }
 
-        const token = authHeader.split(' ')[1];
-
-        const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
+        const decoded = verifyToken(token, 'access');
+        const userId = decoded.sub || decoded.id;
 
         const user = await authModel
-            .findById(decoded.id)
+            .findOne({
+                $or: [
+                    { _id: userId.length === 24 ? userId : null },
+                    { email: decoded.email },
+                ],
+            })
             .select('-password');
 
         if (!user) {
-            return res.status(401).json({ message: 'User not found' });
+            return res
+                .status(401)
+                .json({ message: 'User not found in Locus database' });
         }
 
         req.user = user;
         next();
-        
     } catch (error) {
-        console.error("Auth Middleware Error:", error.message);
+        console.error('Auth Middleware Error:', error.message);
         return res.status(401).json({ message: 'Token expired or invalid' });
     }
 };

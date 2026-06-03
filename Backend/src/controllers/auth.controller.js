@@ -1,6 +1,15 @@
 import authModel from '../models/auth.model.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import axios from 'axios';
+import qs from 'qs';
+import { verifyToken } from '../utils/verifyToken.js';
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+};
 
 const registerUser = async (req, res) => {
     try {
@@ -61,12 +70,6 @@ const registerUser = async (req, res) => {
         user.refreshToken = refreshToken;
         await user.save();
 
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        };
-
         res.cookie('refreshToken', refreshToken, cookieOptions);
 
         res.status(201).json({
@@ -92,7 +95,7 @@ const loginUser = async (req, res) => {
 
         if (!user) {
             return res.status(404).json({
-                message: 'User not found, invalid email or username',
+                message: 'User not found, invalid email or password',
             });
         }
 
@@ -118,16 +121,10 @@ const loginUser = async (req, res) => {
             { expiresIn: process.env.REFRESH_SECRET_EXPIRY || '7d' },
         );
 
-        const cookiesOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        };
-
         user.refreshToken = refreshToken;
         await user.save();
 
-        res.cookie('refreshToken', refreshToken, cookiesOptions);
+        res.cookie('refreshToken', refreshToken, cookieOptions);
 
         res.status(200).json({
             message: 'User logged in successfully',
@@ -153,59 +150,70 @@ const refreshAccessToken = async (req, res) => {
         }
 
         const token = req.cookies.refreshToken;
+        if (!token)
+            return res.status(401).json({ message: 'No refresh token' });
 
-        if (!token) {
-            return res
-                .status(401)
-                .json({ message: 'Not authorized for action' });
+        const decoded = verifyToken(token, 'refresh');
+
+        let user;
+        if (decoded.rawToken) {
+            user = await authModel.findOne({ refreshToken: decoded.rawToken });
+        } else {
+            const userId = decoded.sub || decoded.id;
+            user = await authModel.findById(userId);
         }
 
-        const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
-
-        const user = await authModel.findById(decoded.id);
-
-        if (!user || user.refreshToken !== token) {
+        if (!user) {
             return res.status(403).json({ message: 'User identity missing' });
         }
 
         const newAccessToken = jwt.sign(
             { id: user._id },
             process.env.ACCESS_SECRET,
-            { expiresIn: process.env.ACCESS_SECRET_EXPIRY || '1d' },
+            { expiresIn: '1d' },
         );
 
         res.status(200).json({ accessToken: newAccessToken });
     } catch (error) {
-        console.log(error);
+        console.error('Refresh Controller Error:', error.message);
         return res.status(403).json({ message: 'Token expired or invalid' });
     }
 };
 
 const logoutUser = async (req, res) => {
     try {
-        const token = req.cookies.refreshToken;
+        const idToken = req.cookies.idToken;
+        const currentRefreshToken = req.cookies.refreshToken;
 
-        if (token) {
+        if (currentRefreshToken) {
             await authModel.findOneAndUpdate(
-                { refreshToken: token },
+                { refreshToken: currentRefreshToken },
                 { $unset: { refreshToken: 1 } },
             );
         }
 
-        res.clearCookie('refreshToken', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        });
+        res.clearCookie('refreshToken', cookieOptions);
+        res.clearCookie('idToken', cookieOptions);
 
-        res.status(200).json({ message: 'User logged out successfully' });
+        const centralServerBase =
+            process.env.PROTOAUTH_SERVER_URL || 'http://localhost:3000';
+
+        const centralLogoutUrl =
+            `${centralServerBase}/o/authenticate/signout` +
+            `?id_token=${idToken || ''}` +
+            `&redirect_uri=${encodeURIComponent(process.env.PROTOAUTH_REDIRECT_URI || 'http://localhost:5175')}`;
+
+        return res.status(200).json({
+            message: 'Local session cleared successfully.',
+            redirectUrl: centralLogoutUrl,
+        });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: 'User failed to log out' });
+        console.error('Logout error encountered:', error);
+        return res.status(500).json({ message: 'User failed to log out' });
     }
 };
 
-export const getUser = async (req, res) => {
+const getUser = async (req, res) => {
     try {
         if (req.isAuthenticated()) {
             return res.status(200).json({
@@ -232,10 +240,106 @@ export const getUser = async (req, res) => {
     }
 };
 
+const callback = async (req, res) => {
+    const { code } = req.body;
+
+    try {
+        const tokenRequest = {
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: process.env.PROTOAUTH_REDIRECT_URI,
+            client_id: process.env.PROTOAUTH_CLIENT_ID,
+            client_secret: process.env.PROTOAUTH_CLIENT_SECRET,
+        };
+
+        const response = await axios.post(
+            `${process.env.PROTOAUTH_SERVER_URL}/o/token` ||
+                'http://localhost:3000/o/token',
+            qs.stringify(tokenRequest),
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            },
+        );
+
+        const { access_token, refresh_token, id_token } = response.data.data;
+
+        const decodedIdentity = verifyToken(id_token, 'access');
+
+        const user = await authModel.findOneAndUpdate(
+            {
+                $or: [
+                    { authId: decodedIdentity.sub },
+                    { email: decodedIdentity.email },
+                ],
+            },
+            {
+                authId: decodedIdentity.sub,
+                email: decodedIdentity.email,
+                username: [
+                    decodedIdentity.firstName,
+                    decodedIdentity.lastName,
+                ].join(' '),
+                refreshToken: refresh_token,
+            },
+            { upsert: true, returnDocument: 'after' },
+        );
+
+        res.cookie('refreshToken', refresh_token, cookieOptions);
+
+        res.cookie('idToken', id_token, cookieOptions);
+
+        res.json({
+            message: 'Tokens retrieved',
+            _id: id_token,
+            accessToken: access_token,
+        });
+    } catch (error) {
+        console.error('Auth Server refused exchange:', error.response?.data);
+        res.status(500).json({ error: 'Could not verify identity' });
+    }
+};
+
+const userinfo = async (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'No access token provided' });
+    }
+
+    const accessToken = authHeader.split(' ')[1];
+
+    try {
+        const response = await axios.get('http://localhost:3000/o/userinfo', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return res.json({
+            success: true,
+            user: response.data.data,
+        });
+    } catch (error) {
+        if (error.response) {
+            console.error('Auth Server Error:', error.response.data);
+            return res.status(error.response.status).json(error.response.data);
+        }
+
+        console.error('Connection to Auth Server failed:', error.message);
+        return res
+            .status(500)
+            .json({ error: 'Failed to fetch user info from Auth Server' });
+    }
+};
+
 export default {
     registerUser,
     loginUser,
     refreshAccessToken,
     logoutUser,
     getUser,
+    callback,
+    userinfo,
 };

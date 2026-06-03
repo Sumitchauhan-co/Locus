@@ -31,6 +31,11 @@ const postSchema = new mongoose.Schema(
                     ref: 'Auth',
                     required: true,
                 },
+                authId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'Auth',
+                    required: false,
+                },
                 username: {
                     type: String,
                     required: true,

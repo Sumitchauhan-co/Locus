@@ -21,6 +21,7 @@ interface CommentProps {
 
 interface Comment {
     _id: string;
+    authId: string;
     userId: string;
     username: string;
     text: string;
@@ -41,9 +42,6 @@ const Comment: React.FC<CommentProps> = ({
 
     const { openModal } = useContext(ModalContext);
     const { user } = useContext(AuthContext);
-
-    const initial = user?.username?.charAt(0).toUpperCase() || 'U';
-    const bgColor = getBgColor(user?.username || '');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -127,9 +125,17 @@ const Comment: React.FC<CommentProps> = ({
                         {!loading &&
                             comments.map((comment) => {
                                 const isCommentOwner =
-                                    comment?.userId === currentUserId;
+                                    comment?.userId === currentUserId ||
+                                    comment?.authId === currentUserId;
                                 const isMenuOpen =
                                     activeMenuId === comment?._id;
+
+                                const initial = comment?.username
+                                    ?.charAt(0)
+                                    .toUpperCase();
+                                const bgColor = getBgColor(
+                                    comment?.username || '',
+                                );
 
                                 return (
                                     <div
@@ -139,7 +145,7 @@ const Comment: React.FC<CommentProps> = ({
                                         <div className="flex flex-col relative gap-2">
                                             <div className="flex justify-start items-center gap-2">
                                                 <div
-                                                    className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-sm shadow-sm`}
+                                                    className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-xs shadow-sm`}
                                                 >
                                                     <span>{initial}</span>
                                                 </div>

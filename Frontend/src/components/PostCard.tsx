@@ -46,7 +46,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 <div className="flex flex-col relative mb-2 gap-3">
                     <div className="flex justify-start items-center gap-2">
                         <div
-                            className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-sm shadow-sm`}
+                            className={`h-6 w-6 flex items-center justify-center rounded-full text-(--text-color) font-bold ${bgColor} border-2 border-white text-xs shadow-sm`}
                         >
                             <span>{initial}</span>
                         </div>
@@ -73,7 +73,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
                 {/* Media Container */}
                 {post.mediaURL && (
-                    <div className="relative w-full aspect-5/6 rounded-lg bg-neutral-800 overflow-hidden mt-2">
+                    <div className="relative w-full aspect-4/5 rounded-lg bg-neutral-800 overflow-hidden mt-2">
                         {!loaded && (
                             <div className="absolute inset-0 animate-pulse bg-neutral-700" />
                         )}

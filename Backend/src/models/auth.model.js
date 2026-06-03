@@ -13,11 +13,11 @@ const authSchema = new mongoose.Schema({
     password: {
         type: String,
         required: function () {
-            const isOauth = this.googleId;
+            const isOauth = this.authId;
             return !isOauth;
         },
     },
-    googleId: {
+    authId: {
         type: String,
         default: null,
     },

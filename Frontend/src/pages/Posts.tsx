@@ -43,7 +43,7 @@ const Posts: React.FC = () => {
         <section className="min-h-screen w-full flex flex-col items-center ">
             <ScrollToTop />
             <div className="w-full grid content-center mb-10">
-                <div className="text-4xl sm:text-5xl flex flex-col p-3 text-center text-(--text-color)">
+                <div className="text-4xl sm:text-5xl flex flex-col p-3 text-center text-transparent bg-clip-text bg-linear-to-t from-neutral-500 to-white">
                     <h1>Your amazing posts,</h1>
                     <h1>for everyone!</h1>
                 </div>
@@ -66,7 +66,7 @@ const Posts: React.FC = () => {
                         No posts yet!
                     </h3>
                     <div className="flex justify-center items-center gap-3">
-                        <Button text='Create Post' />
+                        <Button text="Create Post" />
                     </div>
                 </div>
             )}

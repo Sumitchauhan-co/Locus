@@ -6,62 +6,70 @@ const api = axios.create({
     withCredentials: true,
 });
 
-api.interceptors.request.use((config) => {
-    const token = getAccessToken();
+api.interceptors.request.use(
+    (config) => {
+        const token = getAccessToken();
 
-    const skipUrls = [
-        '/api/auth/login',
-        '/api/auth/register',
-        '/api/auth/refresh',
-    ];
+        const skipUrls = [
+            '/api/auth/login',
+            '/api/auth/register',
+            '/api/auth/refresh',
+            '/api/auth/callback',
+        ];
 
-    if (skipUrls.some((url) => config.url?.includes(url))) {
+        const isSkipUrl = skipUrls.some((url) => config.url?.includes(url));
+
+        if (token && !isSkipUrl) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
         return config;
-    }
-
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-});
+    },
+    (error) => Promise.reject(error),
+);
 
 api.interceptors.response.use(
     (res) => res,
     async (error) => {
         const originalRequest = error.config;
 
-        if (!originalRequest || originalRequest._retry) {
+        if (error.response?.status !== 401 || originalRequest._retry) {
             return Promise.reject(error);
         }
 
-        if (
-            originalRequest.url?.includes('/api/auth/login') ||
-            originalRequest.url?.includes('/api/auth/register') ||
-            originalRequest.url?.includes('/api/auth/refresh')
-        ) {
+        const authUrls = [
+            '/api/auth/login',
+            '/api/auth/register',
+            '/api/auth/refresh',
+        ];
+        if (authUrls.some((url) => originalRequest.url?.includes(url))) {
             return Promise.reject(error);
         }
 
-        if (error.response?.status === 401) {
-            originalRequest._retry = true;
+        originalRequest._retry = true;
 
-            try {
-                const res = await api.post('/api/auth/refresh');
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/auth/refresh`,
+                {},
+                {
+                    withCredentials: true,
+                },
+            );
 
-                const newAccessToken = res.data.accessToken;
+            const newAccessToken = res.data.accessToken;
 
+            if (newAccessToken) {
                 setAccessToken(newAccessToken);
 
-                api.defaults.headers.common['Authorization'] =
-                    `Bearer ${newAccessToken}`;
-
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
                 return api(originalRequest);
-            } catch (err) {
-                setAccessToken(null);
-                return Promise.reject(err);
             }
+        } catch (err) {
+            console.error('Token refresh failed:', err);
+            setAccessToken(null);
+            return Promise.reject(err);
         }
 
         return Promise.reject(error);

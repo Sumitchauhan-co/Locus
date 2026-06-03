@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Loading2 from './Loading2';
 import { Icons } from '../utils/icons';
+import { handleOAuthProto } from '../utils/AuthService';
 
 interface FormInputs {
     input: string;
@@ -73,9 +74,7 @@ const Login: React.FC = () => {
         }
     };
 
-    const callbackURL = import.meta.env.PROD
-        ? `${import.meta.env.VITE_API_URL}/auth/google/callback`
-        : 'http://localhost:3000/auth/google/callback';
+    const callbackURL = `${import.meta.env.VITE_API_URL}/auth/google/callback`;
 
     const handleOAuth = () => {
         window.location.href = `${callbackURL}`;
@@ -101,16 +100,16 @@ const Login: React.FC = () => {
                 <div className="flex flex-col w-[90vmin] x-sm:w-[75vmin] sm:w-[80vmin] hover:bg-(--tertiary-color) bg-(--secondary-color) gap-10 sm:gap-12 rounded-3xl px-5 sm:px-12 py-10 sm:py-15">
                     <div className="w-full flex flex-col gap-3">
                         <label className="w-full text-lg sm:text-xl font-semibold">
-                            Username or Email
+                            Email
                         </label>
                         <input
                             className="autofill:shadow-[inset_0_0_0px_1000px_rgb(225,225,225)] p-2 rounded-xl border-2 border-neutral-300 focus-visible:border-neutral-200 focus-visible:border-3 outline-none"
                             type="text"
-                            placeholder="Enter username or email"
+                            placeholder="Enter email"
                             {...register('input', {
                                 required: {
                                     value: true,
-                                    message: 'Username or email is required',
+                                    message: 'Email is required',
                                 },
                             })}
                         />
@@ -120,7 +119,6 @@ const Login: React.FC = () => {
                             </p>
                         )}
                     </div>
-
                     <div className="w-full flex flex-col gap-3 mb-2">
                         <label className="w-full text-lg sm:text-xl font-semibold">
                             Password
@@ -175,19 +173,17 @@ const Login: React.FC = () => {
                             )}
                         </motion.button>
                     </div>
-
                     <div className="w-full flex items-center justify-between text-[0.7rem] sm:text-sm">
                         <div className="h-px w-[45%] bg-gray-200"></div>
                         <span>Or</span>
                         <div className="h-px w-[45%] bg-gray-200"></div>
                     </div>
-
                     <motion.button
                         whileHover={{ scale: 1.025, y: 1 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleOAuth}
                         type="button"
-                        className="w-full cursor-pointer font-semibold flex justify-center gap-4 text-lg text-black items-center p-2 rounded-2xl bg-(--input-color) hover:bg-(--button-hover-color)"
+                        className="w-full cursor-pointer font-semibold flex justify-center gap-4 text-lg text-black items-center p-2 rounded-2xl bg-(--sso-button-color) hover:bg-(--sso-button-hover-color)"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -214,6 +210,38 @@ const Login: React.FC = () => {
                         </svg>
                         <span>Sign in with Google</span>
                     </motion.button>
+                    
+                    <motion.button
+                        whileHover={{ scale: 1.025, y: 1 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => handleOAuthProto()}
+                        type="button"
+                        title="SSO with ProtoAuth"
+                        className="w-full cursor-pointer font-semibold flex justify-center gap-4 text-lg text-black items-center p-2 rounded-2xl bg-(--sso-proto-button-color) hover:bg-(--sso-proto-button-hover-color)"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="32px"
+                            height="32px"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-shield-user"
+                            aria-hidden="true"
+                        >
+                            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+                            <path d="M6.376 18.91a6 6 0 0 1 11.249.003"></path>
+                            <circle
+                                cx="12"
+                                cy="11"
+                                r="4"
+                            ></circle>
+                        </svg>
+                        <span>Sign in with ProtoAuth</span>
+                    </motion.button>
 
                     <div className="w-full flex justify-center items-center text-sm sm:text-[1rem] gap-2">
                         <p>Don't have an account?</p>
@@ -224,7 +252,6 @@ const Login: React.FC = () => {
                             Sign up
                         </span>
                     </div>
-
                     {error && (
                         <p className="text-lg text-red-500 text-center font-semibold">
                             {error}

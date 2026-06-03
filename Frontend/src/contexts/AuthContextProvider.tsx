@@ -52,10 +52,17 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const logout = async () => {
         try {
             setLoading(true);
-            await api.post('/api/auth/logout');
+            const response = await api.post('/api/auth/logout');
 
             setUser(null);
             setAccessToken(null);
+            const centralLogoutUrl = response.data.redirectUrl;
+
+            if (centralLogoutUrl) {
+                window.location.href = centralLogoutUrl;
+            } else {
+                window.location.href = '/login';
+            }
         } catch (error) {
             console.log(error);
         } finally {
@@ -66,7 +73,6 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const getUser = async () => {
         try {
             setLoading(true);
-
             const res = await api.get('/api/auth/user');
             setUser(res.data.user);
         } catch (error) {
@@ -77,18 +83,19 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
         }
     };
 
+    const contextValue = {
+        user,
+        setUser,
+        login,
+        logout,
+        signup,
+        getUser,
+        loading,
+        setLoading,
+    };
+
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                login,
-                logout,
-                signup,
-                getUser,
-                loading,
-                setLoading,
-            }}
-        >
+        <AuthContext.Provider value={contextValue}>
             {children}
         </AuthContext.Provider>
     );

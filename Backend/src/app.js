@@ -15,7 +15,8 @@ const app = express();
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     }),
 );
@@ -31,7 +32,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const callbackURL =
     process.env.NODE_ENV === 'production'
         ? `${process.env.BACKEND_URL}/auth/google/callback`
-        : 'http://localhost:3000/auth/google/callback';
+        : `http://localhost:${process.env.PORT}/auth/google/callback`;
 
 passport.use(
     new GoogleStrategy.Strategy(
@@ -45,11 +46,11 @@ passport.use(
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
-                let user = await authModel.findOne({ googleId: profile.id });
+                let user = await authModel.findOne({ authId: profile.id });
 
                 if (!user) {
                     user = new authModel({
-                        googleId: profile.id,
+                        authId: profile.id,
                         username: profile.displayName,
                         email: profile.emails[0].value,
                     });
@@ -103,12 +104,11 @@ app.use('/api/auth', authRouter);
 
 app.use('/api/location', locationRouter);
 
-app.use((err, req, res, next) => {
-    console.error('SERVER ERROR:', err);
-    res.status(500).json({ message: err.message });
-});
+app.get('/health', (req, res) =>
+    res.json({ message: 'Server is healthy', healthy: true }),
+);
 
-// OAuth endpoints 
+// OAuth endpoints
 
 // Connect
 app.get('/auth/google', passport.authenticate('google'));

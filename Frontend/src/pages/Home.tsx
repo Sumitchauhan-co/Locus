@@ -9,6 +9,8 @@ import Intro from '../components/Intro';
 const Home: React.FC = () => {
     const targetRef = useRef<HTMLDivElement | null>(null);
 
+    
+
     return (
         <section
             ref={targetRef}

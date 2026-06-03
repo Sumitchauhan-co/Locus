@@ -7,7 +7,7 @@ import { Icons } from '../utils/icons';
 import { getBgColor } from '../utils/bgColor';
 
 const linkVariants: Variants = {
-    hover: { scale: 1.125, y: 1 },
+    hover: { scale: 1.1, y: 1 },
     tap: { scale: 0.975 },
 };
 

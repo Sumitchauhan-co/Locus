@@ -66,7 +66,7 @@ const Cards: React.FC = () => {
                 }}
                 className="text-5xl md:text-6xl flex flex-col gap-3 text-center"
             >
-                <h2 className="text-transparent bg-clip-text bg-gradient-to-t from-neutral-400 to-white">
+                <h2 className="text-transparent bg-clip-text bg-gradient-to-t from-neutral-500 to-white">
                     Share your journey instantly
                 </h2>
                 <div className="h-full flex justify-center items-center">
@@ -93,10 +93,10 @@ const Cards: React.FC = () => {
                             <h2 className="w-full text-3xl md:text-4xl text-(--text-pink-color)/75 text-center">
                                 {card.heading}
                             </h2>
-                            <NavLink to={`${card.id === 3? '/map': '/posts'}`}>
-                                <Button
-                                    text={card.btnText}
-                                />
+                            <NavLink
+                                to={`${card.id === 3 ? '/map' : '/posts'}`}
+                            >
+                                <Button text={card.btnText} />
                             </NavLink>
                         </div>
                         <div
@@ -109,21 +109,20 @@ const Cards: React.FC = () => {
                                     alt={card.alt}
                                     loading="lazy"
                                     height={700}
-                                    width={`${card.id === 3 ? 850 : 350}`}
+                                    width={`${card.id === 3 ? 900 : 350}`}
                                 />
                                 <img
-                                    className="block md:hidden aspect-2/3"
+                                    className="block md:hidden aspect-2/3 brightness-90"
                                     src={card.imgSrcPhone}
                                     alt={card.alt}
                                     loading="lazy"
                                     height={700}
-                                    width={300}
+                                    width={350}
                                 />
                             </div>
                         </div>
                     </motion.div>
                 ))}
-                
             </div>
         </section>
     );

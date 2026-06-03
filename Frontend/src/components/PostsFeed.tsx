@@ -78,7 +78,7 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                         <PostCard
                             key={post._id}
                             post={post}
-                            isOwner={user?._id === post.user?._id}
+                            isOwner={user?._id === post.user?._id || user?.authId === post.user.authId}
                             isActive={activePostId === post._id}
                             onLike={handleLike}
                             onRemove={removePost}
