@@ -11,8 +11,9 @@ type Props = {
 };
 
 const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
-
-    const [openCommentPostId, setOpenCommentPostId] = useState<string | null>(null);
+    const [openCommentPostId, setOpenCommentPostId] = useState<string | null>(
+        null,
+    );
     const { openModal } = useContext(ModalContext);
     const [activePostId, setActivePostId] = useState<string | null>(null);
     const { user, setLoading } = useContext(AuthContext);
@@ -78,7 +79,10 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                         <PostCard
                             key={post._id}
                             post={post}
-                            isOwner={user?._id === post.user?._id || user?.authId === post.user.authId}
+                            isOwner={
+                                user?._id === post.user?._id ||
+                                user?.authId === post.user?.authId
+                            }
                             isActive={activePostId === post._id}
                             onLike={handleLike}
                             onRemove={removePost}
@@ -86,7 +90,7 @@ const PostsFeed: React.FC<Props> = ({ posts, setPosts }) => {
                             currentUserId={user?._id}
                             isAdmin={isAdmin}
                             showComment={openCommentPostId === post._id}
-                            onToggleComments={(id : string) =>
+                            onToggleComments={(id: string) =>
                                 setOpenCommentPostId((prev) =>
                                     prev === id ? null : id,
                                 )

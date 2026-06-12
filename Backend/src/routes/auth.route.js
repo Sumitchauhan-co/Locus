@@ -14,8 +14,4 @@ route.post('/refresh', authController.refreshAccessToken);
 
 route.post('/logout', authController.logoutUser);
 
-route.post('/callback', authController.callback)
-
-route.get('/userinfo', authController.userinfo)
-
 export default route;

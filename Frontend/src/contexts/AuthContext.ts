@@ -5,15 +5,14 @@ export type User = {
     username: string;
     email: string;
     accessToken: string;
-    authId?: string | undefined | null;
+    authId?: string | undefined;
 };
-
 
 export type Data = {
     username: string | undefined;
     email: string | undefined;
     password: string;
-}
+};
 
 interface returnObj {
     statusCode: number | undefined;

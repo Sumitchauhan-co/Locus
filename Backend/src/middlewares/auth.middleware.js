@@ -1,5 +1,5 @@
+import jwt from 'jsonwebtoken';
 import authModel from '../models/auth.model.js';
-import { verifyToken } from '../utils/verifyToken.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -13,25 +13,12 @@ export const authMiddleware = async (req, res, next) => {
         if (!token) {
             return res.status(401).json({ message: 'Token missing' });
         }
-
-        const decoded = verifyToken(token, 'access');
-        const userId = decoded.sub || decoded.id;
-
-        const user = await authModel
-            .findOne({
-                $or: [
-                    { _id: userId.length === 24 ? userId : null },
-                    { email: decoded.email },
-                ],
-            })
-            .select('-password');
+        const decoded = jwt.verify(token, process.env.ACCESS_SECRET);
+        const user = await authModel.findById(decoded.id).select('-password');
 
         if (!user) {
-            return res
-                .status(401)
-                .json({ message: 'User not found in Locus database' });
+            return res.status(401).json({ message: 'User not found' });
         }
-
         req.user = user;
         next();
     } catch (error) {

@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import qs from 'qs';
-import { verifyToken } from '../utils/verifyToken.js';
 
 const cookieOptions = {
     httpOnly: true,
@@ -150,18 +149,16 @@ const refreshAccessToken = async (req, res) => {
         }
 
         const token = req.cookies.refreshToken;
-        if (!token)
-            return res.status(401).json({ message: 'No refresh token' });
 
-        const decoded = verifyToken(token, 'refresh');
-
-        let user;
-        if (decoded.rawToken) {
-            user = await authModel.findOne({ refreshToken: decoded.rawToken });
-        } else {
-            const userId = decoded.sub || decoded.id;
-            user = await authModel.findById(userId);
+        if (!token) {
+            return res
+                .status(401)
+                .json({ message: 'Not authorized for action' });
         }
+
+        const decoded = jwt.verify(token, process.env.REFRESH_SECRET);
+
+        const user = await authModel.findById(decoded.id);
 
         if (!user) {
             return res.status(403).json({ message: 'User identity missing' });
@@ -170,7 +167,7 @@ const refreshAccessToken = async (req, res) => {
         const newAccessToken = jwt.sign(
             { id: user._id },
             process.env.ACCESS_SECRET,
-            { expiresIn: '1d' },
+            { expiresIn: process.env.ACCESS_SECRET_EXPIRY || '1d' },
         );
 
         res.status(200).json({ accessToken: newAccessToken });
@@ -182,31 +179,29 @@ const refreshAccessToken = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     try {
-        const idToken = req.cookies.idToken;
-        const currentRefreshToken = req.cookies.refreshToken;
+        // 1. Check if the user is logged into the Passport session
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            return req.logout((err) => {
+                if (err) {
+                    console.error('Logout error encountered:', err);
+                    return res
+                        .status(500)
+                        .json({ message: 'User failed to log out' });
+                }
 
-        if (currentRefreshToken) {
-            await authModel.findOneAndUpdate(
-                { refreshToken: currentRefreshToken },
-                { $unset: { refreshToken: 1 } },
-            );
+                // Clear cookie and respond only after Passport session is destroyed
+                res.clearCookie('refreshToken', cookieOptions);
+                return res
+                    .status(200)
+                    .json({ message: 'User logged out successfully' });
+            });
         }
 
+        // 2. Handle cases where passport session doesn't exist but cookie does
         res.clearCookie('refreshToken', cookieOptions);
-        res.clearCookie('idToken', cookieOptions);
-
-        const centralServerBase =
-            process.env.PROTOAUTH_SERVER_URL || 'http://localhost:3000';
-
-        const centralLogoutUrl =
-            `${centralServerBase}/o/authenticate/signout` +
-            `?id_token=${idToken || ''}` +
-            `&redirect_uri=${encodeURIComponent(process.env.PROTOAUTH_REDIRECT_URI || 'http://localhost:5175')}`;
-
-        return res.status(200).json({
-            message: 'Local session cleared successfully.',
-            redirectUrl: centralLogoutUrl,
-        });
+        return res
+            .status(200)
+            .json({ message: 'User logged out successfully' });
     } catch (error) {
         console.error('Logout error encountered:', error);
         return res.status(500).json({ message: 'User failed to log out' });
@@ -240,106 +235,10 @@ const getUser = async (req, res) => {
     }
 };
 
-const callback = async (req, res) => {
-    const { code } = req.body;
-
-    try {
-        const tokenRequest = {
-            grant_type: 'authorization_code',
-            code: code,
-            redirect_uri: process.env.PROTOAUTH_REDIRECT_URI,
-            client_id: process.env.PROTOAUTH_CLIENT_ID,
-            client_secret: process.env.PROTOAUTH_CLIENT_SECRET,
-        };
-
-        const response = await axios.post(
-            `${process.env.PROTOAUTH_SERVER_URL}/o/token` ||
-                'http://localhost:3000/o/token',
-            qs.stringify(tokenRequest),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            },
-        );
-
-        const { access_token, refresh_token, id_token } = response.data.data;
-
-        const decodedIdentity = verifyToken(id_token, 'access');
-
-        const user = await authModel.findOneAndUpdate(
-            {
-                $or: [
-                    { authId: decodedIdentity.sub },
-                    { email: decodedIdentity.email },
-                ],
-            },
-            {
-                authId: decodedIdentity.sub,
-                email: decodedIdentity.email,
-                username: [
-                    decodedIdentity.firstName,
-                    decodedIdentity.lastName,
-                ].join(' '),
-                refreshToken: refresh_token,
-            },
-            { upsert: true, returnDocument: 'after' },
-        );
-
-        res.cookie('refreshToken', refresh_token, cookieOptions);
-
-        res.cookie('idToken', id_token, cookieOptions);
-
-        res.json({
-            message: 'Tokens retrieved',
-            _id: id_token,
-            accessToken: access_token,
-        });
-    } catch (error) {
-        console.error('Auth Server refused exchange:', error.response?.data);
-        res.status(500).json({ error: 'Could not verify identity' });
-    }
-};
-
-const userinfo = async (req, res) => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'No access token provided' });
-    }
-
-    const accessToken = authHeader.split(' ')[1];
-
-    try {
-        const response = await axios.get('http://localhost:3000/o/userinfo', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
-
-        return res.json({
-            success: true,
-            user: response.data.data,
-        });
-    } catch (error) {
-        if (error.response) {
-            console.error('Auth Server Error:', error.response.data);
-            return res.status(error.response.status).json(error.response.data);
-        }
-
-        console.error('Connection to Auth Server failed:', error.message);
-        return res
-            .status(500)
-            .json({ error: 'Failed to fetch user info from Auth Server' });
-    }
-};
-
 export default {
     registerUser,
     loginUser,
     refreshAccessToken,
     logoutUser,
     getUser,
-    callback,
-    userinfo,
 };

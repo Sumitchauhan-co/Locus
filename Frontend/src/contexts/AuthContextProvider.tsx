@@ -52,17 +52,10 @@ const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
     const logout = async () => {
         try {
             setLoading(true);
-            const response = await api.post('/api/auth/logout');
+            await api.post('/api/auth/logout');
 
             setUser(null);
             setAccessToken(null);
-            const centralLogoutUrl = response.data.redirectUrl;
-
-            if (centralLogoutUrl) {
-                window.location.href = centralLogoutUrl;
-            } else {
-                window.location.href = '/login';
-            }
         } catch (error) {
             console.log(error);
         } finally {

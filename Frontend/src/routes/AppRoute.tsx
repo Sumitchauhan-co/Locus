@@ -1,50 +1,60 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home';
-import PostCreate from '../pages/PostCreate';
-import Menu from '../pages/Menu';
 import Applayout from '../layouts/AppLayout';
-import About from '../pages/About';
-import Contact from '../pages/Contact';
-import Posts from '../pages/Posts';
-import Map from '../pages/Map';
+import Loading from '../components/Loading';
+import Container from '../components/LayoutContainer';
+
+// Lazy load the page components
+const Home = lazy(() => import('../pages/Home'));
+const PostCreate = lazy(() => import('../pages/PostCreate'));
+const Menu = lazy(() => import('../pages/Menu'));
+const About = lazy(() => import('../pages/About'));
+const Contact = lazy(() => import('../pages/Contact'));
+const Posts = lazy(() => import('../pages/Posts'));
+const Map = lazy(() => import('../pages/Map'));
+
+const PageLoader = () => (
+    <Container>
+        <Loading />
+    </Container>
+);
 
 const AppRoute: React.FC = () => {
     return (
-        <Routes>
-            <Route element={<Applayout />}>
+        <Suspense fallback={<PageLoader />}>
+            <Routes>
+                <Route element={<Applayout />}>
+                    <Route
+                        path="/"
+                        element={<Home />}
+                    />
+                    <Route
+                        path="/create-post"
+                        element={<PostCreate />}
+                    />
+                    <Route
+                        path="/about"
+                        element={<About />}
+                    />
+                    <Route
+                        path="/posts"
+                        element={<Posts />}
+                    />
+                    <Route
+                        path="/map"
+                        element={<Map />}
+                    />
+                </Route>
                 <Route
-                    path="/"
-                    element={<Home />}
-                ></Route>
+                    path="/menu"
+                    element={<Menu />}
+                />
                 <Route
-                    path="/create-post"
-                    element={<PostCreate />}
-                ></Route>
-                <Route
-                    path="/about"
-                    element={<About />}
-                ></Route>
-
-                <Route
-                    path="/posts"
-                    element={<Posts />}
-                ></Route>
-
-                <Route
-                    path="/map"
-                    element={<Map />}
-                ></Route>
-            </Route>
-            <Route
-                path="/menu"
-                element={<Menu />}
-            ></Route>
-            <Route
-                path="/contact"
-                element={<Contact />}
-            ></Route>
-        </Routes>
+                    path="/contact"
+                    element={<Contact />}
+                />
+            </Routes>
+        </Suspense>
     );
 };
 
