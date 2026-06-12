@@ -8,6 +8,15 @@ pnpm-debug.log*
 lerna-debug.log*
 
 stats.html
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging.local
+.env.development
+.env.test
+.env.production
+.env.staging
 .env
 
 # Dependencies
