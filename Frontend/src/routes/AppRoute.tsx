@@ -11,51 +11,56 @@ const Menu = lazy(() => import('../pages/Menu'));
 const About = lazy(() => import('../pages/About'));
 const Contact = lazy(() => import('../pages/Contact'));
 const Posts = lazy(() => import('../pages/Posts'));
+const Profile = lazy(() => import('../pages/Profile'));
 const Map = lazy(() => import('../pages/Map'));
 
 const PageLoader = () => (
-    <Container>
-        <Loading />
-    </Container>
+	<Container>
+		<Loading />
+	</Container>
 );
 
 const AppRoute: React.FC = () => {
-    return (
-        <Suspense fallback={<PageLoader />}>
-            <Routes>
-                <Route element={<Applayout />}>
-                    <Route
-                        path="/"
-                        element={<Home />}
-                    />
-                    <Route
-                        path="/create-post"
-                        element={<PostCreate />}
-                    />
-                    <Route
-                        path="/about"
-                        element={<About />}
-                    />
-                    <Route
-                        path="/posts"
-                        element={<Posts />}
-                    />
-                    <Route
-                        path="/map"
-                        element={<Map />}
-                    />
-                </Route>
-                <Route
-                    path="/menu"
-                    element={<Menu />}
-                />
-                <Route
-                    path="/contact"
-                    element={<Contact />}
-                />
-            </Routes>
-        </Suspense>
-    );
+	return (
+		<Suspense fallback={<PageLoader />}>
+			<Routes>
+				<Route element={<Applayout />}>
+					<Route
+						path="/"
+						element={<Home />}
+					/>
+					<Route
+						path="/create-post"
+						element={<PostCreate />}
+					/>
+					<Route
+						path="/about"
+						element={<About />}
+					/>
+					<Route
+						path="/posts"
+						element={<Posts />}
+					/>
+					<Route
+						path="/profile"
+						element={<Profile />}
+					/>
+					<Route
+						path="/map"
+						element={<Map />}
+					/>
+				</Route>
+				<Route
+					path="/menu"
+					element={<Menu />}
+				/>
+				<Route
+					path="/contact"
+					element={<Contact />}
+				/>
+			</Routes>
+		</Suspense>
+	);
 };
 
 export default AppRoute;
