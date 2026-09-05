@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from 'react';
+import React, { useState, useEffect, type ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import { type User, type Data } from './AuthContext';
 import api from '../api/axios';
@@ -6,92 +6,99 @@ import axios from 'axios';
 import { setAccessToken } from '../utils/TokenService';
 
 interface ProviderProps {
-    children: ReactNode;
+	children: ReactNode;
 }
 
 const AuthContextProvider: React.FC<ProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<User | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
 
-    const [loading, setLoading] = useState<boolean>(false);
+	useEffect(() => {
+		getUser();
+	}, []);
 
-    const signup = async (data: Data) => {
-        try {
-            await api.post('/api/auth/register', data);
+	const signup = async (data: Data) => {
+		try {
+			setLoading(true);
+			await api.post('/api/auth/register', data);
 
-            const res = await api.get('/api/auth/user');
-            setUser(res.data.user);
-            setAccessToken(res.data.accessToken);
-            return { statusCode: res.status, errorMessage: undefined };
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const statusCode = error.response?.status;
-                const errorMessage = error.response?.data?.message;
-                return { statusCode, errorMessage };
-            }
-        }
-    };
+			const res = await api.get('/api/auth/user');
+			setUser(res.data.user);
+			setAccessToken(res.data.accessToken);
+			return { statusCode: res.status, errorMessage: undefined };
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				const statusCode = error.response?.status;
+				const errorMessage = error.response?.data?.message;
+				return { statusCode, errorMessage };
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    const login = async (data: Data) => {
-        try {
-            await api.post('/api/auth/login', data);
+	const login = async (data: Data) => {
+		try {
+			setLoading(true);
+			await api.post('/api/auth/login', data);
 
-            const res = await api.get('/api/auth/user');
-            setUser(res.data.user);
-            setAccessToken(res.data.accessToken);
+			const res = await api.get('/api/auth/user');
+			setUser(res.data.user);
+			setAccessToken(res.data.accessToken);
 
-            return { statusCode: res.status, errorMessage: undefined };
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const statusCode = error.response?.status;
-                const errorMessage = error.response?.data?.message;
-                return { statusCode, errorMessage };
-            }
-        }
-    };
+			return { statusCode: res.status, errorMessage: undefined };
+		} catch (error) {
+			if (axios.isAxiosError(error)) {
+				const statusCode = error.response?.status;
+				const errorMessage = error.response?.data?.message;
+				return { statusCode, errorMessage };
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    const logout = async () => {
-        try {
-            setLoading(true);
-            await api.post('/api/auth/logout');
+	const logout = async () => {
+		try {
+			setLoading(true);
+			await api.post('/api/auth/logout');
 
-            setUser(null);
-            setAccessToken(null);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+			setUser(null);
+			setAccessToken(null);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    const getUser = async () => {
-        try {
-            setLoading(true);
-            const res = await api.get('/api/auth/user');
-            setUser(res.data.user);
-        } catch (error) {
-            console.log(error);
-            setUser(null);
-        } finally {
-            setLoading(false);
-        }
-    };
+	const getUser = async () => {
+		try {
+			setLoading(true);
+			const res = await api.get('/api/auth/user');
+			setUser(res.data.user);
+		} catch (error) {
+			console.log(error);
+			setUser(null);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    const contextValue = {
-        user,
-        setUser,
-        login,
-        logout,
-        signup,
-        getUser,
-        loading,
-        setLoading,
-    };
+	const contextValue = {
+		user,
+		setUser,
+		login,
+		logout,
+		signup,
+		getUser,
+		loading,
+		setLoading,
+	};
 
-    return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
-    );
+	return (
+		<AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+	);
 };
 
 export { AuthContextProvider };

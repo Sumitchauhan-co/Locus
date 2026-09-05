@@ -1,15 +1,17 @@
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Icons } from '../utils/icons';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import LoadingBar from './LoadingBar';
 
 const BALL_FREQ = 300;
 const FALL_DURATION = 7;
-const INTERACTION_WINDOW = 3000; // Snappy 3-second window once active
+const INTERACTION_WINDOW = 3000;
 
 const ROWS = 8;
 const COLS_DESKTOP = 10;
 const COLS_MOBILE = 5;
 
+// Pre-computed grid tiles outside render loop
 const GRID_TILES = Array.from({ length: ROWS * COLS_DESKTOP }, (_, i) => ({
 	id: i,
 	delay: Math.random() * 2,
@@ -41,18 +43,38 @@ interface LoaderProps {
 }
 
 export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
-	const word = 'Locus'.split('');
+	const word = useMemo(() => 'Locus'.split(''), []);
 	const [hearts, setHearts] = useState<PopHeart[]>([]);
 	const [brokenCount, setBrokenCount] = useState(0);
 	const [isTextDone, setIsTextDone] = useState(false);
 	const [showGrid, setShowGrid] = useState(true);
+	const [isBarComplete, setIsBarComplete] = useState(false);
 
-	// 1. Text animation finishes -> triggers heart phase
+	const timeoutRefs = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+	// Helper to track and clean timeouts automatically
+	const safeSetTimeout = useCallback((callback: () => void, delay: number) => {
+		const id = setTimeout(() => {
+			callback();
+			timeoutRefs.current.delete(id);
+		}, delay);
+		timeoutRefs.current.add(id);
+		return id;
+	}, []);
+
+	// Clear all active timeouts on unmount
+	useEffect(() => {
+		const currentRefs = timeoutRefs.current;
+		return () => {
+			currentRefs.forEach((id) => clearTimeout(id));
+			currentRefs.clear();
+		};
+	}, []);
+
+	// 1. Text & Letter Framer Motion Variants
 	const container: Variants = useMemo(
 		() => ({
-			animate: {
-				transition: { staggerChildren: 0.1, delayChildren: 0.5 },
-			},
+			animate: { transition: { staggerChildren: 0.1, delayChildren: 0.5 } },
 		}),
 		[],
 	);
@@ -63,81 +85,82 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 			animate: {
 				opacity: [0, 1],
 				y: [15, -15],
-				transition: {
-					duration: 1.2,
-					times: [0, 0.2, 1],
-					ease: 'easeInOut',
-				},
+				transition: { duration: 1.2, times: [0, 0.2, 1], ease: 'easeInOut' },
 			},
 		}),
 		[],
 	);
 
-	// The flashing grid tile variants you wanted to keep active
 	const tileVariants: Variants = useMemo(
 		() => ({
 			animate: (delay: number) => ({
 				opacity: [0.15, 0.7, 0.15],
 				scale: [0.98, 1.03, 0.98],
-				transition: {
-					duration: 3,
-					repeat: Infinity,
-					delay: delay,
-					ease: 'easeInOut',
-				},
+				transition: { duration: 3, repeat: Infinity, delay, ease: 'easeInOut' },
 			}),
 		}),
 		[],
 	);
 
-	// 2. Control when the grid fades out separate from the text
+	// 2. Hide background grid after auth and text finish
 	useEffect(() => {
 		if (!isAuthLoading && isTextDone) {
-			// Give the user a brief moment to see the tiles fade into the background
-			const gridTimer = setTimeout(() => setShowGrid(false), 1500);
-			return () => clearTimeout(gridTimer);
+			safeSetTimeout(() => setShowGrid(false), 1500);
 		}
-	}, [isAuthLoading, isTextDone]);
+	}, [isAuthLoading, isTextDone, safeSetTimeout]);
 
-	// 3. Heart spawner loop
+	// 3. Heart Spawner Loop
 	useEffect(() => {
 		if (!isTextDone) return;
 
 		const interval = setInterval(() => {
+			const id = Math.random();
 			const newHeart: PopHeart = {
-				id: Math.random(),
+				id,
 				size: Math.random() * 15 + 25,
 				left: Math.random() * 90 + 5,
 				drift: Math.random() * 120,
 				isPopped: false,
 			};
+
 			setHearts((prev) => [...prev, newHeart]);
-			setTimeout(
+
+			safeSetTimeout(
 				() => {
-					setHearts((prev) => prev.filter((h) => h.id !== newHeart.id));
+					setHearts((prev) => prev.filter((h) => h.id !== id));
 				},
 				FALL_DURATION * 1000 + 500,
 			);
 		}, BALL_FREQ);
 
-		// Closes the loader after the interaction window finishes
-		const finishTimer = setTimeout(onFinish, INTERACTION_WINDOW);
+		safeSetTimeout(onFinish, INTERACTION_WINDOW);
 
-		return () => {
-			clearInterval(interval);
-			clearTimeout(finishTimer);
-		};
-	}, [isTextDone, onFinish]);
+		return () => clearInterval(interval);
+	}, [isTextDone, onFinish, safeSetTimeout]);
 
-	const handlePop = useCallback((id: number) => {
-		setHearts((prev) => {
-			const target = prev.find((h) => h.id === id);
-			if (!target || target.isPopped) return prev;
-			setBrokenCount((c) => c + 1);
-			return prev.map((h) => (h.id === id ? { ...h, isPopped: true } : h));
-		});
-		setTimeout(() => setHearts((prev) => prev.filter((h) => h.id !== id)), 200);
-	}, []);
+	// 4. Pop heart handler
+	const handlePop = useCallback(
+		(id: number) => {
+			setHearts((prev) => {
+				const target = prev.find((h) => h.id === id);
+				if (!target || target.isPopped) return prev;
+				setBrokenCount((c) => c + 1);
+				return prev.map((h) => (h.id === id ? { ...h, isPopped: true } : h));
+			});
+
+			safeSetTimeout(() => {
+				setHearts((prev) => prev.filter((h) => h.id !== id));
+			}, 200);
+		},
+		[safeSetTimeout],
+	);
+
+	// 5. Completion Synchronization: Triggers onFinish when BOTH auth & bar finish
+	useEffect(() => {
+		if (!isAuthLoading && isBarComplete) {
+			safeSetTimeout(onFinish, 300);
+		}
+	}, [isAuthLoading, isBarComplete, onFinish, safeSetTimeout]);
 
 	return (
 		<div className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black select-none touch-none font-sans">
@@ -153,7 +176,7 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 				</span>
 			</motion.div>
 
-			{/* LAYER 1: BRIGHTER PINK GRID BACKGROUND */}
+			{/* LAYER 1: PINK GRID BACKGROUND */}
 			<AnimatePresence>
 				{showGrid && (
 					<motion.div
@@ -163,19 +186,9 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 						className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center p-6"
 					>
 						<div
-							className="grid gap-4 sm:gap-6 w-full max-w-6xl h-fit"
-							style={{
-								gridTemplateColumns: `repeat(${COLS_MOBILE}, 1fr)`,
-								gridTemplateRows: `repeat(${ROWS}, 1fr)`,
-							}}
+							className="grid gap-4 sm:gap-6 w-full max-w-6xl h-fit grid-cols-5 sm:grid-cols-10"
+							style={{ gridTemplateRows: `repeat(${ROWS}, 1fr)` }}
 						>
-							<style>{`
-                                @media (min-width: 640px) {
-                                    div[style*="grid-template-columns"] { 
-                                        grid-template-columns: repeat(${COLS_DESKTOP}, 1fr) !important; 
-                                    }
-                                }
-                            `}</style>
 							{GRID_TILES.map((tile) => (
 								<div
 									key={tile.id}
@@ -209,10 +222,7 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 									scale: 1.6,
 									opacity: 0,
 									filter: 'brightness(1.2) blur(4px)',
-									transition: {
-										duration: 0.3,
-										ease: 'easeOut',
-									},
+									transition: { duration: 0.3, ease: 'easeOut' },
 								}}
 								onPointerDown={() => handlePop(heart.id)}
 								onPointerEnter={() => handlePop(heart.id)}
@@ -265,11 +275,7 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 			<div className="relative z-20 flex flex-col items-center gap-8 pointer-events-none">
 				<motion.div
 					animate={{ rotate: 360 }}
-					transition={{
-						duration: 4,
-						repeat: Infinity,
-						ease: 'linear',
-					}}
+					transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
 					className="text-[#ff80c0] drop-shadow-[0_0_20px_rgba(255,128,192,0.8)]"
 				>
 					<Icons.logo size={65} />
@@ -279,7 +285,7 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 					variants={container}
 					initial="initial"
 					animate="animate"
-					onAnimationComplete={() => setTimeout(() => setIsTextDone(true), 500)}
+					onAnimationComplete={() => setIsTextDone(true)}
 					className="flex text-white text-4xl sm:text-6xl tracking-[0.3em] uppercase drop-shadow-lg"
 				>
 					{word.map((char, i) => (
@@ -290,6 +296,18 @@ export default function Loader({ onFinish, isAuthLoading }: LoaderProps) {
 							{char}
 						</motion.span>
 					))}
+				</motion.div>
+
+				{/* TRICKLE LOADING BAR */}
+				<motion.div
+					initial={{ opacity: 0, y: 10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ delay: 0.2, duration: 0.4 }}
+				>
+					<LoadingBar
+						isLoading={isAuthLoading}
+						onComplete={() => setIsBarComplete(true)}
+					/>
 				</motion.div>
 			</div>
 		</div>

@@ -7,7 +7,7 @@ import { Icons } from '../utils/icons';
 import { getBgColor } from '../utils/bgColor';
 
 const linkVariants: Variants = {
-	hover: { scale: 1.1, y: 1 },
+	hover: { scale: 1.05, y: -1 },
 	tap: { scale: 0.975 },
 };
 
@@ -30,8 +30,9 @@ const Navbar: React.FC = () => {
 		{ label: 'About', path: '/about' },
 	];
 
+	// Updated with explicit after:bg-pink-500
 	const linkStyle =
-		'p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg';
+		'relative p-1 hover:text-(--text-color2) cursor-pointer px-3 font-bold text-lg sm:text-xl xl:text-2xl outline-white rounded-lg after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-pink-500 after:transition-all after:duration-300 hover:after:w-full';
 
 	const handleNavigation = (path: string) => {
 		closeModal();
